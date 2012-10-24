@@ -1,10 +1,11 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.csnyder.model.Contact" %>
+<%@ page import="com.registration.sors.model.Contact" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
 <html>
 <body>
 	<h1>CpS 420 Proof of Concept Application v2</h1>
-
+	<tag:header/>
 	Function : <a href="add">Add Contact</a>
 	<hr />
 
