@@ -1,0 +1,7 @@
+
+@font-face {
+  font-family: 'Days One';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Days One'), local('DaysOne-Regular'), url(../js/main_font.woff) format('woff');
+}

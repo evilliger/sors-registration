@@ -1,17 +1,29 @@
 package com.registration.sors.model;
 import java.util.*;
 
+import javax.persistence.Id;
+
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Parent;
+
 @SuppressWarnings("javadoc")
+@Entity
 public class Athlete {
 	
+	@Id
 	int athleteID;
 	String firstName;
 	String lastName;
 	char middleInitial;
 	Date birthDate;
 	char gender;
-	int classID;
 	
+    @Parent
+    Key<Classroom> classroom;
+
+	public Athlete(){ }
+    
 	public Athlete(String fn, String ln, Date bday, char g){
 		firstName = fn;
 		lastName = ln;
@@ -60,13 +72,6 @@ public class Athlete {
 
 	public void setGender(char gender) {
 		this.gender = gender;
-	}
-	public int getClassID() {
-		return classID;
-	}
-
-	public void setClassID(int classID) {
-		this.classID = classID;
 	}
 	
 	

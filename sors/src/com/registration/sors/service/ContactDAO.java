@@ -24,7 +24,7 @@ public class ContactDAO {
 		return c;
 	}
 	
-	public  void init(){
+	public void init(){
 		Objectify ofy = objectifyFactory.begin();
 		addressBook ab = new addressBook();
 		ab.setId(new Long(1));

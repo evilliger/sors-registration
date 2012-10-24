@@ -1,30 +1,82 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
-<!-- above set at the top of the file will set     -->
-<!-- the browser's rendering engine into           -->
-<!-- "Quirks Mode". Replacing this declaration     -->
-<!-- with a "Standards Mode" doctype is supported, -->
-<!-- but may lead to some differences in layout.   -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>SORS</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/reset.css" type="text/css" media="all">
+  <link rel="stylesheet" href="css/grid.css" type="text/css" media="all">
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
+  <link href='css/mainfont.css' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js" ></script>
+  <script type="text/javascript" src="js/cufon-yui.js"></script>
+  <script type="text/javascript" src="js/Bell_Gothic_Std_500.font.js"></script>
+  <script type="text/javascript" src="js/Bell_Gothic_Std_700.font.js"></script>
+  <script type="text/javascript" src="js/cufon-replace.js"></script>  
+  <script type="text/javascript" src="js/jquery.tablesorter.js"></script> 
+  <script src="js/jquery.ez-pinned-footer.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" type="text/css" href="css/oldstyle.css"/>
+  <!--[if lt IE 7]>
+  	<script type="text/javascript" src="http://info.template-help.com/files/ie6_warning/ie6_script_other.js"></script>
+  <![endif]-->
+  <!--[if lt IE 9]>
+  	<script type="text/javascript" src="js/html5.js"></script>
+  <![endif]-->
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $("#footer").pinFooter("relative"); 
+    if($("#content").height() < $(window).height()-200) {
+      $("#content").css("height", ($(window).height()-200) + "px");
+    }  
+  });
+  </script>
+</head>
 
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>CSNYD042 - P.O.C. v2</title>
-  </head>
-
-  <body>
-    <h1>CSNYD042 - P.O.C. v2</h1>
-    <p>(This time it actually works...)</p>
-    <table>
-      <tr>
-        <td colspan="2" style="font-weight:bold;">Available Functionality</td>        
-      </tr>
-      <tr>
-        <td><a href="/list">View Contacts</a></td>
-      </tr>
-      <tr>
-        <td><a href="/svc/list">View Contacts as JSON</a></td>
-      </tr>
-    </table>
-  </body>
+<body>
+  <!-- header -->
+  <header>
+    <div class="header-bg">
+      <div class="container_24">
+      	<div>
+        	<a href="index.html"><span id="logo">SORS</span></a>
+          <span id="sub-logo">Special Olympics Registration System</span>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+    <ul style="text-align:left; padding:10px;">
+    <li><a href="teacher_maintain_athletes.html">(Login as Teacher)</a></li>
+    <li><a href="coord_maintain_classrooms.html">(Login as Coordinator)</a></li>
+    <li><a href="admin_maintain_schools.html">(Login as Admin)</a></li>
+    </ul>
+<section id="login" class="main">
+    <h2>Greenville Recreation Department</h2>
+    <h3>Special Olympics Registration System</h3>
+    <br><br>
+    <form action="teacher_maintain_athletes.html" method="POST">
+        <table class="center">
+            <tr><td>Username:</td><td><input type="text" name="username"></td></tr>
+            <tr><td>Password:</td><td><input type="password" name="pswd"></td></tr>
+            <tr><td></td><td><input type="Submit" value="Login"></td></tr>
+        </table>
+    </form><br>
+    <a href="register.html">Request Access</a>
+</section>
+  <!-- footer -->
+  <div id="footer">
+    <div class="container_24">
+    	<div class="wrapper">
+        <nav>
+          <ul>
+          	<li><a href="index.html">Logout</a></li>
+            <li><a href="index-1.html">About Us</a></li>
+            <li><a href="index-4.html">FAQ</a></li>
+            <li><a href="index-5.html">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript"> Cufon.now(); </script>
+</body>
 </html>

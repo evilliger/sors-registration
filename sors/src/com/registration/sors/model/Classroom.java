@@ -7,6 +7,8 @@ public class Classroom {
 	String className;
 	int schoolID;
 	
+	public Classroom(){ }
+	
 	public Classroom(String n, int sID){
 		className = n;
 		schoolID = sID;
