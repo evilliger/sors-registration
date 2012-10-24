@@ -13,10 +13,10 @@ public class Athlete {
 	
 	@Id
 	int athleteID;
-	String firstName;
-	String lastName;
-	char middleInitial;
-	Date birthDate;
+	String fname;
+	String lname;
+	char mname;
+	Date bdate;
 	char gender;
 	
     @Parent
@@ -25,9 +25,9 @@ public class Athlete {
 	public Athlete(){ }
     
 	public Athlete(String fn, String ln, Date bday, char g){
-		firstName = fn;
-		lastName = ln;
-		birthDate = bday;
+		fname = fn;
+		lname = ln;
+		bdate = bday;
 		gender = g;		
 	}
 	public int getAthleteID() {
@@ -37,33 +37,33 @@ public class Athlete {
 	public void setAthleteID(int athleteID) {
 		this.athleteID = athleteID;
 	}
-	public String getFirstName() {
-		return firstName;
+	public String getFname() {
+		return fname;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setFname(String firstName) {
+		this.fname = firstName;
 	}
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public char getMiddleInitial() {
-		return middleInitial;
+	public String getLname() {
+		return lname;
 	}
 
-	public void setMiddleInitial(char middleInitial) {
-		this.middleInitial = middleInitial;
+	public void setLname(String lastName) {
+		this.lname = lastName;
 	}
-	public Date getBirthDate() {
-		return birthDate;
+	public char getMname() {
+		return mname;
 	}
 
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
+	public void setMname(char middleInitial) {
+		this.mname = middleInitial;
+	}
+	public Date getBdate() {
+		return bdate;
+	}
+
+	public void setBdate(Date birthDate) {
+		this.bdate = birthDate;
 	}
 	
 	public char getGender() {

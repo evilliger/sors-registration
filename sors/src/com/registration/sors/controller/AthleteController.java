@@ -26,12 +26,6 @@ public class AthleteController {
 	public String getAddContactPage(ModelMap model) {
 		return "addAthlete";
 	}
-	
-	@RequestMapping(value = "/init", method = RequestMethod.GET)
-	public ModelAndView init(ModelMap model) {
-		dao.init();
-		return new ModelAndView("redirect:list");
-	}
 
 	// Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -43,7 +37,6 @@ public class AthleteController {
 		binder.setRequiredFields(new String[] {"fname", "lname", "mname", "gender", "bdate"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
-		
 		if (!errors.hasErrors()) {
 			if(dao.add(a) != null) {
 				throw new Exception ("Error adding contact to datastore");
@@ -123,6 +116,6 @@ public class AthleteController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String listContact(ModelMap model) {	
 		model.addAttribute("contactList", dao.loadAll());
-		return "list";
+		return "listAthlete";
 	}
 }

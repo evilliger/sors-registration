@@ -82,7 +82,7 @@ public class MaintainHeatsHandler {
 		    Calendar cal2 = new GregorianCalendar();
 		    int age = 0;
 		    int factor = 0; 
-		    cal1.setTime(a.birthDate);
+		    cal1.setTime(a.bdate);
 		    cal2.setTime(new Date());
 		    if(cal2.get(Calendar.DAY_OF_YEAR) < cal1.get(Calendar.DAY_OF_YEAR)) {
 		          factor = -1; 

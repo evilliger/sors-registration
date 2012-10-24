@@ -1,0 +1,25 @@
+!SESSION 2012-10-24 17:15:58.913 -----------------------------------------------
+eclipse.buildId=I20120608-1400
+java.version=1.7.0_02
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=de_DE
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -data C:\Users\Elias\Desktop\sors\sors-registration\sors -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.core.net 1 0 2012-10-24 17:16:08.042
+!MESSAGE System property http.proxyHost is not set but should be proxy.bju.edu.
+
+!ENTRY org.eclipse.core.net 1 0 2012-10-24 17:16:08.054
+!MESSAGE System property http.proxyPort is not set but should be 8080.
+
+!ENTRY org.eclipse.core.net 1 0 2012-10-24 17:16:08.064
+!MESSAGE System property https.proxyHost is not set but should be proxy.bju.edu.
+
+!ENTRY org.eclipse.core.net 1 0 2012-10-24 17:16:08.068
+!MESSAGE System property https.proxyPort is not set but should be 8080.
+
+!ENTRY org.eclipse.core.net 1 0 2012-10-24 17:16:08.081
+!MESSAGE System property https.proxyHost is not set but should be proxy.bju.edu.
+
+!ENTRY org.eclipse.core.net 1 0 2012-10-24 17:16:08.084
+!MESSAGE System property https.proxyPort is not set but should be 8080.
