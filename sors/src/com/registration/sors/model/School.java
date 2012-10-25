@@ -1,3 +1,10 @@
+//--------------------------------------//
+// Name: School   				        //
+// Purpose: This class is to provide 	//
+//		a school object with the        //
+// 		same attributes as the 			//
+//      school entity in the datastore.	//
+//--------------------------------------//
 package com.registration.sors.model;
 
 @SuppressWarnings("javadoc")

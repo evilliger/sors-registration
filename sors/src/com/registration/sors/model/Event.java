@@ -1,3 +1,10 @@
+//--------------------------------------//
+// Name: Event   						//
+// Purpose: This class is to provide 	//
+//		an event object with the same   //
+// 		attributes as the event entity  //
+//		in the datastore.				//
+//--------------------------------------//
 package com.registration.sors.model;
 
 @SuppressWarnings("javadoc")

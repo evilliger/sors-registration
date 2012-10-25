@@ -1,3 +1,8 @@
+//--------------------------------------//
+// Name: SchoolDAO						//
+// Purpose: This class is to provide 	//
+//		access to the School Datastore. //
+//--------------------------------------//
 package com.registration.sors.service;
 
 import java.util.List;
@@ -9,26 +14,32 @@ public class SchoolDAO {
 	// Add an School to DataStore
 	// Parameters: School s - School to add
 	// Return: School - newly added School
-	public static School AddSchool(School s){
+	public static School add(School s){
 		return null;
 	}
 	// Delete an School from DataStore
 	// Parameters: School s - School to delete
 	// Return: void
-	public static void DeleteSchool(School s){
+	public static void delete(School s){
 	
 	}
 	// update an School in DataStore
 	// Parameters: School s - School to update
 	// Return: School - newly updated School
-	public static School UpdateSchool(School s){
+	public static School update(School s){
 		return null;
 	}
 	
 	// get a list of Schools in DataStore
 	// Parameters: none
 	// Return: list of Schools
-	public static List<School> LoadAllSchools(){
+	public static List<School> loadAll(){
+		return null;
+	}
+	// find an School whose schoolID is id
+	// Parameters: id - schoolID number
+	// Return: school - whose schoolID is id
+	public static School find(int id){
 		return null;
 	}
 }

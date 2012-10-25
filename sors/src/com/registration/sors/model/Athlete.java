@@ -1,3 +1,10 @@
+//--------------------------------------//
+// Name: Athlete						//
+// Purpose: This class is to provide 	//
+//		an athlete object with the same //
+// 		attributes as the athlete entity//
+//		in the datastore.				//
+//--------------------------------------//
 package com.registration.sors.model;
 import java.util.*;
 

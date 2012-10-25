@@ -1,3 +1,8 @@
+//--------------------------------------//
+// Name: UserDAO						//
+// Purpose: This class is to provide 	//
+//		access to the User Datastore.   //
+//--------------------------------------//
 package com.registration.sors.service;
 
 import java.util.List;
@@ -31,6 +36,7 @@ public class UserDAO {
 		} catch (Exception e) {
 			return null;
 		}
+		
 	}
 	
 	// Delete an User from DataStore

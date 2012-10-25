@@ -1,10 +1,17 @@
+//--------------------------------------//
+// Name: Heat   						//
+// Purpose: This class is to provide 	//
+//		a  heat object with the same    //
+// 		attributes as the event entity  //
+//		in the datastore.				//
+//--------------------------------------//
 package com.registration.sors.model;
 import java.util.*;
 
 @SuppressWarnings("javadoc")
 public class Heat {
 	int headID;
-	char gender;
+	String gender;
 	int division;
 	int minAge;
 	int maxAge;
@@ -67,7 +74,7 @@ public class Heat {
 		this.eventID = eventID;
 	}
 
-	public Heat(int d, char g, int min, int max, int e, Date t){
+	public Heat(int d, String g, int min, int max, int e, Date t){
 		division = d;
 		minAge = min;
 		maxAge = max;

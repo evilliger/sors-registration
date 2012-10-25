@@ -1,3 +1,11 @@
+//--------------------------------------//
+// Name: Registration   				//
+// Purpose: This class is to provide 	//
+//		a  Registration object with the //
+// 		same attributes as the 			//
+//      Registration entity in the 		//
+//		datastore.			         	//
+//--------------------------------------//
 package com.registration.sors.model;
 
 @SuppressWarnings("javadoc")

@@ -1,10 +1,17 @@
+//---------------------------------------//
+// Name: HeatSpec						 //
+// Purpose: This class is to provide 	 //
+//		a  HeatSpec object with the same //
+// 		attributes as the HeatSpec entity//
+//		in the datastore.				 //
+//---------------------------------------//
 package com.registration.sors.model;
 import java.util.*;
 
 @SuppressWarnings("javadoc")
 public class HeatSpec {
 	int HeatSpecID;
-	char gender;
+	String gender;
 	int minAge;
 	int maxAge;
 	Date time;
@@ -20,11 +27,11 @@ public class HeatSpec {
 		HeatSpecID = heatSpecID;
 	}
 
-	public char getGender() {
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(char gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 

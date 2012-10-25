@@ -1,3 +1,10 @@
+//--------------------------------------//
+// Name: Classroom						//
+// Purpose: This class is to provide 	//
+//		a classroom object with the same//
+// 		attributes as the classroom     //
+//		entity in the datastore.	    //
+//--------------------------------------//
 package com.registration.sors.model;
 
 import javax.persistence.Id;
