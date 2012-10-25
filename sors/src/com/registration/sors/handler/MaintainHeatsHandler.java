@@ -35,7 +35,7 @@ public class MaintainHeatsHandler {
 		// 3. turn athlete list into dictionary
 		for(int i = 0; i < athleteList.size(); ++i){
 			Athlete a = athleteList.get(i);
-			athleteCodes.put(Integer.toString(a.athleteID), a);
+			athleteCodes.put(Integer.toString(a.Id), a);
 		}
 	
 		// 4. Generate a list of heatentries based on registrations, athletes and heat specifications

@@ -27,6 +27,12 @@ public class AthleteController {
 		return "addAthlete";
 	}
 
+	@RequestMapping(value = "/init", method = RequestMethod.GET)
+	public ModelAndView init(ModelMap model) {
+		dao.init();
+		return new ModelAndView("redirect:list");
+	}
+
 	// Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ModelAndView add(HttpServletRequest req, ModelMap model) throws Exception {
@@ -38,7 +44,7 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		if (!errors.hasErrors()) {
-			if(dao.add(a) != null) {
+			if(dao.add(a) == null) {
 				throw new Exception ("Error adding contact to datastore");
 			}
 		} else {
@@ -64,7 +70,7 @@ public class AthleteController {
 		} else {
 			throw new Exception ("Helpful exception code");
 		}
-		return "update";
+		return "updateAthlete";
 	}
 	
 	// Accepts the input from update.jsp, stores it in the datastore, and returns list.jsp
@@ -74,16 +80,14 @@ public class AthleteController {
 		Athlete a = new Athlete();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
-		binder.setRequiredFields(new String[] {"id", "name", "email"});
+		binder.setRequiredFields(new String[] {"id", "fname", "lname", "mname", "gender", "bdate"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
 		if (!errors.hasErrors()) {
-			if(dao.update(a) != null) {
-				throw new Exception ("Error updating datastore");
-			}
+			dao.update(a);
 		} else {
-			throw new Exception ("Supply ID, Name, and Email");
+			throw new Exception ("Supply required information.");
 		}
 		
 		// return to list
@@ -97,25 +101,21 @@ public class AthleteController {
 
 		Athlete a = new Athlete();
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
-		binder.setRequiredFields(new String[] {"id", "name", "email"});
+		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
-		
-		if (!errors.hasErrors()) {
-			dao.delete(a);
-		} else {
-			throw new Exception ("Supply ID, Name, and Email");
-		}
+	
+		dao.delete(a);
 
 		// return to list
-		return "redirect:/list";
+		return "redirect:list";
 
 	}
 
 	// get all contacts
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String listContact(ModelMap model) {	
-		model.addAttribute("contactList", dao.loadAll());
+		model.addAttribute("athleteList", dao.loadAll());
 		return "listAthlete";
 	}
 }

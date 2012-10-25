@@ -1,9 +1,15 @@
 package com.registration.sors.model;
 
+import javax.persistence.Id;
+
+import com.googlecode.objectify.annotation.Entity;
+
 @SuppressWarnings("javadoc")
+@Entity
 public class Classroom {
 	
-	int classID;
+	@Id
+	Long classID;
 	String className;
 	int schoolID;
 	
@@ -13,11 +19,11 @@ public class Classroom {
 		className = n;
 		schoolID = sID;
 	}
-	public int getClassID() {
+	public Long getClassID() {
 		return classID;
 	}
 
-	public void setClassID(int classID) {
+	public void setClassID(Long classID) {
 		this.classID = classID;
 	}
 	public int getSchoolID() {

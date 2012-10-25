@@ -12,30 +12,39 @@ import com.googlecode.objectify.annotation.Parent;
 public class Athlete {
 	
 	@Id
-	int athleteID;
+	Long Id;
 	String fname;
 	String lname;
-	char mname;
+	String mname;
 	Date bdate;
-	char gender;
+	String gender;
 	
     @Parent
     Key<Classroom> classroom;
 
 	public Athlete(){ }
     
-	public Athlete(String fn, String ln, Date bday, char g){
+	public Athlete(String fn, String ln, Date bday, String g){
 		fname = fn;
 		lname = ln;
 		bdate = bday;
 		gender = g;		
 	}
-	public int getAthleteID() {
-		return athleteID;
+
+	public Key<Classroom> getClassroom() {
+		return classroom;
 	}
 
-	public void setAthleteID(int athleteID) {
-		this.athleteID = athleteID;
+	public void setClassroom(Key<Classroom> classroom) {
+		this.classroom = classroom;
+	}
+	
+	public Long getId() {
+		return Id;
+	}
+
+	public void setId(Long athleteID) {
+		this.Id = athleteID;
 	}
 	public String getFname() {
 		return fname;
@@ -51,11 +60,11 @@ public class Athlete {
 	public void setLname(String lastName) {
 		this.lname = lastName;
 	}
-	public char getMname() {
+	public String getMname() {
 		return mname;
 	}
 
-	public void setMname(char middleInitial) {
+	public void setMname(String middleInitial) {
 		this.mname = middleInitial;
 	}
 	public Date getBdate() {
@@ -66,11 +75,11 @@ public class Athlete {
 		this.bdate = birthDate;
 	}
 	
-	public char getGender() {
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(char gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 	

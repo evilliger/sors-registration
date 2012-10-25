@@ -32,7 +32,7 @@
             <tr><td>Middle Initial:</td><td><input type="text" name="mname" size="3"/></td></tr>
             <tr><td>Last Name:</td><td><input type="text" name="lname" /></td></tr>
             <tr><td>Date of Birth:</td><td><input type="text" name="bdate" /><i>NOTE: format mm/dd/yyyy</i></td></tr>
-            <tr><td>Gender:</td><td><input type="radio" name="gender" value="male"/>Male  <input type="radio" name="sex" value="female"/>Female</td><tr>
+            <tr><td>Gender:</td><td><input type="radio" name="gender" value="M"/>Male  <input type="radio" name="gender" value="F"/>Female</td><tr>
             <tr><td><br></td><td></td></tr>
             <tr><td>Event One:</td><td>
                 <select id="pevent" name="pevent">

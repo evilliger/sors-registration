@@ -28,6 +28,7 @@
     if($("#content").height() < $(window).height()-200) {
       $("#content").css("height", ($(window).height()-200) + "px");
     }  
+    $("#ath_table").tablesorter({sortList: [[0,0]]});
   });
   </script>
 </head>
