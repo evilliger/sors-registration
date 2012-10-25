@@ -36,7 +36,7 @@ public class AthleteDAO {
 	// Add an Athlete to DataStore
 	// Parameters: Athlete a - athlete to add
 	// Return: Athlete - newly added athlete
-	public static Athlete add(Athlete a){
+	public Athlete add(Athlete a){
 		try {
 			a.setClassroom(new Key<Classroom>(Classroom.class, 1));
 			Objectify ofy = objectifyFactory.begin();
@@ -50,7 +50,7 @@ public class AthleteDAO {
 	// Delete an Athlete from DataStore
 	// Parameters: Athlete a - athlete to delete
 	// Return: void
-	public static void delete(Athlete a){
+	public void delete(Athlete a){
 		Objectify ofy = objectifyFactory.begin();
 		Athlete ath = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, 1), Athlete.class, a.getId()));
 		ofy.delete(ath);
@@ -58,7 +58,7 @@ public class AthleteDAO {
 	// update an Athlete in DataStore
 	// Parameters: Athlete a - athlete to update
 	// Return: Athlete - newly updated athlete
-	public static void update(Athlete a){
+	public void update(Athlete a){
 		Objectify ofy = objectifyFactory.begin();
 
 		Athlete newAthlete = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, 1), Athlete.class, a.getId()));
@@ -75,7 +75,7 @@ public class AthleteDAO {
 	// get a list of Athletes in DataStore
 	// Parameters: none
 	// Return: list of Athletes
-	public static List<Athlete> loadAll(){
+	public List<Athlete> loadAll(){
 		Objectify ofy = objectifyFactory.begin();
 		List<Athlete> list = ofy.query(Athlete.class).ancestor(new Key<Classroom>(Classroom.class,1)).list();
 		return list;
@@ -83,7 +83,7 @@ public class AthleteDAO {
 	// find an athlete whose athleteID is id
 	// Parameters: id - athleteID number
 	// Return: Athlete - whose athleteID is id
-	public static Athlete find(int id){
+	public Athlete find(int id){
 		return null;
 	}
 	

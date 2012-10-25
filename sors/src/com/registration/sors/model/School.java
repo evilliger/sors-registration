@@ -9,21 +9,21 @@ package com.registration.sors.model;
 
 @SuppressWarnings("javadoc")
 public class School {
-	int schoolID;
+	Long schoolID;
 	String schoolName;
 	String groupID;
-	
+	public School(){}
 	public School(String gc, String sn){
 		schoolName = sn;
 		groupID = gc;
 	}
 
-	public int getSchoolID() {
+	public Long getSchoolID() {
 		return schoolID;
 	}
 
-	public void setSchoolID(int schoolID) {
-		this.schoolID = schoolID;
+	public void setSchoolID(Long long1) {
+		this.schoolID = long1;
 	}
 
 	public String getSchoolName() {

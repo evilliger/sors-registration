@@ -86,6 +86,16 @@ public class UserDAO {
 			return null;
 		}
 	}
+	// Returns a User for a given username
+	// Check this method with Josh and see if it will work
+	public User find(String username) {
+		try {
+			Objectify ofy = objectifyFactory.begin();
+			return ofy.get(new Key<User>(new Key<SorsParent>(SorsParent.class, 1), User.class, username));
+		} catch (Exception e) {
+			return null;
+		}
+	}
 	
 	public void init(){
 		Objectify ofy = objectifyFactory.begin();

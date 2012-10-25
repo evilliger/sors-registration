@@ -134,7 +134,8 @@ public class MaintainHeatsHandler {
 		// 1. fill these lists
 		List<Registration> regList = RegistrationDAO.loadAll();
 		List<HeatSpec> heatSpecList = HeatSpecDAO.loadAll();
-		List<Athlete> athleteList = AthleteDAO.loadAll();
+		AthleteDAO aDal = new AthleteDAO();
+		List<Athlete> athleteList = aDal.loadAll();
 		
 		// 2. populate these dictionaries
 		Dictionary<String,Athlete>athleteCodes = new Hashtable<String,Athlete>();
