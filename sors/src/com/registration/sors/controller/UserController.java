@@ -1,6 +1,5 @@
 package com.registration.sors.controller;
 
-import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -12,6 +11,9 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.registration.sors.helpers.Authenticator;
+import com.registration.sors.model.SystemSession;
 import com.registration.sors.model.User;
 import com.registration.sors.service.UserDAO;
 
@@ -24,42 +26,58 @@ public class UserController {
 	
 	// Facilitates the login of a user
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String loginUser(HttpServletRequest req, ModelMap model) throws Exception {
+	public String loginUser(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
 		
 		// Grab username and pswd from POST
 		String username = (String) req.getParameter("username");
 		String password = (String) req.getParameter("pswd");
 		
 		User u = dao.find(username);		
-		if (u == null) {
+		if (!Authenticator.authenticate(u,password)) {
 			model.addAttribute("AuthError", "Invalid username or password.");
 			return "home";
 		} else {
-			if(u.getPword().equals(password)){
-				//session.setAttribute("user", u);
-				return "redirect:/athlete/list";
-			}else{
-				model.addAttribute("AuthError", "Invalid username or password.");
-				return "home";
-			}
+			session.setAttribute("system", new SystemSession(u,true));
+			return "redirect:/athlete/list";
 		}
 	}
 	
+	// Facilitates the login of a user
+		@RequestMapping(value = "/login", method = RequestMethod.GET)
+		public String loginUserGet(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
+			
+			// Grab username and pswd from POST
+			String username = (String) req.getParameter("username");
+			String password = (String) req.getParameter("pswd");
+			
+			User u = dao.find(username);		
+			if (!Authenticator.authenticate(u,password)) {
+				model.addAttribute("AuthError", "Invalid username or password.");
+				return "home";
+			} else {
+				session.setAttribute("system", new SystemSession(u,true));
+				return "redirect:/athlete/list";
+			}
+		}
+	
 	// Returns the add.jsp page allowing the user to submit a new contact
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddContactPage(ModelMap model) {
+	public String getAddContactPage(ModelMap model, HttpSession session) {
+		SystemSession ss = (SystemSession)session.getAttribute("system");
+		if(!Authenticator.isAuthenticated(false, true, ss))
+			return "home";
 		return "addUser";
 	}
 	
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
-	public ModelAndView init(ModelMap model) {
+	public ModelAndView init(ModelMap model, HttpSession session) {
 		dao.init();
 		return new ModelAndView("redirect:list");
 	}
 
 	// Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public ModelAndView add(HttpServletRequest req, ModelMap model) throws Exception {
+	public ModelAndView add(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
 
 		User u = new User();
 		

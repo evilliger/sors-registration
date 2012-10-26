@@ -36,7 +36,7 @@
 					  <td>--event1--</td>
 					  <td>--event2--</td>
                     <td><img src="../img/no.png" class="confirm" alt="no">No</img></td>
-					<td ><button onClick="document.location.href='update?id=<%=a.getId()%>&fname=<%=a.getFname()%>&lname=<%=a.getLname()%>&mname=<%=a.getMname()%>&bdate=<%=a.getBdate()%>&gender=<%=a.getGender()%>'">Edit</button>
+					<td ><button onClick="document.location.href='update?id=<%=a.getId()%>'">Edit</button>
 					<button onClick="document.location.href='delete?id=<%=a.getId()%>'" class="del">Delete</button></td>
                     
 					</tr>
