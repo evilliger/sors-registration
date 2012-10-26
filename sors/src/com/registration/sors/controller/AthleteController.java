@@ -20,17 +20,17 @@ import com.registration.sors.service.AthleteDAO;
 public class AthleteController {
 	
 	@Autowired private AthleteDAO dao;
-	
-	// Returns the add.jsp page allowing the user to submit a new contact
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddContactPage(ModelMap model) {
-		return "addAthlete";
-	}
 
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init(ModelMap model) {
 		dao.init();
 		return new ModelAndView("redirect:list");
+	}
+	
+	// Returns the add.jsp page allowing the user to submit a new contact
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String getAddContactPage(ModelMap model) {
+		return "addAthlete";
 	}
 
 	// Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
@@ -61,7 +61,7 @@ public class AthleteController {
 		Athlete a = new Athlete();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
-		binder.setRequiredFields(new String[] {"fname", "lname", "mname", "gender", "bdate"});
+		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		

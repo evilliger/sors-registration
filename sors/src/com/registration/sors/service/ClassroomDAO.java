@@ -40,7 +40,7 @@ public class ClassroomDAO {
 	// Add classroom to DataStore
 	// Parameters: classroom c - classroom to add
 	// Return: classroom - newly added classroom
-	public static Classroom add(Classroom c){
+	public Classroom add(Classroom c){
 		try {
 			c.setSchool(new Key<School>(School.class, 1));
 			Objectify ofy = objectifyFactory.begin();
@@ -54,7 +54,7 @@ public class ClassroomDAO {
 	// Delete an Classroom from DataStore
 	// Parameters: Classroom c - Classroom to delete
 	// Return: void
-	public static void delete(Classroom c){
+	public void delete(Classroom c){
 		Objectify ofy = objectifyFactory.begin();
 		Classroom clas = ofy.get(new Key<Classroom>(new Key<School>(School.class, 1), Classroom.class, c.getId()));
 		ofy.delete(clas);
@@ -62,7 +62,7 @@ public class ClassroomDAO {
 	// update a Classroom in DataStore
 	// Parameters: Classroom c - Classroom to update
 	// Return: Classroom - newly updated Classroom
-	public static Classroom update(Classroom c){
+	public void update(Classroom c){
 		Objectify ofy = objectifyFactory.begin();
 
 		Classroom newClass = ofy.get(new Key<Classroom>(new Key<School>(School.class, 1), Classroom.class, c.getId()));
@@ -70,13 +70,13 @@ public class ClassroomDAO {
 		newClass.setClassName(c.getClassName());
 		newClass.setSchoolID(c.getSchoolID());
 		
-		ofy.put(newClassroom);
+		ofy.put(newClass);
 	}
 	
 	// get a list of Classrooms in DataStore
 	// Parameters: none
 	// Return: list of Classrooms
-	public static List<Classroom> loadAll(){
+	public List<Classroom> loadAll(){
 		Objectify ofy = objectifyFactory.begin();
 		List<Classroom> list = ofy.query(Classroom.class).ancestor(new Key<School>(School.class,1)).list();
 		return list;
@@ -85,7 +85,7 @@ public class ClassroomDAO {
 	// find an classroom whose classID is id
 	// Parameters: id - classID number
 	// Return: classroom - whose classID is id
-	public static Classroom find(int id){
+	public Classroom find(int id){
 		try {
 			Objectify ofy = objectifyFactory.begin();
 			return ofy.get(new Key<Classroom>(new Key<School>(School.class, 1), Classroom.class, id));

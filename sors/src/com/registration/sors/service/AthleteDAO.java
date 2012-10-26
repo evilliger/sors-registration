@@ -4,7 +4,7 @@
 //		access to the Athlete Datastore.//
 //--------------------------------------//
 package com.registration.sors.service;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Classroom;
-import com.registration.sors.model.Contact;
-import com.registration.sors.model.addressBook;
-import com.googlecode.objectify.*;
+import com.registration.sors.model.User;
 
 @SuppressWarnings("javadoc")
 @Service
@@ -29,7 +27,7 @@ public class AthleteDAO {
 	public void init(){
 		Objectify ofy = objectifyFactory.begin();
 		Classroom cr = new Classroom();
-		cr.setClassID(new Long(1));
+		cr.setId(new Long(1)); // set up a catch-all classroom for development work
 		ofy.put(cr);
 	}
 	
@@ -38,7 +36,7 @@ public class AthleteDAO {
 	// Return: Athlete - newly added athlete
 	public Athlete add(Athlete a){
 		try {
-			a.setClassroom(new Key<Classroom>(Classroom.class, 1));
+			a.setClassroom(new Key<Classroom>(Classroom.class, a.getClassroomId()));
 			Objectify ofy = objectifyFactory.begin();
 			ofy.put(a);
 			
@@ -52,7 +50,7 @@ public class AthleteDAO {
 	// Return: void
 	public void delete(Athlete a){
 		Objectify ofy = objectifyFactory.begin();
-		Athlete ath = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, 1), Athlete.class, a.getId()));
+		Athlete ath = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, a.getClassroomId()), Athlete.class, a.getId()));
 		ofy.delete(ath);
 	}
 	// update an Athlete in DataStore
@@ -61,7 +59,7 @@ public class AthleteDAO {
 	public void update(Athlete a){
 		Objectify ofy = objectifyFactory.begin();
 
-		Athlete newAthlete = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, 1), Athlete.class, a.getId()));
+		Athlete newAthlete = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, a.getClassroomId()), Athlete.class, a.getId()));
 		
 		newAthlete.setFname(a.getFname());
 		newAthlete.setLname(a.getLname());
@@ -77,14 +75,22 @@ public class AthleteDAO {
 	// Return: list of Athletes
 	public List<Athlete> loadAll(){
 		Objectify ofy = objectifyFactory.begin();
-		List<Athlete> list = ofy.query(Athlete.class).ancestor(new Key<Classroom>(Classroom.class,1)).list();
+		List<Athlete> list = new ArrayList<Athlete>();
+		// The following line needs to be executed for every classroomId of every school in the system instead of "1".
+		list.addAll(ofy.query(Athlete.class).ancestor(new Key<Classroom>(Classroom.class,1)).list());
 		return list;
 	}
 	// find an athlete whose athleteID is id
 	// Parameters: id - athleteID number
 	// Return: Athlete - whose athleteID is id
-	public Athlete find(int id){
-		return null;
+	public Athlete find(Long id){
+		try {
+			Objectify ofy = objectifyFactory.begin();
+			// The following get would have to be run on every classroom id, instead of just "1".
+			return ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, 1), Athlete.class, id));
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 }

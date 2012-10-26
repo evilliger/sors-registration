@@ -18,7 +18,7 @@ import com.registration.sors.service.UserDAO;
 @SuppressWarnings("javadoc")
 @Controller
 @RequestMapping("/user")
-public class UsersController {
+public class UserController {
 	
 	@Autowired private UserDAO dao;
 	

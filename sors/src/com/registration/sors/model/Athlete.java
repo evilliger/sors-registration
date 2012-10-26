@@ -20,6 +20,7 @@ public class Athlete {
 	
 	@Id
 	Long Id;
+	Long classroomId = new Long(1);
 	String fname;
 	String lname;
 	String mname;
@@ -53,6 +54,15 @@ public class Athlete {
 	public void setId(Long athleteID) {
 		this.Id = athleteID;
 	}
+	
+	public Long getClassroomId() {
+		return classroomId;
+	}
+
+	public void setClassroomId(Long classroomId) {
+		this.classroomId = classroomId;
+	}
+	
 	public String getFname() {
 		return fname;
 	}

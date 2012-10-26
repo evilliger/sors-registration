@@ -18,7 +18,7 @@ import com.googlecode.objectify.annotation.Parent;
 public class Classroom {
 	
 	@Id
-	Long classID;
+	Long id;
 	String className;
 	int schoolID;
 	@Parent
@@ -36,12 +36,12 @@ public class Classroom {
 	public void setSchool(Key<School> school) {
 		this.school = school;
 	}
-	public Long getClassID() {
-		return classID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setClassID(Long classID) {
-		this.classID = classID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public int getSchoolID() {
 		return schoolID;

@@ -5,6 +5,7 @@
 //--------------------------------------//
 package com.registration.sors.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Service;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.registration.sors.model.Contact;
+import com.registration.sors.model.Athlete;
+import com.registration.sors.model.Classroom;
 import com.registration.sors.model.SorsParent;
 import com.registration.sors.model.User;
-import com.registration.sors.model.addressBook;
 
 @SuppressWarnings("javadoc")
 @Service
@@ -30,7 +31,7 @@ public class UserDAO {
 	// Return: User - newly added User
 	public User add(User u){
 		try {
-			u.setSors(new Key<SorsParent>(SorsParent.class, 1));
+			u.setParent(new Key<User>(User.class, User.parentId));
 			Objectify ofy = objectifyFactory.begin();
 			ofy.put(u);
 			return u;
@@ -45,7 +46,7 @@ public class UserDAO {
 	// Return: void
 	public void delete(User u){
 		Objectify ofy = objectifyFactory.begin();
-		User user = ofy.get(new Key<User>(new Key<SorsParent>(SorsParent.class, 1), User.class, u.getId()));
+		User user = ofy.get(new Key<User>(new Key<User>(User.class, User.parentId), User.class, u.getId()));
 		ofy.delete(user);
 	}
 	
@@ -55,7 +56,7 @@ public class UserDAO {
 	public void update(User u){
 		Objectify ofy = objectifyFactory.begin();
 		
-		User user = ofy.get(new Key<User>(new Key<SorsParent>(SorsParent.class, 1), User.class, u.getId()));
+		User user = ofy.get(new Key<User>(new Key<User>(User.class, User.parentId), User.class, u.getId()));
 		
 		user.setTitle(u.getTitle());
 		user.setFname(u.getFname());
@@ -74,7 +75,9 @@ public class UserDAO {
 	// Return: list of Users
 	public List<User> loadAll(){
 		Objectify ofy = objectifyFactory.begin();
-		List<User> list = ofy.query(User.class).ancestor(new Key<SorsParent>(SorsParent.class,1)).list();
+		List<User> list = new ArrayList<User>();
+		// The following line needs to be executed for every classroomId of every school in the system.
+		list.addAll(ofy.query(User.class).ancestor(new Key<User>(User.class,User.parentId)).list());
 		return list;
 	}
 
@@ -82,7 +85,7 @@ public class UserDAO {
 	public User find(Long id) {
 		try {
 			Objectify ofy = objectifyFactory.begin();
-			return ofy.get(new Key<User>(new Key<SorsParent>(SorsParent.class, 1), User.class, id));
+			return ofy.get(new Key<User>(new Key<User>(User.class, User.parentId), User.class, id));
 		} catch (Exception e) {
 			return null;
 		}
@@ -92,7 +95,7 @@ public class UserDAO {
 	public User find(String email) {
 		try {
 			Objectify ofy = objectifyFactory.begin();
-			User u = ofy.query(User.class).ancestor(new Key<SorsParent>(SorsParent.class, 1)).filter("email", email).get();
+			User u = ofy.query(User.class).ancestor(new Key<User>(User.class, User.parentId)).filter("email", email).get();
 			return u;
 		} catch (Exception e) {
 			return null;
@@ -101,8 +104,8 @@ public class UserDAO {
 	
 	public void init() {
 		Objectify ofy = objectifyFactory.begin();
-		SorsParent sors = new SorsParent();
-		sors.setId(new Long(1));
-		ofy.put(sors);
+		User u = new User();
+		u.setId(User.parentId);
+		ofy.put(u);
 	}
 }

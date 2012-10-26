@@ -1,7 +1,5 @@
 package com.registration.sors.model;
 
-import java.util.Date;
-
 import javax.persistence.Id;
 
 import com.googlecode.objectify.Key;
@@ -14,6 +12,7 @@ public class User {
 	
 	@Id
 	Long id;
+	public static Long parentId = new Long(1);
 	
 	String title;
 	String fname;
@@ -25,7 +24,7 @@ public class User {
 	String active;
 	
 	@Parent
-	Key<SorsParent> sors;
+	Key<User> parent;
 
 	public User(){ }
 
@@ -36,13 +35,13 @@ public class User {
 		this.role = r;
 		this.active = a;
 	}
-	
-	public Key<SorsParent> getSors() {
-		return sors;
+
+	public Key<User> getParent() {
+		return parent;
 	}
 
-	public void setSors(Key<SorsParent> sors) {
-		this.sors = sors;
+	public void setParent(Key<User> parent) {
+		this.parent = parent;
 	}
 
 	public String getTitle() {
