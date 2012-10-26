@@ -427,3 +427,8 @@ a.rss:hover {
 		}
 
 /*==========================================*/
+
+.error {
+	color:red;
+	text-align:center;
+}
