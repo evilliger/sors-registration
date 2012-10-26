@@ -29,7 +29,7 @@ public class UserDAO {
 	public User add(User u){
 		try {
 			u.setParent(new Key<User>(User.class, User.parentId));
-			Objectify ofy = objectifyFactory.begin();
+			Objectify ofy = this.objectifyFactory.begin();
 			ofy.put(u);
 			return u;
 		} catch (Exception e) {
@@ -42,7 +42,7 @@ public class UserDAO {
 	// Parameters: User u - User to delete
 	// Return: void
 	public void delete(User u){
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = this.objectifyFactory.begin();
 		User user = ofy.get(new Key<User>(new Key<User>(User.class, User.parentId), User.class, u.getId()));
 		ofy.delete(user);
 	}
@@ -51,7 +51,7 @@ public class UserDAO {
 	// Parameters: User u - User to update
 	// Return: User - newly updated User
 	public void update(User u){
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = this.objectifyFactory.begin();
 		
 		User user = ofy.get(new Key<User>(new Key<User>(User.class, User.parentId), User.class, u.getId()));
 		
@@ -71,7 +71,7 @@ public class UserDAO {
 	// Parameters: none
 	// Return: list of Users
 	public List<User> loadAll(){
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = this.objectifyFactory.begin();
 		List<User> list = new ArrayList<User>();
 		// The following line needs to be executed for every classroomId of every school in the system.
 		list.addAll(ofy.query(User.class).ancestor(new Key<User>(User.class,User.parentId)).list());
@@ -81,7 +81,7 @@ public class UserDAO {
 	// Returns a User for a given id
 	public User find(Long id) {
 		try {
-			Objectify ofy = objectifyFactory.begin();
+			Objectify ofy = this.objectifyFactory.begin();
 			return ofy.get(new Key<User>(new Key<User>(User.class, User.parentId), User.class, id));
 		} catch (Exception e) {
 			return null;
@@ -91,7 +91,7 @@ public class UserDAO {
 	// Check this method with Josh and see if it will work
 	public User find(String email) {
 		try {
-			Objectify ofy = objectifyFactory.begin();
+			Objectify ofy = this.objectifyFactory.begin();
 			User u = ofy.query(User.class).ancestor(new Key<User>(User.class, User.parentId)).filter("email", email).get();
 			return u;
 		} catch (Exception e) {
@@ -101,7 +101,7 @@ public class UserDAO {
 	
 	// For Dev ONLY
 	public void init() {
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = this.objectifyFactory.begin();
 		User u = new User();
 		u.setId(User.parentId);
 		ofy.put(u);

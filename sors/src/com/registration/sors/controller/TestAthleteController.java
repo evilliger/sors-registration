@@ -12,22 +12,22 @@ import com.registration.sors.service.AthleteDAO;
 
 @SuppressWarnings("javadoc")
 @Controller
-@RequestMapping("/testathlete")
+@RequestMapping("/")
 public class TestAthleteController {
 	
 	@Autowired private AthleteDAO dao;
 
-	@RequestMapping(value = "/1", method = RequestMethod.GET)
-	public ModelAndView test(ModelMap model) {
-		int numAthletes = dao.loadAll().size();
+	@RequestMapping(value = "/testathlete", method = RequestMethod.GET)
+	public ModelAndView test() {
+		int numAthletes = this.dao.loadAll().size();
 		
 		Athlete a = new Athlete();
 		a.setFname("Max");
-		dao.add(a);
+		this.dao.add(a);
 		assert (false) : "hey, got a problem?";
 		assert (numAthletes + 1 == dao.loadAll().size()) : "Add Athlete Unit Test 1";
-		assert (dao.find(a.getId()).getFname().equals("Max")) : "Add Athlete Unit Test 2";
-		dao.delete(a); // clean up
-		return new ModelAndView("redirect:../athlete/list");
+		assert (this.dao.find(a.getId()).getFname().equals("Max")) : "Add Athlete Unit Test 2";
+		this.dao.delete(a); // clean up
+		return new ModelAndView("passed");
 	}
 }
