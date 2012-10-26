@@ -16,6 +16,7 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.registration.sors.model.Contact;
 import com.registration.sors.model.SorsParent;
 import com.registration.sors.model.User;
+import com.registration.sors.model.addressBook;
 
 @SuppressWarnings("javadoc")
 @Service
@@ -88,16 +89,18 @@ public class UserDAO {
 	}
 	// Returns a User for a given username
 	// Check this method with Josh and see if it will work
-	public User find(String username) {
+	public User findUsername(String username) {
 		try {
 			Objectify ofy = objectifyFactory.begin();
-			return ofy.get(new Key<User>(new Key<SorsParent>(SorsParent.class, 1), User.class, username));
+			//return ofy.get(new Key<User>(new Key<SorsParent>(SorsParent.class, 1), User.class, username));
+			User u = ofy.query(User.class).ancestor(new Key<SorsParent>(SorsParent.class, 1)).filter("email", username).get();
+			return u;
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
-	public void init(){
+	public void init() {
 		Objectify ofy = objectifyFactory.begin();
 		SorsParent sors = new SorsParent();
 		sors.setId(new Long(1));
