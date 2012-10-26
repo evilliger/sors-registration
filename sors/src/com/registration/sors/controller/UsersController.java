@@ -1,6 +1,8 @@
 package com.registration.sors.controller;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.registration.sors.handler.AuthenticationHandler;
 import com.registration.sors.model.User;
 import com.registration.sors.service.UserDAO;
 
@@ -24,21 +24,23 @@ public class UsersController {
 	
 	// Facilitates the login of a user
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ModelAndView loginUser(HttpServletRequest req, ModelMap model) throws Exception {
+	public String loginUser(HttpServletRequest req, ModelMap model) throws Exception {
 		
 		// Grab username and pswd from POST
 		String username = (String) req.getParameter("username");
 		String password = (String) req.getParameter("pswd");
 		
-		User u = dao.findUsername(username);		
+		User u = dao.find(username);		
 		if (u == null) {
 			model.addAttribute("AuthError", "Invalid username or password.");
-			return new ModelAndView("redirect:/index.html");
+			return "home";
 		} else {
 			if(u.getPword().equals(password)){
-				return new ModelAndView("redirect:/athlete/list");
+				//session.setAttribute("user", u);
+				return "redirect:/athlete/list";
 			}else{
-				return new ModelAndView("redirect:/index.html");
+				model.addAttribute("AuthError", "Invalid username or password.");
+				return "home";
 			}
 		}
 	}

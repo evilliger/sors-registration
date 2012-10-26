@@ -89,11 +89,10 @@ public class UserDAO {
 	}
 	// Returns a User for a given username
 	// Check this method with Josh and see if it will work
-	public User findUsername(String username) {
+	public User find(String email) {
 		try {
 			Objectify ofy = objectifyFactory.begin();
-			//return ofy.get(new Key<User>(new Key<SorsParent>(SorsParent.class, 1), User.class, username));
-			User u = ofy.query(User.class).ancestor(new Key<SorsParent>(SorsParent.class, 1)).filter("email", username).get();
+			User u = ofy.query(User.class).ancestor(new Key<SorsParent>(SorsParent.class, 1)).filter("email", email).get();
 			return u;
 		} catch (Exception e) {
 			return null;

@@ -14,7 +14,7 @@ import com.registration.sors.model.Contact;
 import com.registration.sors.service.ContactDAO;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/contact")
 public class ContactController {
 	
 	@Autowired private ContactDAO ContactDAO;
