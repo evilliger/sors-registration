@@ -8,10 +8,19 @@ package com.registration.sors.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
+import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Registration;
 
 @SuppressWarnings("javadoc")
 public class RegistrationDAO {
+	
+	@Autowired
+	private ObjectifyFactory objectifyFactory;
+	
 	// Add a Registration to DataStore
 	// Parameters: Registration r - Registration to add
 	// Return: Registration - newly added Registration
@@ -43,4 +52,9 @@ public class RegistrationDAO {
 	public static Registration find(int id){
 		return null;
 	}
+	
+	public void add(List<Registration> a) {
+		Objectify ofy = objectifyFactory.begin();
+		ofy.put(a);
+}
 }

@@ -7,7 +7,10 @@
 //--------------------------------------//
 package com.registration.sors.model;
 
+import com.googlecode.objectify.annotation.Entity;
+
 @SuppressWarnings("javadoc")
+@Entity
 public class Event {
 	int eventID;
 	String eventName;

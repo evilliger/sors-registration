@@ -7,12 +7,29 @@
 //--------------------------------------//
 package com.registration.sors.model;
 
+import javax.persistence.Id;
+
+import com.googlecode.objectify.annotation.Entity;
+
 @SuppressWarnings("javadoc")
+@Entity
 public class School {
+	
+	@Id
 	Long schoolID;
 	String schoolName;
 	String groupID;
+	int volunteerNum;
+	
 	public School(){}
+	
+	public int getVolunteerNum() {
+		return volunteerNum;
+	}
+	public void setVolunteerNum(int volunteerNum) {
+		this.volunteerNum = volunteerNum;
+	}
+	
 	public School(String gc, String sn){
 		schoolName = sn;
 		groupID = gc;

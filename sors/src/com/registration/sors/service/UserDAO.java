@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
+import com.registration.sors.model.Athlete;
 import com.registration.sors.model.User;
 
 @SuppressWarnings("javadoc")
@@ -105,5 +106,12 @@ public class UserDAO {
 		User u = new User();
 		u.setId(User.parentId);
 		ofy.put(u);
+		
+		
 	}
+	
+	public void add(List<User> a) {
+		Objectify ofy = objectifyFactory.begin();
+		ofy.put(a);
+}
 }

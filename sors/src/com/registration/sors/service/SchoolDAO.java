@@ -7,10 +7,19 @@ package com.registration.sors.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
+import com.registration.sors.model.Athlete;
 import com.registration.sors.model.School;
 
 @SuppressWarnings("javadoc")
 public class SchoolDAO {
+	
+	@Autowired
+	private ObjectifyFactory objectifyFactory;
+	
 	// Add an School to DataStore
 	// Parameters: School s - School to add
 	// Return: School - newly added School
@@ -42,4 +51,9 @@ public class SchoolDAO {
 	public static School find(int id){
 		return null;
 	}
+	
+	public void add(List<School> a) {
+		Objectify ofy = objectifyFactory.begin();
+		ofy.put(a);
+}
 }

@@ -8,8 +8,14 @@
 //--------------------------------------//
 package com.registration.sors.model;
 
+import javax.persistence.Id;
+
+import com.googlecode.objectify.annotation.Entity;
+
 @SuppressWarnings("javadoc")
+@Entity
 public class Registration {
+	@Id
 	int regID;
 	double score;
 	int rank;

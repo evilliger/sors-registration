@@ -93,4 +93,9 @@ public class ClassroomDAO {
 			return null;
 		}
 	}
+	
+	public void add(List<Classroom> a) {
+		Objectify ofy = objectifyFactory.begin();
+		ofy.put(a);
+}
 }

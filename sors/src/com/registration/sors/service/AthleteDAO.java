@@ -20,6 +20,7 @@ import com.registration.sors.model.User;
 @SuppressWarnings("javadoc")
 @Service
 public class AthleteDAO {
+	public AthleteDAO(){}
 
 	@Autowired
 	private ObjectifyFactory objectifyFactory;
@@ -91,6 +92,11 @@ public class AthleteDAO {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+	
+	public void add(List<Athlete> a) {
+			Objectify ofy = objectifyFactory.begin();
+			ofy.put(a);
 	}
 	
 }

@@ -5,7 +5,12 @@
 //--------------------------------------//
 package com.registration.sors.model;
 import java.util.*;
+
+import javax.persistence.Id;
 public class HeatEntry {
+	
+	@Id
+	long id;
 	int eventID;
 	int minAge;
 	int maxAge;

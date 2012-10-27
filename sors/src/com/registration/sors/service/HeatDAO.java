@@ -7,10 +7,18 @@ package com.registration.sors.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
+import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Heat;
 
 @SuppressWarnings("javadoc")
 public class HeatDAO {
+	
+	@Autowired
+	private ObjectifyFactory objectifyFactory;
 	// Add a Heat to DataStore
 	// Parameters: Heat h - Heat to add
 	// Return: Heat - newly added Heat
@@ -42,4 +50,9 @@ public class HeatDAO {
 	public static Heat find(int id){
 		return null;
 	}
+	
+	public void add(List<Heat> a) {
+		Objectify ofy = objectifyFactory.begin();
+		ofy.put(a);
+}
 }

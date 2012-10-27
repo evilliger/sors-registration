@@ -21,6 +21,15 @@ public class Classroom {
 	Long id;
 	String className;
 	int schoolID;
+	int userID;
+	public int getUserID() {
+		return userID;
+	}
+
+	public void setUserID(int userID) {
+		this.userID = userID;
+	}
+
 	@Parent
     Key<School> school;
 	public Classroom(){ }

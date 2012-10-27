@@ -8,8 +8,15 @@
 package com.registration.sors.model;
 import java.util.*;
 
+import javax.persistence.Id;
+
+import com.googlecode.objectify.annotation.Entity;
+
 @SuppressWarnings("javadoc")
+@Entity
 public class HeatSpec {
+	
+	@Id
 	int HeatSpecID;
 	String gender;
 	int minAge;
@@ -83,7 +90,7 @@ public class HeatSpec {
 		this.eventID = eventID;
 	}
 
-	public HeatSpec(char g, int minA, int maxA, Date t, int num, int max, int e){
+	public HeatSpec(String g, int minA, int maxA, Date t, int num, int max, int e){
 		gender = g;
 		minAge = minA;
 		maxAge = maxA;

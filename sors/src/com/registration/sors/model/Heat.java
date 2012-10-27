@@ -8,9 +8,15 @@
 package com.registration.sors.model;
 import java.util.*;
 
+import javax.persistence.Id;
+
+import com.googlecode.objectify.annotation.Entity;
+
 @SuppressWarnings("javadoc")
+@Entity
 public class Heat {
-	int headID;
+	@Id
+	int heatID;
 	String gender;
 	int division;
 	int minAge;
@@ -18,20 +24,20 @@ public class Heat {
 	Date time;
 	int eventID;
 	
-	public int getHeadID() {
-		return headID;
-	}
-
-	public void setHeadID(int headID) {
-		this.headID = headID;
-	}
-
-	public char getGender() {
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(char gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
+	}
+	
+	public int getHeatID() {
+		return heatID;
+	}
+
+	public void setHeatID(int headID) {
+		this.heatID = headID;
 	}
 
 	public int getDivision() {
