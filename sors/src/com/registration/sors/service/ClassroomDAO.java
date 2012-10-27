@@ -17,11 +17,14 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.registration.sors.model.Classroom;
 import com.registration.sors.model.School;
 
-@SuppressWarnings("javadoc")
+
 @Service
 public class ClassroomDAO {
 	@Autowired
 	private ObjectifyFactory objectifyFactory;
+	
+	// init 
+	// to initialize the dao
 	
 	public void init(){
 		Objectify ofy = objectifyFactory.begin();
@@ -30,11 +33,10 @@ public class ClassroomDAO {
 		ofy.put(sc);
 	}
 	
-	
-	
 	// Add classroom to DataStore
 	// Parameters: classroom c - classroom to add
 	// Return: classroom - newly added classroom
+	
 	public Classroom add(Classroom c){
 		try {
 			c.setSchool(new Key<School>(School.class, 1));
@@ -49,6 +51,7 @@ public class ClassroomDAO {
 	// Delete an Classroom from DataStore
 	// Parameters: Classroom c - Classroom to delete
 	// Return: void
+	
 	public void delete(Classroom c){
 		Objectify ofy = objectifyFactory.begin();
 		Classroom clas = ofy.get(new Key<Classroom>(new Key<School>(School.class, 1), Classroom.class, c.getId()));
@@ -57,6 +60,7 @@ public class ClassroomDAO {
 	// update a Classroom in DataStore
 	// Parameters: Classroom c - Classroom to update
 	// Return: Classroom - newly updated Classroom
+	
 	public void update(Classroom c){
 		Objectify ofy = objectifyFactory.begin();
 
@@ -71,6 +75,7 @@ public class ClassroomDAO {
 	// get a list of Classrooms in DataStore
 	// Parameters: none
 	// Return: list of Classrooms
+	
 	public List<Classroom> loadAll(){
 		Objectify ofy = objectifyFactory.begin();
 		List<Classroom> list = ofy.query(Classroom.class).ancestor(new Key<School>(School.class,1)).list();
@@ -80,8 +85,10 @@ public class ClassroomDAO {
 	// find an classroom whose classID is id
 	// Parameters: id - classID number
 	// Return: classroom - whose classID is id
+	
 	public Classroom find(int id){
 		try {
+			
 			Objectify ofy = objectifyFactory.begin();
 			return ofy.get(new Key<Classroom>(new Key<School>(School.class, 1), Classroom.class, id));
 		} catch (Exception e) {

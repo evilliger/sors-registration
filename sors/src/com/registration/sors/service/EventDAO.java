@@ -11,21 +11,25 @@ import com.registration.sors.model.Event;
 
 @SuppressWarnings("javadoc")
 public class EventDAO {
+	
 	// Add an Event to DataStore
 	// Parameters: Event e - Event to add
 	// Return: Event - newly added Event
+	
 	public static Event add(Event e){
 		return null;
 	}
 	// Delete an Event from DataStore
 	// Parameters: Event e - Event to delete
 	// Return: void
+	
 	public static void delete(Event e){
 	
 	}
 	// update an Event in DataStore
 	// Parameters: Event e - Event to update
 	// Return: Event - newly updated Event
+	
 	public static Event update(Event e){
 		return null;
 	}
@@ -33,6 +37,7 @@ public class EventDAO {
 	// get a list of Events in DataStore
 	// Parameters: none
 	// Return: list of Events
+	
 	public static List<Event> loadAll(){
 		return null;
 	}
@@ -40,6 +45,7 @@ public class EventDAO {
 	// find an Event whose eventID is id
 	// Parameters: id - eventID number
 	// Return: event - whose eventID is id
+	
 	public static Event find(int id){
 		return null;
 	}

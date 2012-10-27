@@ -1,3 +1,7 @@
+//-------------------------------------------//
+// Name: AthleteController					 //
+// Purpose: Spring Cotroller				 //
+//-------------------------------------------//
 package com.registration.sors.controller;
 
 import java.util.Arrays;
@@ -15,13 +19,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.registration.sors.helpers.Authenticator;
+import com.registration.sors.helpers.Security;
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.SystemSession;
 import com.registration.sors.service.AthleteDAO;
 
 @Controller
 @RequestMapping("/athlete")
+//-------------------------------------------//
+//Name: AthleteController					 //
+//Purpose: Implement the functionality of 	 //
+//		adding, deleting, updating, and 	 //
+//		listing all of the athletes. Uses the//
+//		athletedao to accomplish its tasks	 //
+//-------------------------------------------//
 public class AthleteController {
 	
 	@Autowired private AthleteDAO dao;
@@ -29,10 +40,17 @@ public class AthleteController {
 	List<String> roles = Arrays.asList("A", "T");
 
 	// Dev Testing ONLY
+	// Name: init
+	// Purpose: Determine if the user is logged in and authorized 
+	//		to see this page.
+	// Parameters: session - the current user session
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - if user is logged in and authorized
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init(HttpSession session) {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		if(!Security.isAuthenticated(this.roles, ss)){
 			session.invalidate();
 			// Right now it takes the user back to the Login Page no matter what
 			return new ModelAndView("redirect:/user/login");
@@ -41,24 +59,47 @@ public class AthleteController {
 		return new ModelAndView("redirect:list");
 	}
 	
-	// Returns the add.jsp page allowing the user to submit a new contact
+	// Name: getAddAthletePage
+	// Purpose: Determine if the user is logged in and authorized 
+	//		to see this page.
+	// Parameters: session - the current user session
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		add page - page allowing the user to submit a new athlete
+	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddContactPage(HttpSession session) {
+	public String getAddAthletePage(HttpSession session) {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
 		return "addAthlete";
 	}
 
-	// Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
+	
+	// Name: add
+	// Purpose: Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
+	// Parameters: session - the current user session
+	//				req - the data to add
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - when data is added
+
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ModelAndView add(HttpServletRequest req, HttpSession session) throws Exception {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return new ModelAndView("redirect:/user/login");
 		}
@@ -72,9 +113,11 @@ public class AthleteController {
 		
 		//Errors will be handled here
 		if (!errors.hasErrors()) {
+			
 			if(this.dao.add(a) == null) {
-				throw new Exception ("Error adding contact to datastore");
+				throw new Exception ("Error adding Athlete to datastore");
 			}
+			
 		} else {
 			throw new Exception ("Supply required information.");
 		}
@@ -82,12 +125,23 @@ public class AthleteController {
 
 	}
 	
-	// Displays the get.jsp page with the information from the contact
+	// Name: getUpdateAthletePage
+	// Purpose: Displays the get.jsp page with the information from the Athlete
+	// Parameters: session - the current user session
+	//			req - athlete to update
+	//			model - the model for update
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		updateathlete page - page to edit athlete information
+	
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
-	public String getUpdateContactPage(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
+	public String getUpdateAthletePage(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
@@ -108,11 +162,22 @@ public class AthleteController {
 		return "updateAthlete";
 	}
 	
-	// Accepts the input from update.jsp, stores it in the datastore, and returns list.jsp
+	
+	// Name: update
+	// Purpose: Accepts the input from update.jsp, stores it in the datastore, and returns list.jsp
+	// Parameters: session - the current user session
+	//				req - the entry to update
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - when data is updated
+	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String update(HttpServletRequest req, HttpSession session) throws Exception {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
@@ -137,11 +202,18 @@ public class AthleteController {
 
 	}
 	
-	// Deletes a contact based on information submitted
+	// Name: delete
+	// Purpose: Deletes a Athlete based on information submitted
+	// Parameters: session - the current user session
+	//				req - the entry to delete
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - when data is deleted
+	
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String delete(HttpServletRequest req, HttpSession session) throws Exception {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		if(!Security.isAuthenticated(this.roles, ss)){
 			session.invalidate();
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
@@ -159,16 +231,28 @@ public class AthleteController {
 		return "redirect:list";
 
 	}
-
-	// get all contacts
+	
+	// Name: list
+	// Purpose: get a list of all Athletes
+	// Parameters: session - the current user session
+	//				model - the model for list
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - list of athletes
+	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String listContact(ModelMap model, HttpSession session) {	
+	public String list(ModelMap model, HttpSession session) {	
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
+		
 		// Errors will be handled here
 		model.addAttribute("athleteList", this.dao.loadAll());
 		return "listAthlete";

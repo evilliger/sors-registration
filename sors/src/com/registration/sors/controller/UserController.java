@@ -1,3 +1,7 @@
+//-------------------------------------------//
+// Name: UserController		    			 //
+// Purpose: Spring Cotroller				 //
+//-------------------------------------------//
 package com.registration.sors.controller;
 
 import java.util.Arrays;
@@ -15,13 +19,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.registration.sors.helpers.Authenticator;
+import com.registration.sors.helpers.Security;
 import com.registration.sors.model.SystemSession;
 import com.registration.sors.model.User;
 import com.registration.sors.service.UserDAO;
 
 @Controller
 @RequestMapping("/user")
+//-------------------------------------------//
+//Name: UserController						 //
+//Purpose: Implement the functionality of 	 //
+//		adding, deleting, updating, and 	 //
+//		listing all of the users. Uses the   //
+//		userdao to accomplish its tasks	     //
+//-------------------------------------------//
 public class UserController {
 	
 	@Autowired private UserDAO dao;
@@ -37,7 +48,7 @@ public class UserController {
 		String password = (String) req.getParameter("pswd");
 		
 		User u = this.dao.find(username);		
-		if (!Authenticator.authenticate(u,password)) {
+		if (!Security.authenticate(u,password)) {
 			model.addAttribute("AuthError", "Invalid username or password.");
 			return "home";
 		} else {
@@ -55,7 +66,7 @@ public class UserController {
 		String password = (String) req.getParameter("pswd");
 		
 		User u = this.dao.find(username);		
-		if (!Authenticator.authenticate(u,password)) {
+		if (!Security.authenticate(u,password)) {
 			model.addAttribute("AuthError", "Invalid username or password.");
 			return "home";
 		} else {
@@ -64,38 +75,74 @@ public class UserController {
 		}
 	}
 	
-	// Returns the add.jsp page allowing the user to submit a new contact
+	// Name: getAddUserPage
+	// Purpose: Determine if the user is logged in and authorized 
+	//		to see this page.
+	// Parameters: session - the current user session
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		add page - page allowing the user to submit a new user
+
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddContactPage(HttpSession session) {
+	public String getAddUserPage(HttpSession session) {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+		
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
 		return "addUser";
 	}
-	
+
+
 	// Dev Testing ONLY
+	// Name: init
+	// Purpose: Determine if the user is logged in and authorized 
+	//		to see this page.
+	// Parameters: session - the current user session
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - list of users
+	
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init(HttpSession session) {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+		
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return new ModelAndView("redirect:/user/login");
 		}
+		
 		// Errors will be handled here
 		this.dao.init();
 		return new ModelAndView("redirect:list");
 	}
 
-	// Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
+	// Name: add
+	// Purpose: Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
+	// Parameters: session - the current user session
+	//				req - the data to add
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - when data is added
+	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ModelAndView add(HttpServletRequest req, HttpSession session) throws Exception {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return new ModelAndView("redirect:/user/login");
 		}
@@ -109,9 +156,11 @@ public class UserController {
 	
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
+			
 			if(this.dao.add(u) == null) {
-				throw new Exception ("Error adding contact to datastore");
+				throw new Exception ("Error adding User to datastore");
 			}
+			
 		} else {
 			throw new Exception ("Supply required information.");
 		}
@@ -119,11 +168,22 @@ public class UserController {
 
 	}
 	
-	// Displays the get.jsp page with the information from the contact
+	// Name: getUpdateUserPage
+	// Purpose: Displays the get.jsp page with the information from the User
+	// Parameters: session - the current user session
+	//			req - user to update
+	//			model - the model for update
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		updateuser page - page to edit user information
+
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
-	public String getUpdateContactPage(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
+	public String getUpdateUserPage(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
 			return "redirect:/user/login";
 		}
@@ -144,13 +204,23 @@ public class UserController {
 		}
 		return "updateUser";
 	}
+	// Name: update
+	// Purpose: Accepts the input from update.jsp, stores it in the datastore, and returns list.jsp
+	// Parameters: session - the current user session
+	//				req - the entry to update
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - when data is updated
 	
-	// Accepts the input from update.jsp, stores it in the datastore, and returns list.jsp
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String update(HttpServletRequest req, HttpSession session) throws Exception {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login";
 		}
@@ -174,12 +244,23 @@ public class UserController {
 
 	}
 	
-	// Deletes a contact based on information submitted
+	// Name: delete
+	// Purpose: Deletes a User based on information submitted
+	// Parameters: session - the current user session
+	//				req - the entry to delete
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - when data is deleted
+	
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String delete(HttpServletRequest req, HttpSession session) throws Exception {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login";
 		}
@@ -197,12 +278,23 @@ public class UserController {
 
 	}
 
-	// get all contacts
+	// Name: list
+	// Purpose: get a list of all users
+	// Parameters: session - the current user session
+	//				model - the model for list
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		list page - list of users
+	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String listContact(ModelMap model, HttpSession session) {	
+	public String listUsers(ModelMap model, HttpSession session) {	
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Authenticator.isAuthenticated(this.roles, ss)){
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login";
 		}

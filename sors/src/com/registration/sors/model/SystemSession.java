@@ -1,3 +1,8 @@
+//-----------------------------------//
+// Name: SystemSession				 //
+// Purpose: The object to be stored  //
+//		in the session				 //
+//-----------------------------------//
 package com.registration.sors.model;
 
 @SuppressWarnings("javadoc")
