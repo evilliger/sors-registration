@@ -20,7 +20,6 @@ import com.registration.sors.model.SystemSession;
 import com.registration.sors.model.User;
 import com.registration.sors.service.UserDAO;
 
-@SuppressWarnings({"javadoc", "cast"})
 @Controller
 @RequestMapping("/user")
 public class UserController {

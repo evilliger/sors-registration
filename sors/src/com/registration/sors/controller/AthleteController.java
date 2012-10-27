@@ -20,7 +20,6 @@ import com.registration.sors.model.Athlete;
 import com.registration.sors.model.SystemSession;
 import com.registration.sors.service.AthleteDAO;
 
-@SuppressWarnings({"javadoc"})
 @Controller
 @RequestMapping("/athlete")
 public class AthleteController {
