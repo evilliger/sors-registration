@@ -1,3 +1,10 @@
+//--------------------------------------//
+// Name: User   				        //
+// Purpose: This class is to provide 	//
+//		a user object with the          //
+// 		same attributes as the 			//
+//      user entity in the datastore.	//
+//--------------------------------------//
 package com.registration.sors.model;
 
 import javax.persistence.Id;

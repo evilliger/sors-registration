@@ -24,20 +24,19 @@ public class Heat {
 	Date time;
 	int eventID;
 	
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-	
 	public int getHeatID() {
 		return heatID;
 	}
 
 	public void setHeatID(int headID) {
 		this.heatID = headID;
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public int getDivision() {

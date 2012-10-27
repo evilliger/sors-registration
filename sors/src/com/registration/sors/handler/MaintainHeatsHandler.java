@@ -28,7 +28,6 @@ import com.registration.sors.service.RegistrationDAO;
 
 public class MaintainHeatsHandler {
 	
-
 	// Turn a List of HeatSpec into a dictionary
 	// parameters: heatSpecList - the list to turn into dictionary
 	// return: a dictionary created from parameter
@@ -128,7 +127,6 @@ public class MaintainHeatsHandler {
 		});
 		return heatEntryList;
 	}
-	
 	
 	public static void GenerateHeats(){
 		// 1. fill these lists

@@ -30,6 +30,7 @@ public class Athlete {
     @Parent
     Key<Classroom> classroom;
 
+    // Constructors
 	public Athlete(){ }
     
 	public Athlete(String fn, String ln, Date bday, String g){
@@ -39,6 +40,7 @@ public class Athlete {
 		gender = g;		
 	}
 
+	//Getters ad setters
 	public Key<Classroom> getClassroom() {
 		return classroom;
 	}

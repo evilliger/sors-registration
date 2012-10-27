@@ -1,3 +1,8 @@
+//---------------------------------------//
+// Name: SorsParent					     //
+// Purpose: parent class need for 		 //
+//		objectify ancestors				 //
+//---------------------------------------//
 package com.registration.sors.model;
 
 import javax.persistence.Id;
