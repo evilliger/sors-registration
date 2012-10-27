@@ -5,10 +5,10 @@
     	<div class="wrapper">
         <nav>
           <ul>
-          	<li><a href="index.html">Logout</a></li>
-            <li><a href="index-1.html">About Us</a></li>
-            <li><a href="index-4.html">FAQ</a></li>
-            <li><a href="index-5.html">Contact Us</a></li>
+          	<li><a href="/user/logout">Logout</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Contact Us</a></li>
           </ul>
         </nav>
       </div>

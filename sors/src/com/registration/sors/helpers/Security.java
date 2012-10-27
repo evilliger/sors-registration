@@ -31,6 +31,6 @@ public class Security {
 	// Parameters: session - the user's current session
 	// Return: boolean if there is a valid user in session
 	public static boolean isAuthenticated(List<String> roles, SystemSession session){
-		return true;//(session != null && session.isAuthenticated() && roles.contains(session.getUser().getRole()));
+		return (session != null && session.isAuthenticated() && roles.contains(session.getUser().getRole()));
 	}
 }

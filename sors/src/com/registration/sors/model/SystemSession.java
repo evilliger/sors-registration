@@ -5,9 +5,12 @@
 //-----------------------------------//
 package com.registration.sors.model;
 
+import java.io.Serializable;
+
 @SuppressWarnings("javadoc")
-public class SystemSession {
-	
+public class SystemSession implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	User user;
 	boolean authenticated;
 

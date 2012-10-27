@@ -49,9 +49,12 @@ public class AthleteController {
 	//		list page - if user is logged in and authorized
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init(HttpSession session) {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
 			return new ModelAndView("redirect:/user/login");
 		}
@@ -152,6 +155,8 @@ public class AthleteController {
 		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
+		
+		a = dao.find(a.getId());
 		
 		// Errors will be handle here
 		if (!errors.hasErrors()) {

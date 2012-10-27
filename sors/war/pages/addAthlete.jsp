@@ -2,7 +2,7 @@
 <%@ page import="com.registration.sors.model.Athlete" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
 <tag:header/>
-
+<script type="text/javascript" src="../js/addAth.js"></script>
  <section id="content">
   	<div class="container_24">
     	<div class="row">

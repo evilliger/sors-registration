@@ -115,10 +115,14 @@ public class UserDAO {
 	public void init() {
 		Objectify ofy = this.objectifyFactory.begin();
 		User u = new User();
+		u.setRole("A");
+		u.setActive("T");
+		u.setLname("Schaub");
+		u.setFname("Steven");
+		u.setEmail("Schaub");
+		u.setPword("StevieIsTheBomb");
 		u.setId(User.parentId);
 		ofy.put(u);
-		
-		
 	}
 	
 	public void add(List<User> a) {

@@ -39,7 +39,15 @@ public class UserController {
 	
 	List<String> roles = Arrays.asList("A");
 	
-	// Facilitates the login of a user
+	// Name: loginUser
+	// Purpose: Facilitates the login of a user
+	// Parameters: session - the current user session
+	//			req - the login data
+	//			model - the model for the home page
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		add page - the list of athletes
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String loginUser(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
 		
@@ -57,7 +65,15 @@ public class UserController {
 		}
 	}
 	
-	// Facilitates the login of a user
+	// Name: loginUserGet
+	// Purpose: Facilitates the login of a user
+	// Parameters: session - the current user session
+	//			req - the login data
+	//			model - the model for the home page
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		add page - the list of athletes
+	 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String loginUserGet(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
 		
@@ -73,6 +89,20 @@ public class UserController {
 			session.setAttribute("system", new SystemSession(u,true));
 			return "redirect:/athlete/list";
 		}
+	}
+	
+	// Name: loginUserGet
+	// Purpose: Facilitates the logout of a user
+	// Parameters: session - the current user session
+	//			req - the login data
+	//			model - the model for the home page
+	// Return: page redirect
+	//		login page
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logoutUser(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
+		session.invalidate();
+		return "home";
 	}
 	
 	// Name: getAddUserPage
@@ -110,17 +140,6 @@ public class UserController {
 	
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init(HttpSession session) {
-		
-		SystemSession ss = (SystemSession)session.getAttribute("system");
-		
-		if(!Security.isAuthenticated(this.roles, ss)){
-		
-			session.invalidate();
-			
-			// Right now it takes the user back to the Login Page no matter what
-			return new ModelAndView("redirect:/user/login");
-		}
-		
 		// Errors will be handled here
 		this.dao.init();
 		return new ModelAndView("redirect:list");
@@ -194,6 +213,8 @@ public class UserController {
 		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
+		
+		u = dao.find(u.getId());
 		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
