@@ -23,6 +23,8 @@ public class ClassroomDAO {
 	@Autowired
 	private ObjectifyFactory objectifyFactory;
 	
+	public ClassroomDAO() {}
+	
 	// init 
 	// to initialize the dao
 	

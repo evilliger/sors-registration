@@ -16,7 +16,7 @@ import com.googlecode.objectify.annotation.Entity;
 @Entity
 public class Heat {
 	@Id
-	int heatID;
+	long heatID;
 	String gender;
 	int division;
 	int minAge;
@@ -24,7 +24,9 @@ public class Heat {
 	Date time;
 	int eventID;
 	
-	public int getHeatID() {
+	public Heat() {}
+	
+	public long  getHeatID() {
 		return heatID;
 	}
 

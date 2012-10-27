@@ -17,7 +17,7 @@ import com.googlecode.objectify.annotation.Entity;
 public class HeatSpec {
 	
 	@Id
-	int HeatSpecID;
+	long HeatSpecID;
 	String gender;
 	int minAge;
 	int maxAge;
@@ -26,7 +26,9 @@ public class HeatSpec {
 	int maxInHeat;
 	int eventID;
 	
-	public int getHeatSpecID() {
+	public HeatSpec() {}
+	
+	public long getHeatSpecID() {
 		return HeatSpecID;
 	}
 

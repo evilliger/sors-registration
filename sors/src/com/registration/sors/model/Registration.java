@@ -16,13 +16,15 @@ import com.googlecode.objectify.annotation.Entity;
 @Entity
 public class Registration {
 	@Id
-	int regID;
+	long regID;
 	double score;
 	int rank;
 	int athleteID;
 	int eventID;
 	
-	public int getRegID() {
+	public Registration() {}
+	
+	public long getRegID() {
 		return regID;
 	}
 

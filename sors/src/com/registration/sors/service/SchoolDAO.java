@@ -8,11 +8,12 @@ package com.registration.sors.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.registration.sors.model.School;
-
+@Service
 @SuppressWarnings("javadoc")
 public class SchoolDAO {
 

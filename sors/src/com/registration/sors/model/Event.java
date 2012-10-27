@@ -7,18 +7,24 @@
 //--------------------------------------//
 package com.registration.sors.model;
 
+import javax.persistence.Id;
+
 import com.googlecode.objectify.annotation.Entity;
 
 @SuppressWarnings("javadoc")
 @Entity
 public class Event {
-	int eventID;
+	
+	@Id
+	long eventID;
 	String eventName;
 	double scoreMin;
 	double scoreMax;
 	String scoreUnits;
 	
-	public int getEventID() {
+	public Event() {}
+
+	public long getEventID() {
 		return eventID;
 	}
 

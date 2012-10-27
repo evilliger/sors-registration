@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Classroom;
 import com.registration.sors.model.Event;
@@ -15,30 +13,11 @@ import com.registration.sors.model.HeatSpec;
 import com.registration.sors.model.Registration;
 import com.registration.sors.model.School;
 import com.registration.sors.model.User;
-import com.registration.sors.service.AthleteDAO;
-import com.registration.sors.service.ClassroomDAO;
-import com.registration.sors.service.EventDAO;
-import com.registration.sors.service.HeatDAO;
-import com.registration.sors.service.HeatSpecDAO;
-import com.registration.sors.service.RegistrationDAO;
-import com.registration.sors.service.SchoolDAO;
-import com.registration.sors.service.UserDAO;
-
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 
 public class ImportHandler {
-	
-	
-	//@Autowired private AthleteDAO AthleteDAO;
-	@Autowired private ClassroomDAO ClassroomDAO;
-	@Autowired private EventDAO EventDAO;
-	@Autowired private HeatDAO HeatDAO;
-	@Autowired private HeatSpecDAO HeatSpecDAO;
-	@Autowired private RegistrationDAO RegistrationDAO;
-	@Autowired private SchoolDAO SchoolDAO;
-	@Autowired private UserDAO UserDAO;
 	
 	
 	// Returns a list of athletes created from a CSV string
@@ -68,8 +47,6 @@ public class ImportHandler {
 	    //Parse the CSV
 	    List<Athlete> l = bean.parse(strategy, new StringReader(data));
 	    
-	    AthleteDAO AthDAO = new AthleteDAO();
-	    AthDAO.add(l);
 	    return l;
 	}
 

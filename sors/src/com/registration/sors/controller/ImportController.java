@@ -5,12 +5,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.registration.sors.handler.ImportHandler;
+import com.registration.sors.service.*;
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Classroom;
 import com.registration.sors.model.Event;
@@ -25,14 +27,14 @@ import com.registration.sors.model.User;
 @RequestMapping("/import")
 public class ImportController {
 	
-//	@Autowired private AthleteDAO AthleteDAO;
-//	@Autowired private ClassroomDAO ClassroomDAO;
-//	@Autowired private EventDAO EventDAO;
-//	@Autowired private HeatDAO HeatDAO;
-//	@Autowired private HeatSpecDAO HeatSpecDAO;
-//	@Autowired private RegistrationDAO RegistrationDAO;
-//	@Autowired private SchoolDAO SchoolDAO;
-//	@Autowired private UserDAO UserDAO;
+	@Autowired private AthleteDAO AthleteDAO;
+	@Autowired private ClassroomDAO ClassroomDAO;
+	@Autowired private EventDAO EventDAO;
+	@Autowired private HeatDAO HeatDAO;
+	@Autowired private HeatSpecDAO HeatSpecDAO;
+	@Autowired private RegistrationDAO RegistrationDAO;
+	@Autowired private SchoolDAO SchoolDAO;
+	@Autowired private UserDAO UserDAO;
 	
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
@@ -60,39 +62,38 @@ public class ImportController {
 		if (table.equals("athlete")) {
 			List<Athlete> l = imp.importAthletes(csv);
 			model.addAttribute("TableData", l);
+			AthleteDAO.add(l);
 		} else if (table.equals("classroom")) {
 			List<Classroom> l = imp.importClassrooms(csv);
 			model.addAttribute("TableData", l);
-			//ClassroomDAO.add(l);
+			ClassroomDAO.add(l);
 		} else if (table.equals("event")) {
 			List<Event> l = imp.importEvent(csv);
 			model.addAttribute("TableData", l);
-			//EventDAO.add(l);
+			EventDAO.add(l);
 		} else if (table.equals("heat")) {
 			List<Heat> l = imp.importHeat(csv);
 			model.addAttribute("TableData", l);
-			//HeatDAO.add(l);
+			HeatDAO.add(l);
 		} else if (table.equals("heatspec")) {
 			List<HeatSpec> l = imp.importHeatSpec(csv);
 			model.addAttribute("TableData", l);
-			//HeatSpecDAO.add(l);
+			HeatSpecDAO.add(l);
 		} else if (table.equals("registration")) {
 			List<Registration> l = imp.importRegistration(csv);
 			model.addAttribute("TableData", l);
-			//RegistrationDAO.add(l);
+			RegistrationDAO.add(l);
 		} else if (table.equals("school")) {
 			List<School> l = imp.importSchool(csv);
 			model.addAttribute("TableData", l);
-			//SchoolDAO.add(l);
+			SchoolDAO.add(l);
 		} else if (table.equals("user")) {
 			List<User> l = imp.importUser(csv);
 			model.addAttribute("TableData", l);
-			//UserDAO.add(l);
+			UserDAO.add(l);
 		}
 		
-		// Get it into the datastore
-		
-		return "validateImport";
+		return "redirect:/athlete/list";
 	}
 	
 }

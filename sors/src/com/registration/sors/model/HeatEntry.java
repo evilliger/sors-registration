@@ -20,6 +20,8 @@ public class HeatEntry {
 	int maxInHeat;
 	double score;
 	
+	public HeatEntry() {}
+	
 	public int getEventID() {
 		return eventID;
 	}

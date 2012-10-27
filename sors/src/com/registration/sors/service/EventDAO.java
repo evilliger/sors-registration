@@ -8,17 +8,20 @@ package com.registration.sors.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.registration.sors.model.Event;
 
+@Service
 @SuppressWarnings("javadoc")
 public class EventDAO {
 	
 	@Autowired
 	private ObjectifyFactory objectifyFactory;
-
+	
+	public EventDAO() {}
 	// Add an Event to DataStore
 	// Parameters: Event e - Event to add
 	// Return: Event - newly added Event
