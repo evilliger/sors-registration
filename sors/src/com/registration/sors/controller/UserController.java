@@ -81,7 +81,8 @@ public class UserController {
 		String username = (String) req.getParameter("username");
 		String password = (String) req.getParameter("pswd");
 		
-		User u = this.dao.find(username);		
+		User u = this.dao.find(username);
+		
 		if (!Security.authenticate(u,password)) {
 			model.addAttribute("AuthError", "Invalid username or password.");
 			return "home";
@@ -214,10 +215,9 @@ public class UserController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
-		u = dao.find(u.getId());
-		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
+			Long i = u.getId();
 			u = this.dao.find(u.getId());
 			model.addAttribute("user", u);
 		} else {
@@ -321,7 +321,10 @@ public class UserController {
 		}
 		
 		// Errors will be handled here
-		model.addAttribute("userList", this.dao.loadAll());
+		
+		List<User> list = this.dao.loadAll();
+		list.remove(0);
+		model.addAttribute("userList",list);
 		return "listUser";
 	}
 }

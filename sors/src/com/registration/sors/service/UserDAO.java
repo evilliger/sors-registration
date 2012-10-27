@@ -102,18 +102,24 @@ public class UserDAO {
 	// Check this method with Josh and see if it will work
 	
 	public User find(String email) {
-		try {
-			Objectify ofy = this.objectifyFactory.begin();
-			User u = ofy.query(User.class).ancestor(new Key<User>(User.class, User.parentId)).filter("email", email).get();
-			return u;
-		} catch (Exception e) {
-			return null;
-		}
+		if(email != null  && !email.equals("")){
+			try {
+				Objectify ofy = this.objectifyFactory.begin();
+				User u = ofy.query(User.class).ancestor(new Key<User>(User.class, User.parentId)).filter("email", email).get();
+				return u;
+			} catch (Exception e) {
+				return null;
+			}
+		} else return null;
 	}
 	
 	// For Dev ONLY
 	public void init() {
 		Objectify ofy = this.objectifyFactory.begin();
+		User parent = new User();
+		parent.setId(User.parentId);
+		ofy.put(parent);
+		
 		User u = new User();
 		u.setRole("A");
 		u.setActive("T");
@@ -121,7 +127,7 @@ public class UserDAO {
 		u.setFname("Steven");
 		u.setEmail("Schaub");
 		u.setPword("StevieIsTheBomb");
-		u.setId(User.parentId);
+		u.setParent(new Key<User>(User.class, User.parentId));
 		ofy.put(u);
 	}
 	

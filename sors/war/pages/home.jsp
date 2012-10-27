@@ -19,6 +19,6 @@
             <tr><td></td><td><input type="Submit" value="Login"></td></tr>
         </table>
     </form><br>
-    <a href="register.html">Request Access</a>
+    <a href="#">Request Access</a>
 </section>
 <tag:footer/>

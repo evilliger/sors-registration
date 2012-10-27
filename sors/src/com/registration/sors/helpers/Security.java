@@ -23,7 +23,7 @@ public class Security {
 	//			pword - password to check
 	// Return: boolean if the password matches or not
 	public static boolean authenticate(User u, String pword){
-		return (u != null && u.getPword().equals(pword));
+		return (u != null && u.getPword() != null && u.getPword().equals(pword));
 	}
 
 	// Name: isAutheticated
