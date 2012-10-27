@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Event;
 
 @SuppressWarnings("javadoc")

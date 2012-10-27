@@ -30,6 +30,7 @@ public class Heat {
 
 	public void setHeatID(int headID) {
 		this.heatID = headID;
+	}
 
 	public String getGender() {
 		return gender;
