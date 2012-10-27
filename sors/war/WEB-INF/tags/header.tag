@@ -39,7 +39,7 @@
     <div class="header-bg">
       <div class="container_24">
       	<div>
-        	<a href="/index.html"><span id="logo">SORS</span></a>
+        	<a href="#"><span id="logo">SORS</span></a>
           <span id="sub-logo">Special Olympics Registration System</span>
         </div>
       </div>
