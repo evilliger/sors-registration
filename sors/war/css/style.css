@@ -13,7 +13,8 @@ body {
 html { min-width:980px;}
 html, body { height:100%;}
 
-
+.errors { color: red }
+table { width: 100%; }
 
 /* Global Structure ============================================================= */
 .container_24 {

@@ -14,6 +14,7 @@
   <script type="text/javascript" src="../../js/Bell_Gothic_Std_700.font.js"></script>
   <script type="text/javascript" src="../../js/cufon-replace.js"></script>  
   <script type="text/javascript" src="../../js/jquery.tablesorter.js"></script> 
+  <script type="text/javascript" src="../../js/sors.js"></script> 
   <script src="../../js/jquery.ez-pinned-footer.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" type="text/css" href="../../css/oldstyle.css"/>
   <!--[if lt IE 7]>
@@ -22,15 +23,6 @@
   <!--[if lt IE 9]>
   	<script type="text/javascript" src="../../js/html5.js"></script>
   <![endif]-->
-  <script type="text/javascript">
-  $(document).ready(function() {
-    $("#footer").pinFooter("relative"); 
-    if($("#content").height() < $(window).height()-200) {
-      $("#content").css("height", ($(window).height()-200) + "px");
-    }  
-    $("#ath_table").tablesorter({sortList: [[0,0]]});
-  });
-  </script>
 </head>
 
 <body>

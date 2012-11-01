@@ -71,18 +71,20 @@ public class AthleteController {
 	//		add page - page allowing the user to submit a new athlete
 	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddAthletePage(HttpSession session) {
-		
+	public String getAddAthletePage(HttpSession session, ModelMap model) {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		
 		if(!Security.isAuthenticated(this.roles, ss)){
-			
-			session.invalidate();
-			
+			session.invalidate();	
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
-		return "addAthlete";
+		
+		Athlete a = new Athlete();
+		
+		model.addAttribute("athlete", a);
+		model.addAttribute("add", true);
+		
+		return "maintainAthlete";
 	}
 
 	
@@ -95,7 +97,7 @@ public class AthleteController {
 	//		list page - when data is added
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public ModelAndView add(HttpServletRequest req, HttpSession session) throws Exception {
+	public String add(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
@@ -104,7 +106,7 @@ public class AthleteController {
 			session.invalidate();
 			
 			// Right now it takes the user back to the Login Page no matter what
-			return new ModelAndView("redirect:/user/login");
+			return "redirect:/user/login";
 		}
 		
 		Athlete a = new Athlete();
@@ -116,16 +118,17 @@ public class AthleteController {
 		
 		//Errors will be handled here
 		if (!errors.hasErrors()) {
-			
 			if(this.dao.add(a) == null) {
 				throw new Exception ("Error adding Athlete to datastore");
 			}
 			
 		} else {
-			throw new Exception ("Supply required information.");
+			model.addAttribute("athlete", a);
+			model.addAllAttributes(errors.getModel()); 
+			model.addAttribute("add", true);
+			return "maintainAthlete";
 		}
-		return new ModelAndView("redirect:list");
-
+		return "redirect:list";
 	}
 	
 	// Name: getUpdateAthletePage
@@ -160,11 +163,13 @@ public class AthleteController {
 		
 		// Errors will be handle here
 		if (!errors.hasErrors()) {
-				model.addAttribute("athlete", a);
+			model.addAttribute("athlete", a);
 		} else {
-			throw new Exception ("Helpful exception code");
+			model.addAttribute("athlete", a);
+			model.addAllAttributes(errors.getModel()); 
+			return "maintainAthlete";
 		}
-		return "updateAthlete";
+		return "maintainAthlete";
 	}
 	
 	
@@ -177,7 +182,7 @@ public class AthleteController {
 	//		list page - when data is updated
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(HttpServletRequest req, HttpSession session) throws Exception {
+	public String update(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
@@ -199,7 +204,9 @@ public class AthleteController {
 		if (!errors.hasErrors()) {
 			this.dao.update(a);
 		} else {
-			throw new Exception ("Supply required information.");
+			model.addAttribute("athlete", a);
+			model.addAllAttributes(errors.getModel()); 
+			return "maintainAthlete";
 		}
 		
 		// return to list
