@@ -20,6 +20,9 @@
 				</c:forEach>
 			</ul>
 		</form:errors>
+		
+		<form:hidden path="id" />
+
 		<br>
 		<br>
 		<table>
