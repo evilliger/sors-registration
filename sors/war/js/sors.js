@@ -20,7 +20,7 @@ $(function() {
     $('#cancel').click(function(){
         r = confirm('Are you sure you want to cancel the editing of this record?')    
         if(r){
-            window.location.href="/athlete/list"
+            window.location.href="list"
         }
         return false;
     });
