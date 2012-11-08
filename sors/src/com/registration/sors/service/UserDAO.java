@@ -125,7 +125,7 @@ public class UserDAO {
 		u.setLname("Schaub");
 		u.setFname("Steven");
 		u.setEmail("Schaub");
-		u.setPword("StevieIsTheBomb");
+		u.setPword("x");
 		u.setParent(new Key<User>(User.class, User.parentId));
 		ofy.put(u);
 	}
