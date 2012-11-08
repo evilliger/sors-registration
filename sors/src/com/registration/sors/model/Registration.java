@@ -25,7 +25,10 @@ public class Registration {
 	int rank;
 	Long athleteID;
 	Long eventID;
+	Long heatID;
 	
+
+
 	@Parent
 	Key<Registration> parent;
 	
@@ -77,5 +80,12 @@ public class Registration {
 
 	public void setEventID(Long eventID) {
 		this.eventID = eventID;
+	}
+	public Long getHeatID() {
+		return heatID;
+	}
+
+	public void setHeatID(Long heatID) {
+		this.heatID = heatID;
 	}
 }

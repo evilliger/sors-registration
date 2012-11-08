@@ -24,7 +24,7 @@ public class HeatSpec {
 	Date time;
 	int numHeats;
 	int maxInHeat;
-	int eventID;
+	Long eventID;
 	
 	public HeatSpec() {}
 	
@@ -84,15 +84,15 @@ public class HeatSpec {
 		this.maxInHeat = maxInHeat;
 	}
 
-	public int getEventID() {
+	public Long getEventID() {
 		return eventID;
 	}
 
-	public void setEventID(int eventID) {
+	public void setEventID(Long eventID) {
 		this.eventID = eventID;
 	}
 
-	public HeatSpec(String g, int minA, int maxA, Date t, int num, int max, int e){
+	public HeatSpec(String g, int minA, int maxA, Date t, int num, int max, Long e){
 		gender = g;
 		minAge = minA;
 		maxAge = maxA;
