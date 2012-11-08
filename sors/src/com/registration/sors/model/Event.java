@@ -8,64 +8,84 @@
 package com.registration.sors.model;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Parent;
 
 @SuppressWarnings("javadoc")
 @Entity
-public class Event {
+public class Event implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	@Id
-	long eventID;
-	String eventName;
-	double scoreMin;
-	double scoreMax;
-	String scoreUnits;
+	Long id;
+	public static Long parentId = new Long(1);
 	
+
+	String name;
+	double min;
+	double max;
+	String units;
+	
+	@Parent
+	Key<Event> parent;
+
 	public Event() {}
-
-	public long getEventID() {
-		return eventID;
+	
+	public Key<Event> getParent() {
+		return parent;
 	}
 
-	public void setEventID(int eventID) {
-		this.eventID = eventID;
+	public void setParent(Key<Event> parent) {
+		this.parent = parent;
 	}
 
-	public String getEventName() {
-		return eventName;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public double getScoreMin() {
-		return scoreMin;
+	public String getName() {
+		return name;
 	}
 
-	public void setScoreMin(double scoreMin) {
-		this.scoreMin = scoreMin;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public double getScoreMax() {
-		return scoreMax;
+	
+	public double getMin() {
+		return min;
 	}
 
-	public void setScoreMax(double scoreMax) {
-		this.scoreMax = scoreMax;
+	public void setMin(double min) {
+		this.min = min;
 	}
 
-	public String getScoreUnits() {
-		return scoreUnits;
+	public double getMax() {
+		return max;
 	}
 
-	public void setScoreUnits(String scoreUnits) {
-		this.scoreUnits = scoreUnits;
+	public void setMax(double max) {
+		this.max = max;
+	}
+
+	public String getUnits() {
+		return units;
+	}
+
+	public void setUnits(String units) {
+		this.units = units;
 	}
 
 	public Event(String n, String su){
-		eventName = n;
-		scoreUnits = su;
+		name = n;
+		units = su;
 	}
 }

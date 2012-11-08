@@ -37,8 +37,7 @@ public class UserDAO {
 			
 		} catch (Exception e) {
 			return null;
-		}
-		
+		}		
 	}
 	
 	// Delete an User from DataStore

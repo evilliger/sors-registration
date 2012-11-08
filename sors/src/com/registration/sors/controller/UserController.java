@@ -249,7 +249,7 @@ public class UserController {
 		User u = new User();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(u, "user");
-		binder.setRequiredFields(new String[] {"id","title", "fname", "lname", "pword"});
+		binder.setRequiredFields(new String[] {"id", "title", "fname", "lname", "pword"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
