@@ -10,26 +10,41 @@ package com.registration.sors.model;
 
 import javax.persistence.Id;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Parent;
 
 @SuppressWarnings("javadoc")
 @Entity
 public class Registration {
 	@Id
-	long regID;
+	Long id;
+	public static Long parentId = new Long(1);
+	
 	double score;
 	int rank;
-	int athleteID;
-	int eventID;
+	Long athleteID;
+	Long eventID;
+	
+	@Parent
+	Key<Registration> parent;
 	
 	public Registration() {}
 	
-	public long getRegID() {
-		return regID;
+	public Key<Registration> getParent() {
+		return parent;
 	}
 
-	public void setRegID(int regID) {
-		this.regID = regID;
+	public void setParent(Key<Registration> parent) {
+		this.parent = parent;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public double getScore() {
@@ -48,24 +63,19 @@ public class Registration {
 		this.rank = rank;
 	}
 
-	public int getAthleteID() {
+	public Long getAthleteID() {
 		return athleteID;
 	}
 
-	public void setAthleteID(int athleteID) {
+	public void setAthleteID(Long athleteID) {
 		this.athleteID = athleteID;
 	}
 
-	public int getEventID() {
+	public Long getEventID() {
 		return eventID;
 	}
 
-	public void setEventID(int eventID) {
+	public void setEventID(Long eventID) {
 		this.eventID = eventID;
-	}
-
-	public Registration(int a, int e){
-		athleteID = a;
-		eventID = e;
 	}
 }

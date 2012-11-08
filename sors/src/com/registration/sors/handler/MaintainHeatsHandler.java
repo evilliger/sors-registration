@@ -53,7 +53,7 @@ public class MaintainHeatsHandler {
 		List<HeatEntry> heatEntryList = new ArrayList<HeatEntry>();
 		for(int i = 0; i < regList.size(); ++i){
 			Registration r = regList.get(i);
-			Athlete a = athleteCodes.get(Integer.toString(r.getAthleteID()));
+			Athlete a = athleteCodes.get(r.getAthleteID().toString());
 			
 			//calculate the birthday....
 			Calendar cal1 = new GregorianCalendar();
@@ -130,7 +130,7 @@ public class MaintainHeatsHandler {
 	
 	public static void GenerateHeats(){
 		// 1. fill these lists
-		List<Registration> regList = RegistrationDAO.loadAll();
+		List<Registration> regList = null;//RegistrationDAO.loadAll();
 		List<HeatSpec> heatSpecList = HeatSpecDAO.loadAll();
 		AthleteDAO aDal = new AthleteDAO();
 		List<Athlete> athleteList = aDal.loadAll();
