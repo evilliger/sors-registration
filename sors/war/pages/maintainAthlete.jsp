@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.registration.sors.model.Athlete" %>
 <%@ page import="com.registration.sors.model.Event" %>
+<%@ page import="com.registration.sors.model.User" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -12,7 +13,7 @@
    	<div class="row">
      	<div class="wrapper">
      	
-     	<% boolean isAdmin = request.getAttribute("user").equals("A"); %>
+     	<% boolean isAdmin = ((User)request.getAttribute("user")).getRole().equals("A"); %>
 
 		<form:form commandName='athlete' action='<%= (request.getAttribute("add") != null) ? "add": "update" %>'>
 		
@@ -42,7 +43,7 @@
 						<form:option value="1" label="University of Southern Kansas" />
 						<form:option value="2" label="Central Michigan College" />
 					</form:select>
-				<form:errors path="category" cssClass="errors" /></td>
+				<form:errors path="" cssClass="errors" /></td>
 			</tr>
           	<tr>
 				<td>Class:</td>
