@@ -21,8 +21,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.registration.sors.helpers.Security;
 import com.registration.sors.model.Athlete;
+import com.registration.sors.model.Event;
 import com.registration.sors.model.SystemSession;
 import com.registration.sors.service.AthleteDAO;
+import com.registration.sors.service.EventDAO;
 
 @Controller
 @RequestMapping("/athlete")
@@ -35,7 +37,8 @@ import com.registration.sors.service.AthleteDAO;
 //-------------------------------------------//
 public class AthleteController {
 	
-	@Autowired private AthleteDAO dao;
+	@Autowired private AthleteDAO Athdao;
+	@Autowired private EventDAO Evdao;
 	
 	List<String> roles = Arrays.asList("A", "T");
 
@@ -58,7 +61,7 @@ public class AthleteController {
 			// Right now it takes the user back to the Login Page no matter what
 			return new ModelAndView("redirect:/user/login");
 		}
-		this.dao.init();
+		this.Athdao.init();
 		return new ModelAndView("redirect:list");
 	}
 	
@@ -80,7 +83,10 @@ public class AthleteController {
 		}
 		
 		Athlete a = new Athlete();
+		List<Event> events = this.Evdao.loadAll();
 		
+		model.addAttribute("user",ss.getUser());
+		model.addAttribute("events",events);
 		model.addAttribute("athlete", a);
 		model.addAttribute("add", true);
 		
@@ -116,13 +122,16 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
+		List<Event> events = this.Evdao.loadAll();
+		
 		//Errors will be handled here
 		if (!errors.hasErrors()) {
-			if(this.dao.add(a) == null) {
-				throw new Exception ("Error adding Athlete to datastore");
+			if(this.Athdao.add(a) == null) {
+				return "errorPageTemplate";
 			}
-			
 		} else {
+			model.addAttribute("user",ss.getUser());
+			model.addAttribute("events",events);
 			model.addAttribute("athlete", a);
 			model.addAllAttributes(errors.getModel()); 
 			model.addAttribute("add", true);
@@ -159,12 +168,15 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
-		a = dao.find(a.getId());
+		a = Athdao.find(a.getId());
+		List<Event> events = this.Evdao.loadAll();
 		
 		// Errors will be handle here
 		if (!errors.hasErrors()) {
 			model.addAttribute("athlete", a);
 		} else {
+			model.addAttribute("user",ss.getUser());
+			model.addAttribute("events", events);
 			model.addAttribute("athlete", a);
 			model.addAllAttributes(errors.getModel()); 
 			return "maintainAthlete";
@@ -200,10 +212,14 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
+		List<Event> events = this.Evdao.loadAll();
+		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
-			this.dao.update(a);
+			this.Athdao.update(a);
 		} else {
+			model.addAttribute("user",ss.getUser());
+			model.addAttribute("events", events);
 			model.addAttribute("athlete", a);
 			model.addAllAttributes(errors.getModel()); 
 			return "maintainAthlete";
@@ -237,7 +253,7 @@ public class AthleteController {
 		binder.bind(req);
 		//BindingResult errors = binder.getBindingResult();
 		// Errors will be handled here
-		this.dao.delete(a);
+		this.Athdao.delete(a);
 
 		// return to list
 		return "redirect:list";
@@ -266,7 +282,7 @@ public class AthleteController {
 		}
 		
 		// Errors will be handled here
-		model.addAttribute("athleteList", this.dao.loadAll());
+		model.addAttribute("athleteList", this.Athdao.loadAll());
 		return "listAthlete";
 	}
 }
