@@ -4,6 +4,7 @@
 //-------------------------------------------//
 package com.registration.sors.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -124,12 +125,17 @@ public class AthleteController {
 		
 		List<Event> events = this.Evdao.loadAll();
 		
+		
+		List<String> other_errors = new ArrayList<String>();
+		other_errors.add("BAD BAD BAD");
+		
 		//Errors will be handled here
 		if (!errors.hasErrors()) {
 			if(this.Athdao.add(a) == null) {
 				return "errorPageTemplate";
 			}
 		} else {
+			model.addAttribute("other_errors",other_errors);
 			model.addAttribute("user",ss.getUser());
 			model.addAttribute("events",events);
 			model.addAttribute("athlete", a);

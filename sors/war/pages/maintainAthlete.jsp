@@ -21,6 +21,10 @@
 				<c:forEach items="${messages}" var="message">
 					<li>${message}</li>
 				</c:forEach>
+				<c:forEach items="${other_errors}" var="error">
+					<li>${error}</li>
+				</c:forEach>
+				
 			</ul>
 		</form:errors>
 		
@@ -102,6 +106,7 @@
 	                	<option value="">None</option>
 	                	<% for (Event e : events) { %>
 	                    <%="<option value='" + e.getId() + "'>" + e.getName() + "</option>" %>
+	                    <input type="hidden" id="<%=e.getId()%>" value="<%=e.getUnits()%>"/>
 	                    <% } %>
 	                </select>
 	                <span id="pscore" class="hidden">
@@ -114,10 +119,11 @@
             <tr id="sevent" class="hidden">
             	<td>Event Two:</td>
             	<td>
-	                <select id="sevent" name="sevent">
-	                    <option value="">None</option>
-	                    <% for (Event e : events) { %>
+	                <select id="ssevent" name="sevent">
+	                	<option value="">None</option>
+	                	<% for (Event e : events) { %>
 	                    <%="<option value='" + e.getId() + "'>" + e.getName() + "</option>" %>
+	                    <input type="hidden" id="<%=e.getId()%>" value="<%=e.getUnits()%>"/>
 	                    <% } %>
 	                </select>
 	                <span id="sscore" class="hidden">

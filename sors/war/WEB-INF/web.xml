@@ -22,7 +22,11 @@
 	
 	<error-page>
     	<error-code>404</error-code>
-    	<location>/errors/404.html</location>
+    	<location>/errors/error.html</location>
+	</error-page>
+	<error-page>
+    	<error-code>503</error-code>
+    	<location>/errors/error.html</location>
 	</error-page>
 	
 	<welcome-file-list>

@@ -7,14 +7,14 @@ $(function() {
    // Primary event select
    $('#pevent').change(function(){
         $('#pscore').attr('class','');
-        show_units('#punits', $('#pevent').val());
+        show_units("#punits",$("#" + $('#pevent').val()).val());
         $("#sevent").attr  ('class','');
     });
 
     //Second event  select
     $('#sevent').change(function(){
         $('#sscore').attr('class','');
-        show_units('#sunits', $('#sevent').val());
+        show_units("#sunits",$("#" + $('#ssevent').val()).val());
     });
     // Cancel button
     $('#cancel').click(function(){
@@ -27,12 +27,15 @@ $(function() {
 });
         
 // Logic for properly displayed units
-function show_units(id,num){
-    if (num == 1 ){
-        $(id).html(' units in seconds');
-    }else if (num == 11 || 14){
+function show_units(id,c){
+    if (c === "F" ){
+    	$(id).html(" units in feet");
+    }else if (c === "M"){
         $(id).html(' units in meters');
+    }else if (c === "S"){
+        $(id).html(' units in seconds');
     }
+    
 
 }
 

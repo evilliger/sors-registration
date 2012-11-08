@@ -258,7 +258,6 @@ public class EventController {
 		// Errors will be handled here
 		
 		List<Event> list = this.dao.loadAll();
-		list.remove(0);
 		model.addAttribute("eventList",list);
 		return "listEvent";
 	}

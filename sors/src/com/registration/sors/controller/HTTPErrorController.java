@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HTTPErrorController {
 
-    @RequestMapping(value="/errors/404.html")
-    public String handle404() {
+    @RequestMapping(value="/errors/error.html")
+    public String handleError() {
     	return "errorPageTemplate";
     }
 

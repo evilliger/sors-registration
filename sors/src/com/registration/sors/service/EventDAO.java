@@ -74,11 +74,10 @@ public class EventDAO {
 	public List<Event> loadAll(){
 		Objectify ofy = this.objectifyFactory.begin();
 		List<Event> list = new ArrayList<Event>();
-		
 		// The following line needs to be executed for every classroomId of every school in the system.
 		list.addAll(ofy.query(Event.class).ancestor(new Key<Event>(Event.class,Event.parentId)).list());
+		list.remove(0);
 		return list;
-
 	}
 	
 	// find an Event whose eventID is id
