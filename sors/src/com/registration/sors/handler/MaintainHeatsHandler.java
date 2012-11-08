@@ -37,10 +37,67 @@ public class MaintainHeatsHandler {
 	private static HeatSpecDAO heatSpecDAO;
 	private static HeatDAO heatDAO;
 	
+	
+	
+	private static int findBdate(Date bday){
+		//calculate the birthday....
+		Calendar cal1 = new GregorianCalendar();
+	    Calendar cal2 = new GregorianCalendar();
+	    int age = 0;
+	    int factor = 0; 
+	    cal1.setTime(bday);
+	    cal2.setTime(new Date());
+	    if(cal2.get(Calendar.DAY_OF_YEAR) < cal1.get(Calendar.DAY_OF_YEAR)) {
+	          factor = -1; 
+	    }
+	    age = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR) + factor;
+		return age;
+	}
+	
+	private static Dictionary<String,Event> getEventDictionary(){
+		Dictionary<String,Event>eventList = new Hashtable<String,Event>();
+		List<Event>eList = eventDAO.loadAll();
+		for(int i = 0; i < eList.size(); ++i){
+			eventList.put(eList.get(i).getId().toString(), eList.get(i));		
+		}
+		return eventList;
+	}
+	
+	public static Dictionary<String,List<Registration>> getRegDictionary(){
+		Dictionary<String,List<Registration>> regList = new Hashtable<String,List<Registration>>();
+		List<Registration>rList = regDAO.loadAll();
+		for(int i = 0; i < rList.size(); ++i){
+			Registration r = rList.get(i);
+			List<Registration> temp = regList.get(r.getHeatID().toString());
+			if(temp == null){
+				temp = new ArrayList<Registration>();
+			}
+			temp.add(r);
+			regList.put(r.getHeatID().toString(), temp);
+		}
+		return regList;
+	
+	}
+	public static Dictionary<String,Athlete> getAthleteDictionary(){
+		Dictionary<String,Athlete>athleteCodes = new Hashtable<String,Athlete>();
+		
+		List<Athlete>aList = athDAO.loadAll();
+		// turn athlete list into dictionary
+		for(int i = 0; i < aList.size(); ++i){
+			Athlete a = aList.get(i);
+			athleteCodes.put(Long.toString(a.getId()), a);
+		}
+		return athleteCodes;
+	}
+	
+	
+	
 	// Turn a List of HeatSpec into a dictionary
 	// parameters: heatSpecList - the list to turn into dictionary
 	// return: a dictionary created from parameter
-	private static Dictionary<String, List<HeatSpec>> getHeatSpecDictionary(List<HeatSpec> heatSpecList){
+	private static Dictionary<String, List<HeatSpec>> getHeatSpecDictionary(){
+		List<HeatSpec>heatSpecList = heatSpecDAO.loadAll();
+		
 		Dictionary<String,List<HeatSpec>> specList = new Hashtable<String,List<HeatSpec>>();
 		for(int i = 0; i < heatSpecList.size(); ++i){
 			HeatSpec h = heatSpecList.get(i);
@@ -53,46 +110,8 @@ public class MaintainHeatsHandler {
 		}
 		return specList;
 	}
-	// generate a list of heatentrys
-	// parameters: regList - list of registraitons
-	//				athleteCodes - dictionary of athletes
-	//				specList - dictionary of heat specifications
-	// return: list of HeatEntries
-	private static List<HeatEntry> getHeatEntryList(List<Registration> regList, Dictionary<String,Athlete>athleteCodes, Dictionary<String,List<HeatSpec>> specList){
-		List<HeatEntry> heatEntryList = new ArrayList<HeatEntry>();
-		for(int i = 0; i < regList.size(); ++i){
-			Registration r = regList.get(i);
-			Athlete a = athleteCodes.get(r.getAthleteID().toString());
-			
-			//calculate the birthday....
-			Calendar cal1 = new GregorianCalendar();
-		    Calendar cal2 = new GregorianCalendar();
-		    int age = 0;
-		    int factor = 0; 
-		    cal1.setTime(a.getBdate());
-		    cal2.setTime(new Date());
-		    if(cal2.get(Calendar.DAY_OF_YEAR) < cal1.get(Calendar.DAY_OF_YEAR)) {
-		          factor = -1; 
-		    }
-		    age = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR) + factor;
-		    
-		    // Determine the specs for the event for the person
-			List<HeatSpec>EventSpecsList = specList.get(r.getEventID());
-			
-			for(int j = 0; j < EventSpecsList.size(); ++j){
-				HeatSpec s = EventSpecsList.get(i);
-				if(age >= s.getMinAge() && age <= s.getMaxAge() && a.getGender() == s.getGender()){
-					heatEntryList.add(new HeatEntry(s.getEventID(),s.getMinAge(),s.getMaxAge(),s.getTime(),s.getGender(),r.getScore(),r.getId()));
-					break;
-				}
-			}
-			
-			
-		}
-		// sort the entries
-		heatEntryList = sortHeatEntries(heatEntryList);
-		return heatEntryList;
-	}
+	
+
 	private static List<HeatEntry> sortHeatEntries(List<HeatEntry> heatEntryList){
 		// sort the heat entry list by event id
 		// then time
@@ -136,30 +155,51 @@ public class MaintainHeatsHandler {
 		});
 		return heatEntryList;
 	}
-	private static Dictionary<String,Event> getEventDictionary(){
-		Dictionary<String,Event>eventList = new Hashtable<String,Event>();
-		List<Event>eList = eventDAO.loadAll();
-		for(int i = 0; i < eList.size(); ++i){
-			eventList.put(eList.get(i).getId().toString(), eList.get(i));		
-		}
-		return eventList;
-	}
-	public static Dictionary<String,List<Registration>> getRegDictionary(){
-		Dictionary<String,List<Registration>> regList = new Hashtable<String,List<Registration>>();
-		List<Registration>rList = regDAO.loadAll();
-		for(int i = 0; i < rList.size(); ++i){
-			Registration r = rList.get(i);
-			List<Registration> temp = regList.get(r.getHeatID().toString());
-			if(temp == null){
-				temp = new ArrayList<Registration>();
-			}
-			temp.add(r);
-			regList.put(r.getHeatID().toString(), temp);
-		}
-		return regList;
 	
+	
+	
+	// generate a list of heatentrys
+	// parameters: regList - list of registraitons
+	//				athleteCodes - dictionary of athletes
+	//				specList - dictionary of heat specifications
+	// return: list of HeatEntries
+	private static List<HeatEntry> getHeatEntryList(){
+		
+		List<Registration> regList = regDAO.loadAll();
+		Dictionary<String,Athlete>athleteCodes = getAthleteDictionary();		
+		Dictionary<String,List<HeatSpec>> specList = getHeatSpecDictionary();
+		
+		
+		
+		List<HeatEntry> heatEntryList = new ArrayList<HeatEntry>();
+		for(int i = 0; i < regList.size(); ++i){
+			Registration r = regList.get(i);
+			Athlete a = athleteCodes.get(r.getAthleteID().toString());
+			
+			int age = findBdate(a.getBdate());
+		    
+		    // Determine the specs for the event for the person
+			List<HeatSpec>EventSpecsList = specList.get(r.getEventID());
+			
+			for(int j = 0; j < EventSpecsList.size(); ++j){
+				HeatSpec s = EventSpecsList.get(i);
+				if(age >= s.getMinAge() && age <= s.getMaxAge() && a.getGender() == s.getGender()){
+					heatEntryList.add(new HeatEntry(s.getEventID(),s.getMinAge(),s.getMaxAge(),s.getTime(),s.getGender(),r.getScore(),r.getId()));
+					break;
+				}
+			}			
+			
+		}
+		// sort the entries
+		heatEntryList = sortHeatEntries(heatEntryList);
+		return heatEntryList;
 	}
-	public static String ToString(Dictionary<String,Athlete>athList){
+	
+
+	
+	
+	public static String ToString(){
+		Dictionary<String,Athlete>athList = 
 		Dictionary<String,Event>eventList = getEventDictionary(); 
 		Dictionary<String,List<Registration>>regList = getRegDictionary();
 		List<Heat>heatList = heatDAO.loadAll();
@@ -179,22 +219,23 @@ public class MaintainHeatsHandler {
 			+ "<th>Age</th>"
 			+ "<th>Sex</th>"
 			+ "<th>Rank</th>"
-			+ "<th>Time</th>"
-			+ "<th>Div</th>";
-			
-			
+			+ "<th>Score</th>"
+			+ "<th>Div</th></tr>";
 			
 			List<Registration>rList = regList.get(h.getId().toString());
 			
 			for(int j = 0; j < rList.size(); ++i){
 				Registration r = rList.get(i);
 				Athlete a = athList.get(r.getAthleteID().toString());
-				html += "<td>" + a.getFname() + " " + a.getLname() + "</td>"
-						+ "<td>";
+				html += "<tr><td>" + a.getFname() + " " + a.getLname() + "</td>"
+						+ "<td>" + findBdate(a.getBdate()) + "</td>"
+						+ "<td>" + a.getGender() + "</td>"
+						+ "<td>" + r.getRank() + "</td>"
+						+ "<td>" + r.getScore() + "</td>"
+						+ "<td>" + h.getDivision() + "</td></tr>";
 			
 			}
-			
-		
+			html += "</table>";		
 		}
 		return html;
 	}
@@ -205,28 +246,14 @@ public class MaintainHeatsHandler {
 		heatSpecDAO = new HeatSpecDAO();
 		heatDAO = new HeatDAO();
 		
-		// 1. fill these lists
-		List<Registration> regList = regDAO.loadAll();
-		
-		List<HeatSpec> heatSpecList = heatSpecDAO.loadAll();
-		List<Athlete> athleteList = athDAO.loadAll();
-		
-		// 2. populate these dictionaries
-		Dictionary<String,Athlete>athleteCodes = new Hashtable<String,Athlete>();
-		Dictionary<String,List<HeatSpec>> specList = getHeatSpecDictionary(heatSpecList);
-		
-		// 3. turn athlete list into dictionary
-		for(int i = 0; i < athleteList.size(); ++i){
-			Athlete a = athleteList.get(i);
-			athleteCodes.put(Long.toString(a.getId()), a);
-		}
+
 	
-		// 4. Generate a list of heatentries based on registrations, athletes and heat specifications
-		// 5. sort the heatentry list
-		List<HeatEntry> heatEntryList = getHeatEntryList(regList,athleteCodes, specList);
+		// Generate a list of heatentries based on registrations, athletes and heat specifications
+		// and sort the heatentry list
+		List<HeatEntry> heatEntryList = getHeatEntryList();
 		
 	    
-		// 6. Generate the heats and add to datastore
+		// Generate the heats and add to datastore
 		for(int i = 0; i< heatEntryList.size(); ++i){
 			HeatEntry he = heatEntryList.get(i);
 			Heat h = new Heat(0, he.getGender(), he.getMinAge(), he.getMaxAge(), he.getEventID(),he.getTime());
