@@ -37,9 +37,9 @@ public class MaintainHeatsHandler {
 	private static HeatSpecDAO heatSpecDAO;
 	private static HeatDAO heatDAO;
 	
+	public MaintainHeatsHandler(){}
 	
-	
-	private static int findBdate(Date bday){
+	private  int findBdate(Date bday){
 		//calculate the birthday....
 		Calendar cal1 = new GregorianCalendar();
 	    Calendar cal2 = new GregorianCalendar();
@@ -54,7 +54,7 @@ public class MaintainHeatsHandler {
 		return age;
 	}
 	
-	private static Dictionary<String,Event> getEventDictionary(){
+	private  Dictionary<String,Event> getEventDictionary(){
 		Dictionary<String,Event>eventList = new Hashtable<String,Event>();
 		List<Event>eList = eventDAO.loadAll();
 		for(int i = 0; i < eList.size(); ++i){
@@ -63,7 +63,7 @@ public class MaintainHeatsHandler {
 		return eventList;
 	}
 	
-	public static Dictionary<String,List<Registration>> getRegDictionary(){
+	public  Dictionary<String,List<Registration>> getRegDictionary(){
 		Dictionary<String,List<Registration>> regList = new Hashtable<String,List<Registration>>();
 		List<Registration>rList = regDAO.loadAll();
 		for(int i = 0; i < rList.size(); ++i){
@@ -78,7 +78,7 @@ public class MaintainHeatsHandler {
 		return regList;
 	
 	}
-	public static Dictionary<String,Athlete> getAthleteDictionary(){
+	public  Dictionary<String,Athlete> getAthleteDictionary(){
 		Dictionary<String,Athlete>athleteCodes = new Hashtable<String,Athlete>();
 		
 		List<Athlete>aList = athDAO.loadAll();
@@ -95,24 +95,24 @@ public class MaintainHeatsHandler {
 	// Turn a List of HeatSpec into a dictionary
 	// parameters: heatSpecList - the list to turn into dictionary
 	// return: a dictionary created from parameter
-	private static Dictionary<String, List<HeatSpec>> getHeatSpecDictionary(){
+	private  Dictionary<String, List<HeatSpec>> getHeatSpecDictionary(){
 		List<HeatSpec>heatSpecList = heatSpecDAO.loadAll();
 		
 		Dictionary<String,List<HeatSpec>> specList = new Hashtable<String,List<HeatSpec>>();
 		for(int i = 0; i < heatSpecList.size(); ++i){
 			HeatSpec h = heatSpecList.get(i);
-			List<HeatSpec> temp = specList.get(h.getEventID().toString());
+			List<HeatSpec> temp = specList.get(h.getEventId().toString());
 			if(temp == null){
 				temp = new ArrayList<HeatSpec>();
 			}
 			temp.add(h);
-			specList.put(h.getEventID().toString(), temp);
+			specList.put(h.getEventId().toString(), temp);
 		}
 		return specList;
 	}
 	
 
-	private static List<HeatEntry> sortHeatEntries(List<HeatEntry> heatEntryList){
+	private  List<HeatEntry> sortHeatEntries(List<HeatEntry> heatEntryList){
 		// sort the heat entry list by event id
 		// then time
 		// then age
@@ -163,7 +163,7 @@ public class MaintainHeatsHandler {
 	//				athleteCodes - dictionary of athletes
 	//				specList - dictionary of heat specifications
 	// return: list of HeatEntries
-	private static List<HeatEntry> getHeatEntryList(){
+	private List<HeatEntry> getHeatEntryList(){
 		
 		List<Registration> regList = regDAO.loadAll();
 		Dictionary<String,Athlete>athleteCodes = getAthleteDictionary();		
@@ -184,7 +184,7 @@ public class MaintainHeatsHandler {
 			for(int j = 0; j < EventSpecsList.size(); ++j){
 				HeatSpec s = EventSpecsList.get(i);
 				if(age >= s.getMinAge() && age <= s.getMaxAge() && a.getGender() == s.getGender()){
-					heatEntryList.add(new HeatEntry(s.getEventID(),s.getMinAge(),s.getMaxAge(),s.getTime(),s.getGender(),r.getScore(),r.getId()));
+					heatEntryList.add(new HeatEntry(s.getEventId(),s.getMinAge(),s.getMaxAge(),s.getTime(),s.getGender(),r.getScore(),r.getId()));
 					break;
 				}
 			}			
@@ -198,8 +198,8 @@ public class MaintainHeatsHandler {
 
 	
 	
-	public static String ToString(){
-		Dictionary<String,Athlete>athList = 
+	public String ToString(){
+		Dictionary<String,Athlete>athList = getAthleteDictionary();
 		Dictionary<String,Event>eventList = getEventDictionary(); 
 		Dictionary<String,List<Registration>>regList = getRegDictionary();
 		List<Heat>heatList = heatDAO.loadAll();
@@ -239,12 +239,17 @@ public class MaintainHeatsHandler {
 		}
 		return html;
 	}
-	public static void GenerateHeats(){
+	public void GenerateHeats(){
 		regDAO = new RegistrationDAO();
 		athDAO = new AthleteDAO();
 		eventDAO = new EventDAO();
 		heatSpecDAO = new HeatSpecDAO();
 		heatDAO = new HeatDAO();
+		regDAO.init();
+		athDAO.init();
+		eventDAO.init();
+		heatSpecDAO.init();
+		heatDAO.init();
 		
 
 	
