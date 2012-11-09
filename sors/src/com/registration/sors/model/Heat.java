@@ -6,17 +6,26 @@
 //		in the datastore.				//
 //--------------------------------------//
 package com.registration.sors.model;
+import java.io.Serializable;
 import java.util.*;
 
 import javax.persistence.Id;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Parent;
 
 @SuppressWarnings("javadoc")
 @Entity
-public class Heat {
+public class Heat implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
+	
 	@Id
 	Long id;
+	public static Long parentId = new Long(1);
+	
 	String gender;
 	int division;
 	int minAge;
@@ -24,13 +33,22 @@ public class Heat {
 	Date time;
 	Long eventID;
 	
+	@Parent
+	Key<Heat> parent;
+	
 	public Heat() {}
 	
 	
 
+
+
+
 	public Long getId() {
 		return id;
 	}
+
+
+
 
 
 
@@ -40,9 +58,33 @@ public class Heat {
 
 
 
+
+
+
+	public static Long getParentId() {
+		return parentId;
+	}
+
+
+
+
+
+
+	public static void setParentId(Long parentId) {
+		Heat.parentId = parentId;
+	}
+
+
+
+
+
+
 	public String getGender() {
 		return gender;
 	}
+
+
+
 
 
 
@@ -52,9 +94,15 @@ public class Heat {
 
 
 
+
+
+
 	public int getDivision() {
 		return division;
 	}
+
+
+
 
 
 
@@ -64,9 +112,15 @@ public class Heat {
 
 
 
+
+
+
 	public int getMinAge() {
 		return minAge;
 	}
+
+
+
 
 
 
@@ -76,9 +130,15 @@ public class Heat {
 
 
 
+
+
+
 	public int getMaxAge() {
 		return maxAge;
 	}
+
+
+
 
 
 
@@ -88,9 +148,15 @@ public class Heat {
 
 
 
+
+
+
 	public Date getTime() {
 		return time;
 	}
+
+
+
 
 
 
@@ -100,15 +166,42 @@ public class Heat {
 
 
 
+
+
+
 	public Long getEventID() {
 		return eventID;
 	}
 
 
 
+
+
+
 	public void setEventID(Long eventID) {
 		this.eventID = eventID;
 	}
+
+
+
+
+
+
+	public Key<Heat> getParent() {
+		return parent;
+	}
+
+
+
+
+
+
+	public void setParent(Key<Heat> parent) {
+		this.parent = parent;
+	}
+
+
+
 
 
 

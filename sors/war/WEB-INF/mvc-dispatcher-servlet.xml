@@ -35,6 +35,7 @@
                 <value>com.registration.sors.model.Event</value>
                 <value>com.registration.sors.model.Heat</value>
                 <value>com.registration.sors.model.HeatEntry</value>
+                <value>com.registration.sors.model.HeatSpec</value>
                 <value>com.registration.sors.model.Registration</value>
                 <value>com.registration.sors.model.School</value>
                 <value>com.registration.sors.model.User</value>

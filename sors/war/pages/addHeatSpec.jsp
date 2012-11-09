@@ -14,9 +14,10 @@
 			<tr><td>Event:</td><td>
 			    <select id="eventId" name="eventId">
 			        <option value=""></option>
-			        <option value="1">50 Meter Dash</option>
-			        <option value="11">100 Meter Flash</option>
+			        <option value="122">50 Meter Dash</option>
+			        <option value="123">100 Meter Flash</option>
 			        <option value="14">Sock Challenge</option>
+			        
 			    </select>
 			</td></tr>
            	<tr><td>Gender:</td><td><input type="radio" name="gender" value="M"/>Male

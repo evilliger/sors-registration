@@ -1,5 +1,5 @@
 //-------------------------------------------//
-// Name: AthleteController					 //
+// Name: HeatController		    			 //
 // Purpose: Spring Cotroller				 //
 //-------------------------------------------//
 package com.registration.sors.controller;
@@ -19,25 +19,51 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.registration.sors.handler.MaintainHeatsHandler;
 import com.registration.sors.helpers.Security;
-import com.registration.sors.model.HeatSpec;
 import com.registration.sors.model.SystemSession;
-import com.registration.sors.service.HeatSpecDAO;
+import com.registration.sors.model.Heat;
+import com.registration.sors.service.HeatDAO;
 
 @Controller
-@RequestMapping("/heatspec")
-//-----------------------------------------------//
-//Name: HeatSpecController						 //
-//Purpose: Implement the functionality of 		 //
-//		adding, deleting, updating, and 	 	 //
-//		listing all of the HeatSpecs. Uses the	 //
-//		heatspecdao to accomplish its tasks		 //
-//-----------------------------------------------//
-public class HeatSpecController {
+@RequestMapping("/heat")
+//-------------------------------------------//
+//Name: heatController						 //
+//Purpose: Implement the functionality of 	 //
+//		adding, deleting, updating, and 	 //
+//		listing all of the heats. Uses the   //
+//		heatdao to accomplish its tasks	     //
+//-------------------------------------------//
+public class HeatController {
 	
-	@Autowired private HeatSpecDAO dao;
+	@Autowired private HeatDAO dao;
 	
-	List<String> roles = Arrays.asList("A", "T");
+	List<String> roles = Arrays.asList("A");
+	
+	
+	// Name: getAddHeatPage
+	// Purpose: Determine if the user is logged in and authorized 
+	//		to see this page.
+	// Parameters: session - the current user session
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		add page - page allowing the user to submit a new heat
+
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String getAddHeatPage(HttpSession session) {
+		
+		SystemSession ss = (SystemSession)session.getAttribute("system");
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+		
+			session.invalidate();
+			
+			// Right now it takes the user back to the Login Page no matter what
+			return "redirect:/user/login"; 
+		}
+		return "addHeat";
+	}
+
 
 	// Dev Testing ONLY
 	// Name: init
@@ -46,49 +72,15 @@ public class HeatSpecController {
 	// Parameters: session - the current user session
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
-	//		list page - if user is logged in and authorized
+	//		list page - list of heats
+	
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init(HttpSession session) {
-		
-		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Security.isAuthenticated(this.roles, ss)){
-			
-			session.invalidate();
-			
-			// Right now it takes the user back to the Login Page no matter what
-			return new ModelAndView("redirect:/user/login");
-		}
+		// Errors will be handled here
 		this.dao.init();
-		//this.dao.init();
 		return new ModelAndView("redirect:list");
 	}
-	
-	// Name: getAddAthletePage
-	// Purpose: Determine if the user is logged in and authorized 
-	//		to see this page.
-	// Parameters: session - the current user session
-	// Return: page redirect
-	//		login page - if user not logged in or not authorized
-	//		add page - page allowing the user to submit a new athlete
-	
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddAthletePage(HttpSession session, ModelMap model) {
-		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Security.isAuthenticated(this.roles, ss)){
-			session.invalidate();	
-			// Right now it takes the user back to the Login Page no matter what
-			return "redirect:/user/login"; 
-		}
-		
-		HeatSpec h = new HeatSpec();
-		
-		model.addAttribute("heatspec", h);
-		model.addAttribute("add", true);
-		
-		return "addHeatSpec";
-	}
 
-	
 	// Name: add
 	// Purpose: Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
 	// Parameters: session - the current user session
@@ -96,9 +88,9 @@ public class HeatSpecController {
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
 	//		list page - when data is added
-
+	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public ModelAndView add(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
+	public ModelAndView add(HttpServletRequest req, HttpSession session) throws Exception {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
@@ -110,68 +102,64 @@ public class HeatSpecController {
 			return new ModelAndView("redirect:/user/login");
 		}
 		
-		HeatSpec h = new HeatSpec();
+		Heat h = new Heat();
 		
-		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heatspec");
-		binder.setRequiredFields(new String[] {"eventId", "gender", "minAge", "maxAge", "time", "numHeats", "maxInHeat"});
+		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heat");
+		binder.setRequiredFields(new String[] {"title", "fname", "lname", "pword"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
-
+	
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
 			
 			if(this.dao.add(h) == null) {
-				throw new Exception ("Error adding HeatSpec to datastore");
+				throw new Exception ("Error adding Heat to datastore");
 			}
 			
 		} else {
-			throw new Exception ("Supply required information." + errors.getAllErrors().get(0).toString());
+			throw new Exception ("Supply required information.");
 		}
 		return new ModelAndView("redirect:list");
+
 	}
 	
-	// Name: getUpdateHeatSpecPage
-	// Purpose: Displays the get.jsp page with the information from the Athlete
+	// Name: getUpdateHeatPage
+	// Purpose: Displays the get.jsp page with the information from the User
 	// Parameters: session - the current user session
-	//			req - athlete to update
+	//			req - heat to update
 	//			model - the model for update
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
-	//		updateathlete page - page to edit athlete information
-	
+	//		updateheat page - page to edit heat information
+
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
-	public String getUpdateHeatSpecPage(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
+	public String getUpdateHeatPage(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
+		
 		if(!Security.isAuthenticated(this.roles, ss)){
 			
 			session.invalidate();
-			
-			// Right now it takes the user back to the Login Page no matter what
-			return "redirect:/user/login"; 
+			return "redirect:/user/login";
 		}
-
-		HeatSpec h = new HeatSpec();
 		
-		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heatspec");
+		Heat h = new Heat();
+		
+		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heat");
 		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
-		h = dao.find(h.getId());
-		
-		// Errors will be handle here
+		// Errors will be handled here
 		if (!errors.hasErrors()) {
-			model.addAttribute("heatspec", h);
+			Long i = h.getId();
+			h = this.dao.find(h.getId());
+			model.addAttribute("heat", h);
 		} else {
-			model.addAttribute("heatspec", h);
-			model.addAllAttributes(errors.getModel()); 
-			return "updateHeatSpec";
+			throw new Exception ("Helpful exception code");
 		}
-		return "updateHeatSpec";
+		return "updateHeat";
 	}
-	
-	
 	// Name: update
 	// Purpose: Accepts the input from update.jsp, stores it in the datastore, and returns list.jsp
 	// Parameters: session - the current user session
@@ -181,31 +169,30 @@ public class HeatSpecController {
 	//		list page - when data is updated
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
+	public String update(HttpServletRequest req, HttpSession session) throws Exception {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
 		if(!Security.isAuthenticated(this.roles, ss)){
 			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
-			return "redirect:/user/login"; 
+			return "redirect:/user/login";
 		}
-
-		HeatSpec h = new HeatSpec();
 		
-		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heatspec");
-		binder.setRequiredFields(new String[] {"eventId", "gender", "minAge", "maxAge", "time", "numHeats", "maxInHeat"});
+		Heat h = new Heat();
+		
+		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heat");
+		binder.setRequiredFields(new String[] {"id", "title", "fname", "lname", "pword"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
-		// Errors will be handled here
+		// Errors will be handled here		
 		if (!errors.hasErrors()) {
 			this.dao.update(h);
 		} else {
-			model.addAttribute("heatspec", h);
-			model.addAllAttributes(errors.getModel()); 
-			return "updateHeatSpec";
+			throw new Exception ("Supply ID, Name, and Email");
 		}
 		
 		// return to list
@@ -214,7 +201,7 @@ public class HeatSpecController {
 	}
 	
 	// Name: delete
-	// Purpose: Deletes a HeatSpec based on information submitted
+	// Purpose: Deletes a Heat based on information submitted
 	// Parameters: session - the current user session
 	//				req - the entry to delete
 	// Return: page redirect
@@ -223,36 +210,40 @@ public class HeatSpecController {
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String delete(HttpServletRequest req, HttpSession session) throws Exception {
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
+		
 		if(!Security.isAuthenticated(this.roles, ss)){
+			
 			session.invalidate();
+			
 			// Right now it takes the user back to the Login Page no matter what
-			return "redirect:/user/login"; 
+			return "redirect:/user/login";
 		}
-
-		HeatSpec h = new HeatSpec();
-		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heatspec");
+		
+		Heat h = new Heat();
+		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heat");
 		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
-		//BindingResult errors = binder.getBindingResult();
-		// Errors will be handled here
+		
+		// Errors will be handled here		
 		this.dao.delete(h);
 
 		// return to list
 		return "redirect:list";
 
 	}
-	
+
 	// Name: list
-	// Purpose: get a list of all HeatSpecs
+	// Purpose: get a list of all heats
 	// Parameters: session - the current user session
 	//				model - the model for list
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
-	//		list page - list of HeatSpecs
+	//		list page - list of heats
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String list(ModelMap model, HttpSession session) {	
+	public String listHeats(ModelMap model, HttpSession session) {	
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
@@ -261,11 +252,51 @@ public class HeatSpecController {
 			session.invalidate();
 			
 			// Right now it takes the user back to the Login Page no matter what
-			return "redirect:/user/login"; 
+			return "redirect:/user/login";
 		}
 		
 		// Errors will be handled here
-		model.addAttribute("heatSpecList", this.dao.loadAll());
-		return "listHeatSpec";
+		
+		List<Heat> list = this.dao.loadAll();
+		list.remove(0);
+		model.addAttribute("heatList",list);
+		return "listHeat";
 	}
+	@RequestMapping(value = "/generate", method = RequestMethod.GET)
+	public String getGenerateHeatPage(HttpSession session) {
+		
+		SystemSession ss = (SystemSession)session.getAttribute("system");
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+		
+			session.invalidate();
+			
+			// Right now it takes the user back to the Login Page no matter what
+			return "redirect:/user/login"; 
+		}
+		return "generateHeat";
+	}
+
+
+	
+	@RequestMapping(value = "/generate", method = RequestMethod.POST)
+	public ModelAndView generate(HttpServletRequest req, HttpSession session) throws Exception {
+		
+		SystemSession ss = (SystemSession)session.getAttribute("system");
+		
+		if(!Security.isAuthenticated(this.roles, ss)){
+			
+			session.invalidate();
+			
+			// Right now it takes the user back to the Login Page no matter what
+			return new ModelAndView("redirect:/user/login");
+		}
+		MaintainHeatsHandler handler = new MaintainHeatsHandler();
+		handler.GenerateHeats();
+		String output = handler.ToString();
+		return new ModelAndView("redirect:list");
+
+	}
+	
+	
 }
