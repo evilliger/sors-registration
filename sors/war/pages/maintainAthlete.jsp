@@ -2,6 +2,8 @@
 <%@ page import="com.registration.sors.model.Athlete" %>
 <%@ page import="com.registration.sors.model.Event" %>
 <%@ page import="com.registration.sors.model.User" %>
+<%@ page import="com.registration.sors.model.School" %>
+<%@ page import="com.registration.sors.model.Classroom" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -22,7 +24,7 @@
 				<c:forEach items="${messages}" var="message">
 					<li>${message}</li>
 				</c:forEach>
-				<c:forEach items="${other_errors}" var="error">
+				<c:forEach items="${scores}" var="error">
 					<li>${error}</li>
 				</c:forEach>
 				
@@ -35,23 +37,26 @@
 		<br>
 		<table>
 			<% if (isAdmin) { %>
-          	<tr>
-				<td>School:</td>
-				<td><form:select path="">
-						<form:option value="-1" label="--- Please select ---" />
-						<form:option value="0" label="Bob Jones University" />
-						<form:option value="1" label="University of Southern Kansas" />
-						<form:option value="2" label="Central Michigan College" />
-					</form:select>
+          	<% List<School> schools = (List<School>)request.getAttribute("schools"); %>
+		  	<tr>
+		  		<td>School:</td>
+				<td><form:select path="" id="school">
+	                	<form:option value="-1" label ="--- Please Select ---" />
+	                	<% for (School s : schools) { %>
+	                	<form:option value="<%= s.getId() %>" label ="<%= s.getName() %>" />
+	                    <% } %>
+	                </form:select>
 				<form:errors path="" cssClass="errors" /></td>
-			</tr>
-          	<tr>
+            </tr>
+          	<% List<Classroom> classrooms = (List<Classroom>)request.getAttribute("classrooms"); %>
+          	<tr class="hidden" id="class">
 				<td>Class:</td>
-				<td><form:select path="classroomId" cssClass="hidden" >
+				<td><form:select path="classroomId">
 						<form:option value="-1" label="--- Please select ---" />
-						<form:option value="0" label="6th Grade" />
-						<form:option value="1" label="7th Grade" />
-						<form:option value="2" label="8th Grade" />
+	                	<% for (Classroom c : classrooms) { %>
+						<form:option value="<%= c.getId() %>"
+						label="<%= c.getClassName() %>" />
+	                    <% } %>
 					</form:select>
 				<form:errors path="classroomId" cssClass="errors" /></td>
 			</tr>

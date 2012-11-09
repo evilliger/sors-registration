@@ -31,7 +31,7 @@ public class ClassroomDAO {
 	public void init(){
 		Objectify ofy = objectifyFactory.begin();
 		School sc = new School();
-		sc.setSchoolID(new Long(1));
+		sc.setId(new Long(1));
 		ofy.put(sc);
 	}
 	

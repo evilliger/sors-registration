@@ -6,6 +6,7 @@ package com.registration.sors.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +21,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
 import com.registration.sors.helpers.Security;
 import com.registration.sors.model.Athlete;
+import com.registration.sors.model.Classroom;
 import com.registration.sors.model.Event;
+import com.registration.sors.model.School;
 import com.registration.sors.model.SystemSession;
 import com.registration.sors.service.AthleteDAO;
+import com.registration.sors.service.ClassroomDAO;
 import com.registration.sors.service.EventDAO;
+import com.registration.sors.service.SchoolDAO;
 
 @Controller
 @RequestMapping("/athlete")
@@ -40,6 +48,8 @@ public class AthleteController {
 	
 	@Autowired private AthleteDAO Athdao;
 	@Autowired private EventDAO Evdao;
+	@Autowired private SchoolDAO Schdao;
+	@Autowired private ClassroomDAO Cladao;
 	
 	List<String> roles = Arrays.asList("A", "T");
 
@@ -53,6 +63,13 @@ public class AthleteController {
 	//		list page - if user is logged in and authorized
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init(HttpSession session) {
+		
+		School s = new School();
+		s.setGroupID("012");
+		s.setId(new Long(1));
+		s.setName("Bobby Jones");
+		s.setVolunteerNum(1242);
+		Schdao.add(s);
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
@@ -85,9 +102,13 @@ public class AthleteController {
 		
 		Athlete a = new Athlete();
 		List<Event> events = this.Evdao.loadAll();
+		List<School> schools = this.Schdao.loadAll();
+		List<Classroom> classrooms = this.Cladao.loadAll();
 		
 		model.addAttribute("user",ss.getUser());
 		model.addAttribute("events",events);
+		model.addAttribute("schools",schools);
+		model.addAttribute("classrooms",classrooms);
 		model.addAttribute("athlete", a);
 		model.addAttribute("add", true);
 		
@@ -124,10 +145,9 @@ public class AthleteController {
 		BindingResult errors = binder.getBindingResult();
 		
 		List<Event> events = this.Evdao.loadAll();
-		
-		
-		List<String> other_errors = new ArrayList<String>();
-		other_errors.add("BAD BAD BAD");
+		List<School> schools = this.Schdao.loadAll();
+		List<Classroom> classrooms = this.Cladao.loadAll();
+		List<String> scores = CheckScores(req);
 		
 		//Errors will be handled here
 		if (!errors.hasErrors()) {
@@ -135,9 +155,11 @@ public class AthleteController {
 				return "errorPageTemplate";
 			}
 		} else {
-			model.addAttribute("other_errors",other_errors);
+			model.addAttribute("scores",scores);
 			model.addAttribute("user",ss.getUser());
 			model.addAttribute("events",events);
+			model.addAttribute("schools",schools);
+			model.addAttribute("classrooms",classrooms);
 			model.addAttribute("athlete", a);
 			model.addAllAttributes(errors.getModel()); 
 			model.addAttribute("add", true);
@@ -176,14 +198,16 @@ public class AthleteController {
 		
 		a = Athdao.find(a.getId());
 		List<Event> events = this.Evdao.loadAll();
-		
-		// Errors will be handle here
-		if (!errors.hasErrors()) {
-			model.addAttribute("athlete", a);
-		} else {
+		List<School> schools = this.Schdao.loadAll();
+		List<Classroom> classrooms = this.Cladao.loadAll();
+
+		model.addAttribute("athlete", a);
+		// Errors will be handled here
+		if (errors.hasErrors()) {
 			model.addAttribute("user",ss.getUser());
 			model.addAttribute("events", events);
-			model.addAttribute("athlete", a);
+			model.addAttribute("schools", schools);
+			model.addAttribute("classrooms",classrooms);
 			model.addAllAttributes(errors.getModel()); 
 			return "maintainAthlete";
 		}
@@ -219,13 +243,19 @@ public class AthleteController {
 		BindingResult errors = binder.getBindingResult();
 		
 		List<Event> events = this.Evdao.loadAll();
+		List<School> schools = this.Schdao.loadAll();
+		List<Classroom> classrooms = this.Cladao.loadAll();
+		List<String> scores = CheckScores(req);
 		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
 			this.Athdao.update(a);
 		} else {
+			model.addAttribute("scores",scores);
 			model.addAttribute("user",ss.getUser());
 			model.addAttribute("events", events);
+			model.addAttribute("schools", schools);
+			model.addAttribute("classrooms",classrooms);
 			model.addAttribute("athlete", a);
 			model.addAllAttributes(errors.getModel()); 
 			return "maintainAthlete";
@@ -290,5 +320,31 @@ public class AthleteController {
 		// Errors will be handled here
 		model.addAttribute("athleteList", this.Athdao.loadAll());
 		return "listAthlete";
+	}
+	
+	// Returns a list of errors for when the entered scores for the events are either
+	// - not numeric
+	// - less than minScore or greater than maxScore
+	public List<String> CheckScores(HttpServletRequest req) {
+		List<String> scores = new ArrayList<String>();
+		try {
+			String pevent = (String)req.getAttribute("pevent");
+			String ssevent = (String)req.getAttribute("ssevent");
+			if (pevent != null) {
+				Event pe = this.Evdao.find(Long.parseLong(pevent));
+				Double pscore = Double.parseDouble((String)req.getAttribute("pscore"));
+				if (pscore > pe.getMax() || pscore < pe.getMin())
+					throw new Exception("Value not within bounds");
+			}
+			if (ssevent != null) {
+				Event sse = this.Evdao.find(Long.parseLong(ssevent));
+				Double sscore = Double.parseDouble((String)req.getAttribute("sscore"));
+				if (sscore > sse.getMax() || sscore < sse.getMin())
+					throw new Exception("Value not within bounds");
+			}
+		} catch (Exception e) {
+			scores.add("Invalid score.");
+		}
+		return scores;
 	}
 }
