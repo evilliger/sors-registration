@@ -16,6 +16,8 @@ import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Event;
@@ -37,7 +39,13 @@ public class MaintainHeatsHandler {
 	private static HeatSpecDAO heatSpecDAO;
 	private static HeatDAO heatDAO;
 	
-	public MaintainHeatsHandler(){}
+	public MaintainHeatsHandler(HeatDAO heatDao2, RegistrationDAO regDao2, AthleteDAO athDao2, EventDAO eventDao2, HeatSpecDAO heatSpecDao2){
+		regDAO = regDao2;
+		athDAO = athDao2;
+		eventDAO = eventDao2;
+		heatSpecDAO = heatSpecDao2;
+		heatDAO = heatDao2;
+	}
 	
 	private  int findBdate(Date bday){
 		//calculate the birthday....
@@ -239,19 +247,7 @@ public class MaintainHeatsHandler {
 		}
 		return html;
 	}
-	public void GenerateHeats(){
-		regDAO = new RegistrationDAO();
-		athDAO = new AthleteDAO();
-		eventDAO = new EventDAO();
-		heatSpecDAO = new HeatSpecDAO();
-		heatDAO = new HeatDAO();
-		regDAO.init();
-		athDAO.init();
-		eventDAO.init();
-		heatSpecDAO.init();
-		heatDAO.init();
-		
-
+	public void GenerateHeats() {
 	
 		// Generate a list of heatentries based on registrations, athletes and heat specifications
 		// and sort the heatentry list

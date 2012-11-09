@@ -82,6 +82,7 @@ public class HeatSpecDAO {
 		
 		// The following line needs to be executed for every classroomId of every school in the system.
 		list.addAll(ofy.query(HeatSpec.class).ancestor(new Key<HeatSpec>(HeatSpec.class,HeatSpec.parentId)).list());
+		list.remove(0);
 		return list;
 	}
 	// find a heatspec whose classID is id

@@ -21,9 +21,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.registration.sors.handler.MaintainHeatsHandler;
 import com.registration.sors.helpers.Security;
-import com.registration.sors.model.SystemSession;
 import com.registration.sors.model.Heat;
+import com.registration.sors.model.SystemSession;
+import com.registration.sors.service.AthleteDAO;
+import com.registration.sors.service.EventDAO;
 import com.registration.sors.service.HeatDAO;
+import com.registration.sors.service.HeatSpecDAO;
+import com.registration.sors.service.RegistrationDAO;
 
 @Controller
 @RequestMapping("/heat")
@@ -36,7 +40,12 @@ import com.registration.sors.service.HeatDAO;
 //-------------------------------------------//
 public class HeatController {
 	
-	@Autowired private HeatDAO dao;
+	@Autowired private HeatDAO heatDao;
+	@Autowired private AthleteDAO athDao;
+	@Autowired private RegistrationDAO regDao;
+	@Autowired private EventDAO eventDao;
+	@Autowired private HeatSpecDAO heatSpecDao;
+	
 	
 	List<String> roles = Arrays.asList("A");
 	
@@ -77,7 +86,7 @@ public class HeatController {
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init(HttpSession session) {
 		// Errors will be handled here
-		this.dao.init();
+		this.heatDao.init();
 		return new ModelAndView("redirect:list");
 	}
 
@@ -112,7 +121,7 @@ public class HeatController {
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
 			
-			if(this.dao.add(h) == null) {
+			if(this.heatDao.add(h) == null) {
 				throw new Exception ("Error adding Heat to datastore");
 			}
 			
@@ -153,7 +162,7 @@ public class HeatController {
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
 			Long i = h.getId();
-			h = this.dao.find(h.getId());
+			h = this.heatDao.find(h.getId());
 			model.addAttribute("heat", h);
 		} else {
 			throw new Exception ("Helpful exception code");
@@ -190,7 +199,7 @@ public class HeatController {
 		
 		// Errors will be handled here		
 		if (!errors.hasErrors()) {
-			this.dao.update(h);
+			this.heatDao.update(h);
 		} else {
 			throw new Exception ("Supply ID, Name, and Email");
 		}
@@ -227,7 +236,7 @@ public class HeatController {
 		binder.bind(req);
 		
 		// Errors will be handled here		
-		this.dao.delete(h);
+		this.heatDao.delete(h);
 
 		// return to list
 		return "redirect:list";
@@ -257,7 +266,7 @@ public class HeatController {
 		
 		// Errors will be handled here
 		
-		List<Heat> list = this.dao.loadAll();
+		List<Heat> list = this.heatDao.loadAll();
 		list.remove(0);
 		model.addAttribute("heatList",list);
 		return "listHeat";
@@ -291,7 +300,7 @@ public class HeatController {
 			// Right now it takes the user back to the Login Page no matter what
 			return new ModelAndView("redirect:/user/login");
 		}
-		MaintainHeatsHandler handler = new MaintainHeatsHandler();
+		MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
 		handler.GenerateHeats();
 		String output = handler.ToString();
 		return new ModelAndView("redirect:list");
