@@ -79,7 +79,8 @@ public class RegistrationDAO {
 		
 		// The following line needs to be executed for every classroomId of every school in the system.
 		list.addAll(ofy.query(Registration.class).ancestor(new Key<Registration>(Registration.class,Registration.parentId)).list());
-		list.remove(0);
+		if(list.size() > 0)
+			list.remove(0);
 		return list;
 	}
 	

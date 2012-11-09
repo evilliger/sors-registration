@@ -81,7 +81,6 @@ public class ClassroomDAO {
 	public List<Classroom> loadAll(){
 		Objectify ofy = objectifyFactory.begin();
 		List<Classroom> list = ofy.query(Classroom.class).ancestor(new Key<School>(School.class,1)).list();
-		list.remove(0);
 		return list;
 	}
 	

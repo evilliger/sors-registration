@@ -87,7 +87,7 @@ public class AthleteDAO {
 		List<Athlete> list = new ArrayList<Athlete>();
 		
 		// The following line needs to be executed for every classroomId of every school in the system instead of "1".
-		list.addAll(ofy.query(Athlete.class).ancestor(new Key<Classroom>(Classroom.class,1)).list());
+		list.addAll(ofy.query(Athlete.class).ancestor(new Key<Classroom>(Classroom.class,-1)).list());
 		return list;
 	}
 	// find an athlete whose athleteID is id
@@ -99,7 +99,7 @@ public class AthleteDAO {
 			Objectify ofy = this.objectifyFactory.begin();
 			
 			// The following get would have to be run on every classroom id, instead of just "1".
-			return ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, 1), Athlete.class, id));
+			return ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, -1), Athlete.class, id));
 		} catch (Exception e) {
 			return null;
 		}
