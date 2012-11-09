@@ -257,7 +257,7 @@ public class RegistrationController {
 		// Errors will be handled here
 		
 		List<Registration> list = this.dao.loadAll();
-		list.remove(0);
+		
 		model.addAttribute("registrationList",list);
 		return "listRegistration";
 	}

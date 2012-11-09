@@ -260,7 +260,10 @@ public class MaintainHeatsHandler {
 			HeatEntry he = heatEntryList.get(i);
 			Heat h = new Heat(0, he.getGender(), he.getMinAge(), he.getMaxAge(), he.getEventID(),he.getTime());
 			heatDAO.add(h);
-			int in;
+			// now h has an id...
+			// need to find reg and update it...
+			// add regid to heatspec?
+			int in = 5;
 		}
 	}
 }
