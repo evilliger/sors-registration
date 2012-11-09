@@ -17,7 +17,7 @@
      	
      	<% boolean isAdmin = ((User)request.getAttribute("user")).getRole().equals("A"); %>
 
-		<form:form commandName='athlete' action='<%= (request.getAttribute("add") != null) ? "add": "update" %>'>
+		<form:form commandName='athlete' action='<%= ((Boolean)request.getAttribute("add")) ? "add": "update" %>'>
 		
 		<form:errors path="*" >
 			<ul class="errors">
@@ -37,7 +37,7 @@
 		<br>
 		<table>
 			<% if (isAdmin) { %>
-          	<% List<School> schools = (List<School>)request.getAttribute("schools"); %>
+          		<% List<School> schools = (List<School>)request.getAttribute("schools"); %>
 		  	<tr>
 		  		<td>School:</td>
 				<td><form:select path="" id="school">
@@ -48,7 +48,7 @@
 	                </form:select>
 				<form:errors path="" cssClass="errors" /></td>
             </tr>
-          	<% List<Classroom> classrooms = (List<Classroom>)request.getAttribute("classrooms"); %>
+          		<% List<Classroom> classrooms = (List<Classroom>)request.getAttribute("classrooms"); %>
           	<tr class="hidden" id="class">
 				<td>Class:</td>
 				<td><form:select path="classroomId">
@@ -61,8 +61,10 @@
 				<form:errors path="classroomId" cssClass="errors" /></td>
 			</tr>
           <tr><td><br></td><td></td></tr> 
+          <% } else { %>
+          	<input type="hidden" value="<%= (Long)request.getAttribute("schoolID")%>" />
+          	<form:hidden path="classroomId" />
           <% } %>
-          
           <tr>
            <td>First Name:</td>
            <td>
