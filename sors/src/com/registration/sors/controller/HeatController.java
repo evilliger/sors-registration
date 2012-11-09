@@ -267,7 +267,7 @@ public class HeatController {
 		// Errors will be handled here
 		
 		List<Heat> list = this.heatDao.loadAll();
-		list.remove(0);
+		//list.remove(0);
 		model.addAttribute("heatList",list);
 		return "listHeat";
 	}
