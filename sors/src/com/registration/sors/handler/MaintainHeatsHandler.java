@@ -260,6 +260,7 @@ public class MaintainHeatsHandler {
 			HeatEntry he = heatEntryList.get(i);
 			Heat h = new Heat(0, he.getGender(), he.getMinAge(), he.getMaxAge(), he.getEventID(),he.getTime());
 			heatDAO.add(h);
+			int in;
 		}
 	}
 }
