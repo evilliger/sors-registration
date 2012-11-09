@@ -90,6 +90,7 @@ public class MaintainHeatsHandler {
 		Dictionary<String,Athlete>athleteCodes = new Hashtable<String,Athlete>();
 		
 		List<Athlete>aList = athDAO.loadAll();
+		//aList.remove(0);
 		// turn athlete list into dictionary
 		for(int i = 0; i < aList.size(); ++i){
 			Athlete a = aList.get(i);
@@ -187,11 +188,11 @@ public class MaintainHeatsHandler {
 			int age = findBdate(a.getBdate());
 		    
 		    // Determine the specs for the event for the person
-			List<HeatSpec>EventSpecsList = specList.get(r.getEventID());
+			List<HeatSpec>EventSpecsList = specList.get(r.getEventID().toString());
 			
 			for(int j = 0; j < EventSpecsList.size(); ++j){
-				HeatSpec s = EventSpecsList.get(i);
-				if(age >= s.getMinAge() && age <= s.getMaxAge() && a.getGender() == s.getGender()){
+				HeatSpec s = EventSpecsList.get(j);
+				if(age >= s.getMinAge() && age <= s.getMaxAge() && a.getGender().equals(s.getGender())){
 					heatEntryList.add(new HeatEntry(s.getEventId(),s.getMinAge(),s.getMaxAge(),s.getTime(),s.getGender(),r.getScore(),r.getId()));
 					break;
 				}

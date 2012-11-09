@@ -88,6 +88,7 @@ public class AthleteDAO {
 		
 		// The following line needs to be executed for every classroomId of every school in the system instead of "1".
 		list.addAll(ofy.query(Athlete.class).ancestor(new Key<Classroom>(Classroom.class,1)).list());
+		//list.remove(0);
 		return list;
 	}
 	// find an athlete whose athleteID is id

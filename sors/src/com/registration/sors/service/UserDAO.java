@@ -81,6 +81,7 @@ public class UserDAO {
 		
 		// The following line needs to be executed for every classroomId of every school in the system.
 		list.addAll(ofy.query(User.class).ancestor(new Key<User>(User.class,User.parentId)).list());
+		list.remove(0);
 		return list;
 	}
 
