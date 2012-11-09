@@ -9,18 +9,23 @@ package com.registration.sors.model;
 
 import javax.persistence.Id;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Parent;
 
 @SuppressWarnings("javadoc")
 @Entity
 public class School {
 	
 	@Id
-	Long schoolID;
-	String schoolName;
+	Long id;
+	public static Long parentId = new Long(1);
+	String name;
 	String groupID;
 	int volunteerNum;
-	
+	@Parent
+	Key<School> parent;
+
 	public School(){}
 	
 	public int getVolunteerNum() {
@@ -30,25 +35,33 @@ public class School {
 		this.volunteerNum = volunteerNum;
 	}
 	
+	public Key<School> getParent() {
+		return parent;
+	}
+
+	public void setParent(Key<School> parent) {
+		this.parent = parent;
+	}
+	
 	public School(String gc, String sn){
-		schoolName = sn;
+		name = sn;
 		groupID = gc;
 	}
 
-	public Long getSchoolID() {
-		return schoolID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setSchoolID(Long long1) {
-		this.schoolID = long1;
+	public void setId(Long long1) {
+		this.id = long1;
 	}
 
-	public String getSchoolName() {
-		return schoolName;
+	public String getName() {
+		return name;
 	}
 
-	public void setSchoolName(String schoolName) {
-		this.schoolName = schoolName;
+	public void setName(String schoolName) {
+		this.name = schoolName;
 	}
 
 	public String getGroupID() {
