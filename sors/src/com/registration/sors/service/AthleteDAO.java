@@ -15,6 +15,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Classroom;
+import com.registration.sors.model.User;
 
 
 @Service
@@ -76,12 +77,15 @@ public class AthleteDAO {
 	// Parameters: none
 	// Return: list of Athletes
 	
-	public List<Athlete> loadAll(){
+	public List<Athlete> loadAll(User u){
 		Objectify ofy = this.objectifyFactory.begin();
 		List<Athlete> list = new ArrayList<Athlete>();
 		
 		// The following line needs to be executed for every classroomId of every school in the system instead of "1".
-		list.addAll(ofy.query(Athlete.class).ancestor(new Key<Classroom>(Classroom.class,-1)).list());
+		if (u.getRole().equals("T")) {
+			Classroom c = ofy.query(Classroom.class).filter("userID", u.getId()).get();
+			list.addAll(ofy.query(Athlete.class).ancestor(new Key<Classroom>(Classroom.class,c.getId())).list());
+		}
 		return list;
 	}
 	
@@ -89,12 +93,12 @@ public class AthleteDAO {
 	// Parameters: id - athleteID number
 	// Return: Athlete - whose athleteID is id
 	
-	public Athlete find(Long id){
+	public Athlete find(Long id, Classroom c){
 		try {
 			Objectify ofy = this.objectifyFactory.begin();
 			
 			// The following get would have to be run on every classroom id, instead of just "1".
-			return ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, -1), Athlete.class, id));
+			return ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, c.getId()), Athlete.class, id));
 		} catch (Exception e) {
 			return null;
 		}

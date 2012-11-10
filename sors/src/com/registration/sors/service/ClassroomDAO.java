@@ -6,6 +6,7 @@
 //--------------------------------------//
 package com.registration.sors.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,10 +79,9 @@ public class ClassroomDAO {
 	// get a list of Classrooms in DataStore
 	// Parameters: none
 	// Return: list of Classrooms
-	
 	public List<Classroom> loadAll(){
 		Objectify ofy = objectifyFactory.begin();
-		List<Classroom> list = ofy.query(Classroom.class).ancestor(new Key<School>(School.class,1)).list();
+		List<Classroom> list = ofy.query(Classroom.class).ancestor(new Key<School>(School.class,-1)).list();
 		return list;
 	}
 	
@@ -102,7 +102,7 @@ public class ClassroomDAO {
 	public Classroom find(User u){
 		try {
 			Objectify ofy = objectifyFactory.begin();
-			return ofy.query(Classroom.class).ancestor(new Key<School>(School.class,1)).filter("userID",u.getId()).list().get(0);
+			return ofy.query(Classroom.class).filter("userID", u.getId()).get();
 		} catch (Exception e) {
 			return null;
 		}

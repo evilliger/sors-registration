@@ -142,9 +142,8 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
-		a = Athdao.find(a.getId());
-
-		model.addAttribute("athlete", a);
+		Classroom c = this.Cladao.find(ss.getUser());
+		a = Athdao.find(a.getId(), c);
 
 		if (errors.hasErrors()) 
 			return "redirect:list";
@@ -241,7 +240,7 @@ public class AthleteController {
 			return "redirect:/user/login"; 
 		}
 		
-		model.addAttribute("athleteList", this.Athdao.loadAll());
+		model.addAttribute("athleteList", this.Athdao.loadAll(ss.getUser()));
 		return "listAthlete";
 	}
 	
@@ -282,7 +281,6 @@ public class AthleteController {
 			
 			model.addAttribute("user", u);
 			model.addAttribute("add", add);
-			model.addAttribute("athlete", a);
 			model.addAttribute("events", events);
 			
 			if(u.getRole().equals("A")) {
@@ -291,8 +289,9 @@ public class AthleteController {
 			} else { 
 				Classroom c = this.Cladao.find(u);
 				model.addAttribute("school", c.getSchoolID());
-				model.addAttribute("classroom", c);
+				a.setClassroomId(c.getId());
 			}
+			model.addAttribute("athlete", a);
 			
 			if(errors != null)
 				model.addAllAttributes(errors.getModel()); 

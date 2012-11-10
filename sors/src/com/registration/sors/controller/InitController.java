@@ -81,14 +81,33 @@ public class InitController {
 		u.setRole("T");
 		u.setFname("Frank");
 		u.setLname("Harrison");
+		u.setEmail("user1");
+		u.setPword("x");
 		u.setTitle("Mr.");
 		u.setParent(new Key<User>(User.class, up.getId()));
 		Usedao.add(u);
+		
+		User u2 = new User();
+		u2.setRole("T");
+		u2.setFname("James");
+		u2.setLname("Zumsteg");
+		u2.setEmail("user2");
+		u2.setPword("x");
+		u2.setTitle("Mr.");
+		u2.setParent(new Key<User>(User.class, up.getId()));
+		Usedao.add(u2);
 		
 		Classroom c = new Classroom();
 		c.setClassName("Fifth Grade!!");
 		c.setSchoolID(s.getId());
 		c.setUserID(u.getId());
+		c.setSchool(new Key<School>(School.class, s.getId()));
+		Cladao.add(c);
+		
+		c = new Classroom();
+		c.setClassName("Hundredth Grade!!");
+		c.setSchoolID(s.getId());
+		c.setUserID(u2.getId());
 		c.setSchool(new Key<School>(School.class, s.getId()));
 		Cladao.add(c);
 		
