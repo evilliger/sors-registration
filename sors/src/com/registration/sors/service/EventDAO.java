@@ -100,12 +100,4 @@ public class EventDAO {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
 	}
-	// For Dev ONLY
-	public void init() {
-		Objectify ofy = this.objectifyFactory.begin();
-		Event parent = new Event();
-		parent.setId(Event.parentId);
-		ofy.put(parent);
-		
-	}
 }

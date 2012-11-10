@@ -18,11 +18,9 @@ import com.googlecode.objectify.annotation.Parent;
 @Entity
 public class Event implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
-	
 	@Id
 	Long id;
-	public static Long parentId = new Long(1);
+	public static Long parentId = new Long(-1);
 	
 
 	String name;

@@ -18,7 +18,6 @@ import com.googlecode.objectify.annotation.Parent;
 @SuppressWarnings("javadoc")
 @Entity
 public class HeatSpec implements Serializable {
-	private static final long serialVersionUID = 1L;
 	
 	@Id
 	Long id;
@@ -30,7 +29,7 @@ public class HeatSpec implements Serializable {
 	int numHeats;
 	int maxInHeat;
 	Long eventId;
-	public static Long parentId = new Long(1);
+	public static Long parentId = new Long(-1);
 
 	@Parent
 	Key<HeatSpec> parent;

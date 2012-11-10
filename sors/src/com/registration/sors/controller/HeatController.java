@@ -72,24 +72,7 @@ public class HeatController {
 		}
 		return "addHeat";
 	}
-
-
-	// Dev Testing ONLY
-	// Name: init
-	// Purpose: Determine if the user is logged in and authorized 
-	//		to see this page.
-	// Parameters: session - the current user session
-	// Return: page redirect
-	//		login page - if user not logged in or not authorized
-	//		list page - list of heats
 	
-	@RequestMapping(value = "/init", method = RequestMethod.GET)
-	public ModelAndView init(HttpSession session) {
-		// Errors will be handled here
-		this.heatDao.init();
-		return new ModelAndView("redirect:list");
-	}
-
 	// Name: add
 	// Purpose: Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
 	// Parameters: session - the current user session

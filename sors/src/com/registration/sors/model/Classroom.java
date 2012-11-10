@@ -20,21 +20,13 @@ public class Classroom {
 	@Id
 	Long id;
 	String className;
-	int schoolID;
-	int userID;
-	public int getUserID() {
-		return userID;
-	}
-
-	public void setUserID(int userID) {
-		this.userID = userID;
-	}
-
+	Long schoolID;
+	Long userID;
 	@Parent
     Key<School> school;
 	public Classroom(){ }
 	
-	public Classroom(String n, int sID){
+	public Classroom(String n, Long sID){
 		className = n;
 		schoolID = sID;
 	}
@@ -48,15 +40,23 @@ public class Classroom {
 	public Long getId() {
 		return id;
 	}
+	
+	public Long getUserID() {
+		return userID;
+	}
+
+	public void setUserID(Long userID) {
+		this.userID = userID;
+	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public int getSchoolID() {
+	public Long getSchoolID() {
 		return schoolID;
 	}
 
-	public void setSchoolID(int schoolID) {
+	public void setSchoolID(Long schoolID) {
 		this.schoolID = schoolID;
 	}
 	public String getClassName() {

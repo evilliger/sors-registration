@@ -99,14 +99,6 @@ public class RegistrationDAO {
 			return null;
 		}
 	}
-	// For Dev ONLY
-	public void init() {
-		Objectify ofy = this.objectifyFactory.begin();
-		Registration parent = new Registration();
-		parent.setId(Registration.parentId);
-		ofy.put(parent);
-	
-	}
 	public void add(List<Registration> a) {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);

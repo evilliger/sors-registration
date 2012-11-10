@@ -24,17 +24,6 @@ public class AthleteDAO {
 	@Autowired
 	private ObjectifyFactory objectifyFactory;
 	
-	// For Dev ONLY
-	// init 
-	// to initialize the dao
-	
-	public void init(){
-		Objectify ofy = this.objectifyFactory.begin();
-		Classroom cr = new Classroom();
-		cr.setId(new Long(1)); // set up a catch-all classroom for development work
-		ofy.put(cr);
-	}
-	
 	// Add an Athlete to DataStore
 	// Parameters: Athlete a - athlete to add
 	// Return: Athlete - newly added athlete
