@@ -83,10 +83,15 @@ public class SchoolDAO {
 		}
 	}
 	
+	// add a list of schools 
+	
 	public void add(List<School> a) {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
-}
+	}
+	
+	// get the key of a school from an id
+	
 	public Key<School> getKeyByID(Long id) {
 		try {
 			Objectify ofy = objectifyFactory.begin();

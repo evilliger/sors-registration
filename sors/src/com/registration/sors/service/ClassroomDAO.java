@@ -6,7 +6,6 @@
 //--------------------------------------//
 package com.registration.sors.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +98,8 @@ public class ClassroomDAO {
 		}
 	}
 	
+	// find a classroom by passing in a long
+	
 	public Classroom find(Long id){
 		try {
 			
@@ -109,6 +110,7 @@ public class ClassroomDAO {
 		}
 	}
 	
+	// find a classroom associated with a user
 	
 	public Classroom find(User u){
 		try {
@@ -119,10 +121,14 @@ public class ClassroomDAO {
 		}
 	}
 	
+	// add a list of classrooms
+	
 	public void add(List<Classroom> a) {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
 	}
+	
+	// find the key of a classroom by giving it an id
 	
 	public Key<Classroom> getKeyByID(Long id) {
 		return objectifyFactory.getKey(find(id));

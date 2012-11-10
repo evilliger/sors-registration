@@ -8,9 +8,10 @@
 	text-align:center;
 	padding:50px;
 	background: none !important;
+	text-align:center;
 }
 </style>
 
-<h3 id="message">We are sorry, but the page you were looking for has not been found :(</h3>
+<h3 id="message">We are sorry, but something went terribly wrong! :(</h3>
 
 <tag:footer/>

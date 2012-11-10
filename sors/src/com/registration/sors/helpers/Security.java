@@ -6,6 +6,8 @@
 package com.registration.sors.helpers;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.registration.sors.model.SystemSession;
 import com.registration.sors.model.User;
@@ -17,13 +19,18 @@ import com.registration.sors.model.User;
 //----------------------------------------//
 public class Security {
 	
+	static Logger log = Logger.getLogger(Security.class.getName());
+	
 	// Name: autheticate
 	// Purpose: Determine if the username and password are correct
 	// Parameters: u - user object based on username inputed
 	//			pword - password to check
 	// Return: boolean if the password matches or not
 	public static boolean authenticate(User u, String pword){
-		return (u != null && u.getPword() != null && u.getPword().equals(pword));
+		boolean result = (u != null && u.getPword() != null && u.getPword().equals(pword));
+		if(result && u != null && u.getEmail() != null)
+			log.warning(u.getEmail() + " logged in.");
+		return result;
 	}
 
 	// Name: isAutheticated
@@ -31,6 +38,10 @@ public class Security {
 	// Parameters: session - the user's current session
 	// Return: boolean if there is a valid user in session
 	public static boolean isAuthenticated(List<String> roles, SystemSession session){
-		return (session != null && session.isAuthenticated() && roles.contains(session.getUser().getRole()));
+		boolean result = (session != null && session.isAuthenticated() && roles.contains(session.getUser().getRole()));
+		User u;
+		if(!result && session != null && (u = session.getUser()) != null && u != null && u.getEmail() != null)
+			log.warning(u.getEmail() + " tried to access an unauthorized page.");
+		return result;
 	}
 }

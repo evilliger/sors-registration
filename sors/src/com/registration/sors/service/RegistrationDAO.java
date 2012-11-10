@@ -99,6 +99,8 @@ public class RegistrationDAO {
 		}
 	}
 	
+	// Find a list of registrations from an athlete
+	
 	public List<Registration> find(Athlete a) {
 		try {
 			Objectify ofy = this.objectifyFactory.begin();
@@ -108,8 +110,13 @@ public class RegistrationDAO {
 		}
 	}
 	
-	public void add(List<Registration> a) {
-		Objectify ofy = objectifyFactory.begin();
-		ofy.put(a);
+	public List<Registration> add(List<Registration> a) {
+		try{
+			Objectify ofy = objectifyFactory.begin();
+			ofy.put(a);
+			return a;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

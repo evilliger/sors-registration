@@ -5,12 +5,12 @@
 package com.registration.sors.controller;
 
 import java.beans.PropertyEditorSupport;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.registration.sors.helpers.Security;
+import com.registration.sors.model.AthData;
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Classroom;
 import com.registration.sors.model.Event;
@@ -57,6 +58,8 @@ public class AthleteController {
 	@Autowired private RegistrationDAO Regdao;
 	
 	List<String> roles = Arrays.asList("A", "T");
+	
+	static Logger log = Logger.getLogger(AthleteController.class.getName());
 	
 	// Name: getAddAthletePage
 	// Purpose: Determine if the user is logged in and authorized 
@@ -100,7 +103,7 @@ public class AthleteController {
 		Athlete a = new Athlete();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
-		binder.setRequiredFields(new String[] {"fname", "lname", "mname", "gender", "bdate"});
+		binder.setRequiredFields(new String[] {"fname", "lname","bdate"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
@@ -110,10 +113,13 @@ public class AthleteController {
 		if (!errors.hasErrors() && regData.errors.isEmpty()) {
 			if((a = this.Athdao.add(a)) == null) 
 				return "errorPageTemplate";
+			else 
+				log.warning(ss.getUser().getEmail() + " added " + a.getFname() + " " + a.getLname() + " to the datastore");
 			for(int i = 0; i < regData.registrations.size(); ++i){
 				Registration r = regData.registrations.get(i);
 				r.setAthleteID(a.getId());
-				this.Regdao.add(r);	
+				if(this.Regdao.add(r) != null)
+					log.warning(ss.getUser().getEmail() + " added " + regData.registrations.size() + " to the datastore");
 			}
 		} else {
 			model = loadModel(model, req, true,ss.getUser(),a,errors,regData.errors);
@@ -179,7 +185,7 @@ public class AthleteController {
 		Athlete a = new Athlete();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
-		binder.setRequiredFields(new String[] {"id", "fname", "lname", "mname", "gender", "bdate"});
+		binder.setRequiredFields(new String[] {"id", "fname", "lname","bdate"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
@@ -188,10 +194,13 @@ public class AthleteController {
 		if (!errors.hasErrors() && regData.errors.isEmpty()) {
 			if((a = this.Athdao.add(a)) == null) 
 				return "errorPageTemplate";
+			else 
+				log.warning(ss.getUser().getEmail() + " updated " + a.getFname() + " " + a.getLname() + " in the datastore");
 			for(int i = 0; i < regData.registrations.size(); ++i){
 				Registration r = regData.registrations.get(i);
 				r.setAthleteID(a.getId());
-				this.Regdao.add(r);	
+				if(this.Regdao.add(r) != null)
+					log.warning(ss.getUser().getEmail() + " added " + regData.registrations.size() + " to the datastore");	
 			}
 		} else {
 			model = loadModel(model,req,false,ss.getUser(),a,errors,regData.errors);
@@ -231,6 +240,8 @@ public class AthleteController {
 		
 		if(errors.hasErrors() || this.Athdao.delete(a) == null)
 			return "errorPageTemplate";
+		else 
+			log.warning(ss.getUser().getEmail() + " deleted " + a.getFname() + " " + a.getLname() + " from the datastore");
 		
 		return "redirect:list";
 	}
@@ -245,26 +256,55 @@ public class AthleteController {
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String list(ModelMap model, HttpSession session) {	
+		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
 			session.invalidate();
 			return "redirect:/user/login"; 
 		}
 		
-		model.addAttribute("athleteList", this.Athdao.loadAll(ss.getUser()));
+		List<AthData> athdata = new ArrayList<AthData>();
+		
+		for (Athlete a : this.Athdao.loadAll(ss.getUser())){
+			
+			String event1 = "";
+			String event2 = "";
+			Event e1;
+			Event e2;
+			List<Registration> regs = this.Regdao.find(a);
+			if(regs != null){
+				if(regs.size() > 0) 
+					if((e1 = Evdao.find(regs.get(0).getEventID())) != null)
+						event1 = Evdao.find(regs.get(0).getEventID()).getName();
+				if(regs.size() > 1)
+					if((e2 = Evdao.find(regs.get(1).getEventID())) != null)
+						event2 = Evdao.find(regs.get(1).getEventID()).getName();
+			}
+			
+			boolean complete = !(a.getFname() == null || a.getFname().equals("") || a.getBdate() == null ||
+					a.getLname() == null || a.getLname().equals("") ||
+					a.getLname() == null || a.getLname().equals("") || 
+					a.getMname() == null || a.getMname().equals("") || 
+					a.getGender() == null || a.getGender().equals("") ||
+					event1.equals("") && event2.equals(""));
+			
+			athdata.add(new AthData(a,complete,"",event1,event2));
+		}
+
+		model.addAttribute("athleteList", athdata);
 		return "listAthlete";
 	}
 	
 	// ********* HELPER METHODS *******************
 	
-	// Returns a list of errors for when the entered scores for the events are either
-	// - less than minScore or greater than maxScore
+	// Returns a lists of registrations and errors associated with them inside of a class called RegData
 	public RegData handleRegistrations(HttpServletRequest req, Athlete a) {
 		List<String> errors = new ArrayList<String>();
 		List<Registration> registrations = new ArrayList<Registration>();
+		Long first = -1L;
 		if (req.getParameter("pevent") != null && !((String)req.getParameter("pevent")).equals("-1")) {
-			String pevent = (String)req.getParameter("pevent");
-			Event pe = this.Evdao.find(Long.parseLong(pevent));
+			first = Long.parseLong((String)req.getParameter("pevent"));
+			Event pe = this.Evdao.find(first);
 			if(pe != null){
 				Double pscore = 0.0;
 				try{
@@ -274,17 +314,15 @@ public class AthleteController {
 					} else {
 						Registration r = new Registration(pscore, a.getId(), pe.getId());
 						Long regid = -1L;
-						if (req.getParameter("pregId") != null && !((String)req.getParameter("pregId")).equals("-1")) {
+						if (req.getParameter("pregid") != null && !((String)req.getParameter("pregid")).equals("-1")) {
 							try {
-								regid = Long.parseLong((String)req.getParameter("sregId"));
+								regid = Long.parseLong((String)req.getParameter("pregid"));
 							} catch (Exception e){
 								errors.add("Registration ID in incorrect format.");
 							}
 						}
 						if(regid != -1) {
-							Registration tmpReg = new Registration();
-							tmpReg.setId(regid);
-							this.Regdao.delete(r);
+
 							r.setId(regid);
 						}
 						registrations.add(r);
@@ -298,8 +336,10 @@ public class AthleteController {
 		}
 		
 		if (req.getParameter("sevent") != null && !((String)req.getParameter("sevent")).equals("-1")) {
-			String ssevent = (String)req.getParameter("sevent");
-			Event sse = this.Evdao.find(Long.parseLong(ssevent));
+			Long second = Long.parseLong((String)req.getParameter("sevent"));
+			if(first.equals(second))
+				errors.add("Cannot register for the same event.");
+			Event sse = this.Evdao.find(second);
 			if(sse != null){
 				Double sscore = 0.0;
 				try {
@@ -309,17 +349,14 @@ public class AthleteController {
 					} else {
 						Registration r = new Registration(sscore, a.getId(), sse.getId());
 						Long regid = -1L;
-						if (req.getParameter("sregId") != null && !((String)req.getParameter("sregId")).equals("-1")) {
+						if (req.getParameter("sregid") != null && !((String)req.getParameter("sregid")).equals("-1")) {
 							try {
-								regid = Long.parseLong((String)req.getAttribute("pregId"));
+								regid = Long.parseLong((String)req.getAttribute("sregid"));
 							} catch (Exception e){
 								errors.add("Registration ID in incorrect format.");
 							}
 						}
 						if(regid != -1) {
-							Registration tmpReg = new Registration();
-							tmpReg.setId(regid);
-							this.Regdao.delete(r);
 							r.setId(regid);
 						}
 						registrations.add(r);
@@ -334,10 +371,10 @@ public class AthleteController {
 		return new RegData(registrations, errors);
 	}
 	
+	
+	// Loads the model for the maintain athletes jsp
 	private ModelMap loadModel(ModelMap model, HttpServletRequest req, boolean add, User u, Athlete a, BindingResult errors, List<String> otherErrors) {
-		
 		try{
-			
 			List<Event> events = this.Evdao.loadAll();
 			List<School> schools = this.Schdao.loadAll();
 			List<Classroom> classrooms = this.Cladao.loadAll();
@@ -356,7 +393,6 @@ public class AthleteController {
 			}
 			
 			try{
-				Long s = Long.parseLong(req.getParameter("pevent"));
 				if(req.getParameter("pevent")!=null)
 					model.addAttribute("pevent", Long.parseLong(req.getParameter("pevent")));
 				else model.addAttribute("pevent", -1L);
@@ -421,13 +457,14 @@ public class AthleteController {
 		return model;
 	}
 	
+	// Special binder to customize the output of the date
 	@InitBinder
 	public void binder(WebDataBinder binder) {binder.registerCustomEditor(Date.class,
 	    new PropertyEditorSupport() {
 	        public String getAsText() {
 	        	Object val;
 				if((val = getValue()) != null)
-					return new SimpleDateFormat("MM-dd-yyyy").format(val);
+					return new SimpleDateFormat("MM/dd/yyyy").format(val);
 				else 
 					return "";
         	}
@@ -435,6 +472,7 @@ public class AthleteController {
 	}
 }
 
+// Class that holds registrations and errors associated with them
 class RegData {
 	public List<Registration> registrations;
 	public List<String> errors;
