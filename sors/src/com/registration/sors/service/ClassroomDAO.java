@@ -16,6 +16,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.registration.sors.model.Classroom;
 import com.registration.sors.model.School;
+import com.registration.sors.model.User;
 
 
 @Service
@@ -93,6 +94,15 @@ public class ClassroomDAO {
 			
 			Objectify ofy = objectifyFactory.begin();
 			return ofy.get(new Key<Classroom>(new Key<School>(School.class, 1), Classroom.class, id));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public Classroom find(User u){
+		try {
+			Objectify ofy = objectifyFactory.begin();
+			return ofy.query(Classroom.class).ancestor(new Key<School>(School.class,1)).filter("userID",u.getId()).list().get(0);
 		} catch (Exception e) {
 			return null;
 		}

@@ -63,20 +63,18 @@ public class AthleteController {
 		
 		School s = new School();
 		s.setGroupID("012");
-		s.setId(new Long(1));
 		s.setName("Bobby Jones");
 		s.setVolunteerNum(1242);
 		Schdao.add(s);
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
-			
 			session.invalidate();
-			
-			// Right now it takes the user back to the Login Page no matter what
 			return new ModelAndView("redirect:/user/login");
 		}
+		
 		this.Athdao.init();
+		
 		return new ModelAndView("redirect:list");
 	}
 	
@@ -134,9 +132,9 @@ public class AthleteController {
 		
 		//Errors will be handled here
 		if (!errors.hasErrors()) {
-			if(this.Athdao.add(a) == null) {
+			if(this.Athdao.add(a) == null) 
 				return "errorPageTemplate";
-			}
+			
 		} else {
 			model = loadModel(model,true,ss.getUser(),a,errors);
 			return "maintainAthlete";
@@ -173,20 +171,13 @@ public class AthleteController {
 		BindingResult errors = binder.getBindingResult();
 		
 		a = Athdao.find(a.getId());
-		List<Event> events = this.Evdao.loadAll();
-		List<School> schools = this.Schdao.loadAll();
-		List<Classroom> classrooms = this.Cladao.loadAll();
 
 		model.addAttribute("athlete", a);
-		// Errors will be handled here
-		if (errors.hasErrors()) {
-			model.addAttribute("user",ss.getUser());
-			model.addAttribute("events", events);
-			model.addAttribute("schools", schools);
-			model.addAttribute("classrooms",classrooms);
-			model.addAllAttributes(errors.getModel()); 
-			return "maintainAthlete";
-		}
+
+		if (errors.hasErrors()) 
+			return "redirect:list";
+		
+		model = loadModel(model,false,ss.getUser(),a,errors);
 		return "maintainAthlete";
 	}
 	
@@ -218,22 +209,12 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
-		List<Event> events = this.Evdao.loadAll();
-		List<School> schools = this.Schdao.loadAll();
-		List<Classroom> classrooms = this.Cladao.loadAll();
-		List<String> scores = CheckScores(req);
 		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
 			this.Athdao.update(a);
 		} else {
-			model.addAttribute("scores",scores);
-			model.addAttribute("user",ss.getUser());
-			model.addAttribute("events", events);
-			model.addAttribute("schools", schools);
-			model.addAttribute("classrooms",classrooms);
-			model.addAttribute("athlete", a);
-			model.addAllAttributes(errors.getModel()); 
+			model = loadModel(model,false,ss.getUser(),a,errors);
 			return "maintainAthlete";
 		}
 		
@@ -255,7 +236,6 @@ public class AthleteController {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
 			session.invalidate();
-			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
 
@@ -263,11 +243,11 @@ public class AthleteController {
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
 		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
-		//BindingResult errors = binder.getBindingResult();
-		// Errors will be handled here
-		this.Athdao.delete(a);
-
-		// return to list
+		BindingResult errors = binder.getBindingResult();
+	
+		if(errors.hasErrors() || this.Athdao.delete(a) == null)
+			return "errorPageTemplate";
+		
 		return "redirect:list";
 
 	}
@@ -284,16 +264,11 @@ public class AthleteController {
 	public String list(ModelMap model, HttpSession session) {	
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		
 		if(!Security.isAuthenticated(this.roles, ss)){
-			
 			session.invalidate();
-			
-			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
 		
-		// Errors will be handled here
 		model.addAttribute("athleteList", this.Athdao.loadAll());
 		return "listAthlete";
 	}
@@ -324,23 +299,36 @@ public class AthleteController {
 		return scores;
 	}
 	
-	// ********* HELPER METHODS *******************s
+	// ********* HELPER METHODS *******************
 	private ModelMap loadModel(ModelMap model, boolean add, User u, Athlete a, BindingResult errors) {
 		
-		List<Event> events = this.Evdao.loadAll();
-		List<School> schools = this.Schdao.loadAll();
-		List<Classroom> classrooms = this.Cladao.loadAll();
+		try{
 		
-		model.addAttribute("user",u);
-		model.addAttribute("events",events);
-		model.addAttribute("schools",schools);
-		model.addAttribute("classrooms",classrooms);
-		model.addAttribute("athlete", a);
-		model.addAttribute("add", add);
+			List<Event> events = this.Evdao.loadAll();
+			List<School> schools = this.Schdao.loadAll();
+			List<Classroom> classrooms = this.Cladao.loadAll();
+			
+			model.addAttribute("user", u);
+			model.addAttribute("add", add);
+			model.addAttribute("athlete", a);
+			model.addAttribute("events", events);
+			
+			if(u.getRole().equals("A")) {
+				model.addAttribute("schools",schools);
+				model.addAttribute("classrooms",classrooms);
+			} else { 
+				Classroom c = this.Cladao.find(u);
+				model.addAttribute("school", c.getSchoolID());
+				model.addAttribute("classroom", c);
+			}
+			
+			if(errors != null)
+				model.addAllAttributes(errors.getModel()); 
+			
+		} catch (Exception e){
+			return null;
+		}
 		
-		if(errors != null)
-			model.addAllAttributes(errors.getModel()); 
-		
-		return null;
+		return model;
 	}
 }

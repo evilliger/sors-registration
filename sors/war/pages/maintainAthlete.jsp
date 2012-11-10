@@ -62,7 +62,7 @@
 			</tr>
           <tr><td><br></td><td></td></tr> 
           <% } else { %>
-          	<input type="hidden" value="<%= (Long)request.getAttribute("schoolID")%>" />
+          	<input type="hidden" value="<%= (Long)request.getAttribute("school")%>" />
           	<form:hidden path="classroomId" />
           <% } %>
           <tr>
