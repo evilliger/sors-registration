@@ -9,25 +9,13 @@ import java.util.*;
 import javax.persistence.Id;
 public class HeatEntry {
 	
-	@Id
-	Long id;
 	Long eventID;
-	int minAge;
-	int maxAge;
-	Date time;
-	String gender;
-	int numHeats;
-	int maxInHeat;
-	double score;
-	public Long getId() {
-		return id;
-	}
-
-
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	Long athID;
+	Long regID;
+	Long heatSpecID;
+	
+	public HeatEntry() {}
+	
 
 
 
@@ -43,89 +31,6 @@ public class HeatEntry {
 
 
 
-	public int getMinAge() {
-		return minAge;
-	}
-
-
-
-	public void setMinAge(int minAge) {
-		this.minAge = minAge;
-	}
-
-
-
-	public int getMaxAge() {
-		return maxAge;
-	}
-
-
-
-	public void setMaxAge(int maxAge) {
-		this.maxAge = maxAge;
-	}
-
-
-
-	public Date getTime() {
-		return time;
-	}
-
-
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
-
-
-
-	public String getGender() {
-		return gender;
-	}
-
-
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
-
-
-	public int getNumHeats() {
-		return numHeats;
-	}
-
-
-
-	public void setNumHeats(int numHeats) {
-		this.numHeats = numHeats;
-	}
-
-
-
-	public int getMaxInHeat() {
-		return maxInHeat;
-	}
-
-
-
-	public void setMaxInHeat(int maxInHeat) {
-		this.maxInHeat = maxInHeat;
-	}
-
-
-
-	public double getScore() {
-		return score;
-	}
-
-
-
-	public void setScore(double score) {
-		this.score = score;
-	}
-
-
 
 	public Long getRegID() {
 		return regID;
@@ -136,22 +41,31 @@ public class HeatEntry {
 	public void setRegID(Long regID) {
 		this.regID = regID;
 	}
+	public Long getAthID() {
+		return athID;
+	}
 
 
 
-	Long regID;
+	public void setAthID(Long athID) {
+		this.athID = athID;
+	}
 	
-	public HeatEntry() {}
-	
+	public Long getHeatSpecID() {
+		return heatSpecID;
+	}
+
+
+
+	public void setHeatSpecID(Long heatSpecID) {
+		this.heatSpecID = heatSpecID;
+	}
 	
 
-	public HeatEntry(Long e,int a1,int a2, Date t, String g, double s, Long regID){
-		eventID = e;
-		minAge =a1;
-		maxAge = a2;
-		time = t;
-		gender = g;
-		score = s;
+	public HeatEntry(Long eventID, Long regID, Long athID, Long heatSpecID){
+		this.eventID = eventID;
 		this.regID = regID;
+		this.athID = athID;
+		this.heatSpecID = heatSpecID;
 	}
 }

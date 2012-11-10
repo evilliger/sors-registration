@@ -211,5 +211,6 @@ public class Heat implements Serializable {
 		maxAge = max;
 		eventID = e;
 		time = t;	
+		gender = g;
 	}
 }

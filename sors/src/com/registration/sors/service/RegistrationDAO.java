@@ -65,6 +65,7 @@ public class RegistrationDAO {
 		reg.setEventID(r.getEventID());
 		reg.setRank(r.getRank());
 		reg.setScore(r.getScore());
+		reg.setHeatID(r.getHeatID());
 		
 		ofy.put(reg);
 	}

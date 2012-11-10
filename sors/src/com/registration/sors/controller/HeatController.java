@@ -289,7 +289,7 @@ public class HeatController {
 
 	
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
-	public ModelAndView generate(HttpServletRequest req, HttpSession session) throws Exception {
+	public String generate(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
@@ -298,12 +298,14 @@ public class HeatController {
 			session.invalidate();
 			
 			// Right now it takes the user back to the Login Page no matter what
-			return new ModelAndView("redirect:/user/login");
+			return "redirect:/user/login";
 		}
 		MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
 		handler.GenerateHeats();
-		String output = handler.ToString();
-		return new ModelAndView("redirect:list");
+		String html = handler.ToString();
+		
+		model.addAttribute("htmlTable", html);
+		return "generate";
 
 	}
 	
