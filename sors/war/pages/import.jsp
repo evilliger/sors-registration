@@ -7,6 +7,19 @@
 	<div>
 		<form action="/import/add" method="POST">
 		<table class="center">
+		<tr>
+				
+				<td colspan="2">
+					<h3 class="aligncenter">SORS Import Utility</h3>
+				</td>
+				<tr>
+				
+				<td colspan="2" class="aligncenter">
+					<p class="errors"><c:out value="${error}"></c:out></p>
+					<h4><c:out value="${success}"></c:out></h4>
+				</td>
+			</tr>
+			</tr>
 			<tr>
 				<td class="aligncenter">
 					<label for="table">Table to Import</label>
@@ -30,7 +43,7 @@
 			<tr>
 				
 				<td colspan="2">
-					<textarea name="csv" rows="4" cols="50"></textarea>
+					<textarea name="csv" rows="20" cols="100"></textarea>
 				</td>
 			</tr>
 			<tr>
