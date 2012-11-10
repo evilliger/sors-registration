@@ -109,6 +109,7 @@ public class InitController {
 		u.setEmail("Schaub");
 		u.setPword("x");
 		u.setParent(new Key<User>(User.class, User.parentId));
+		Usedao.add(u);
 		
 		Event ep = new Event();
 		ep.setId(Event.parentId);
@@ -174,7 +175,7 @@ public class InitController {
 		r.setScore(24.239);
 		Regdao.add(r);
 		
-		return new ModelAndView("redirect:list");
+		return new ModelAndView("redirect:/athlete/list");
 	}
 	
 }
