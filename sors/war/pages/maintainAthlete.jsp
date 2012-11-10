@@ -24,10 +24,9 @@
 				<c:forEach items="${messages}" var="message">
 					<li>${message}</li>
 				</c:forEach>
-				<c:forEach items="${scores}" var="error">
+				<c:forEach items="${otherErrors}" var="error">
 					<li>${error}</li>
 				</c:forEach>
-				
 			</ul>
 		</form:errors>
 		
@@ -121,6 +120,7 @@
 	                	Score: <input type="text" name="pscore" size="10"/>
 	                	<i><span id="punits"></span></i>
 	                </span>
+	                <input type="hidden" value="<%= (Long)request.getAttribute("pregId") %>" />
             	</td>
             </tr>
             
@@ -130,8 +130,8 @@
 	                <select id="ssevent" name="sevent">
 	                	<option value="">None</option>
 	                	<% for (Event e : events) { %>
-	                    <%="<option value='" + e.getId() + "'>" + e.getName() + "</option>" %>
-	                    <input type="hidden" id="<%=e.getId()%>" value="<%=e.getUnits()%>"/>
+		                    <%="<option value='" + e.getId() + "'>" + e.getName() + "</option>" %>
+		                    <input type="hidden" id="<%=e.getId()%>" value="<%=e.getUnits()%>"/>
 	                    <% } %>
 	                </select>
 	                <span id="sscore" class="hidden">
@@ -139,6 +139,7 @@
 	                	<i><span id="sunits"></span></i>
 	                </span>
             	</td>
+            	<input type="hidden" value="<%= (Long)request.getAttribute("sregId") %>" />
             </tr>
           <tr><td><br></td><td></td></tr>
           

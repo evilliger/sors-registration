@@ -16,6 +16,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 
+import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Registration;
 
 @Service
@@ -91,16 +92,24 @@ public class RegistrationDAO {
 	
 	public Registration find(Long id) {
 		try {
-			
 			Objectify ofy = this.objectifyFactory.begin();
 			return ofy.get(new Key<Registration>(new Key<Registration>(Registration.class, Registration.parentId), Registration.class, id));
-		
 		} catch (Exception e) {
 			return null;
 		}
 	}
+	
+	public List<Registration> find(Athlete a) {
+		try {
+			Objectify ofy = this.objectifyFactory.begin();
+			return ofy.query(Registration.class).ancestor(new Key<Registration>(Registration.class,Registration.parentId)).filter("athleteID", a.getId()).list();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public void add(List<Registration> a) {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
-}
+	}
 }

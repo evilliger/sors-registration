@@ -27,12 +27,16 @@ public class Registration {
 	Long eventID;
 	Long heatID;
 	
-
-
 	@Parent
 	Key<Registration> parent;
 	
 	public Registration() {}
+	
+	public Registration(double score, Long athleteID, Long eventID) {
+		this.score = score;
+		this.athleteID = athleteID;
+		this.eventID = eventID;
+	}
 	
 	public Key<Registration> getParent() {
 		return parent;
