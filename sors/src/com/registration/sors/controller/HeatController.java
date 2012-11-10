@@ -283,6 +283,11 @@ public class HeatController {
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login";
 		}
+		List<Heat> heatList = this.heatDao.loadAll();
+		for(int i = 0; i < heatList.size(); ++i){
+			Heat h = heatList.get(i);
+			this.heatDao.delete(h);
+		}
 		MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
 		handler.GenerateHeats();
 		String html = handler.ToString();

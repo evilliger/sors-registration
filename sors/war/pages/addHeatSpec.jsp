@@ -14,8 +14,8 @@
 			<tr><td>Event:</td><td>
 			    <select id="eventId" name="eventId">
 			        <option value=""></option>
-			        <option value="179">50 Meter Dash</option>
-			        <option value="180">100 Meter Flash</option>
+			        <option value="339">50 Meter Dash</option>
+			        <option value="340">100 Meter Flash</option>
 			        <option value="14">Sock Challenge</option>
 			        
 			    </select>
