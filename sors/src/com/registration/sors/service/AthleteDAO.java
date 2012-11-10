@@ -54,10 +54,15 @@ public class AthleteDAO {
 	// Parameters: Athlete a - athlete to delete
 	// Return: void
 	
-	public void delete(Athlete a){
-		Objectify ofy = this.objectifyFactory.begin();
-		Athlete ath = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, a.getClassroomId()), Athlete.class, a.getId()));
-		ofy.delete(ath);
+	public Athlete delete(Athlete a){
+		try {
+			Objectify ofy = this.objectifyFactory.begin();
+			Athlete ath = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, a.getClassroomId()), Athlete.class, a.getId()));
+			ofy.delete(ath);
+			return ath;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	// update an Athlete in DataStore
@@ -90,6 +95,7 @@ public class AthleteDAO {
 		list.addAll(ofy.query(Athlete.class).ancestor(new Key<Classroom>(Classroom.class,-1)).list());
 		return list;
 	}
+	
 	// find an athlete whose athleteID is id
 	// Parameters: id - athleteID number
 	// Return: Athlete - whose athleteID is id

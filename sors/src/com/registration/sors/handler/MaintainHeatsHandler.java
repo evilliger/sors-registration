@@ -39,6 +39,7 @@ public class MaintainHeatsHandler {
 	private static HeatSpecDAO heatSpecDAO;
 	private static HeatDAO heatDAO;
 	
+	
 	public MaintainHeatsHandler(HeatDAO heatDao2, RegistrationDAO regDao2, AthleteDAO athDao2, EventDAO eventDao2, HeatSpecDAO heatSpecDao2){
 		regDAO = regDao2;
 		athDAO = athDao2;
@@ -203,7 +204,7 @@ public class MaintainHeatsHandler {
 			for(int j = 0; j < EventSpecsList.size(); ++j){
 				HeatSpec s = EventSpecsList.get(j);
 				if(age >= s.getMinAge() && age <= s.getMaxAge() && a.getGender().equals(s.getGender())){
-					heatEntryList.add(new HeatEntry(s.getEventId(),s.getMinAge(),s.getMaxAge(),s.getTime(),s.getGender(),r.getScore(),r.getId()));
+					//heatEntryList.add(new HeatEntry(s.getEventId(),s.getMinAge(),s.getMaxAge(),s.getTime(),s.getGender(),r.getScore(),r.getId()));
 					break;
 				}
 			}			
@@ -262,7 +263,6 @@ public class MaintainHeatsHandler {
 		Dictionary<String,List<HeatEntry>> list = new Hashtable<String,List<HeatEntry>>();
 		
 		List<Registration> regList = regDAO.loadAll();
-		//List<Event>eventList = eventDAO.loadAll();
 		Dictionary<String,Athlete>athleteCodes = getAthleteDictionary();	
 		// key is event id
 		Dictionary<String,List<HeatSpec>> specList = getHeatSpecDictionary();
