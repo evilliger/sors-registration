@@ -34,7 +34,6 @@ public class AthleteDAO {
 			a.setClassroom(new Key<Classroom>(Classroom.class, a.getClassroomId()));
 			Objectify ofy = this.objectifyFactory.begin();
 			ofy.put(a);
-			
 			return a;
 		} catch (Exception e) {
 			return null;

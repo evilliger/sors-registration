@@ -4,8 +4,12 @@
 //-------------------------------------------//
 package com.registration.sors.controller;
 
+import java.beans.PropertyEditorSupport;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -61,14 +67,14 @@ public class AthleteController {
 	//		add page - page allowing the user to submit a new athlete
 	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddAthletePage(HttpSession session, ModelMap model) {
+	public String getAddAthletePage(HttpSession session, HttpServletRequest req, ModelMap model) {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
 			session.invalidate();	
 			return "redirect:/user/login"; 
 		}
 		
-		model = loadModel(model, true, ss.getUser(), new Athlete(), null,null);
+		model = loadModel(model, req, true, ss.getUser(), new Athlete(), null,null);
 		
 		return "maintainAthlete";
 	}
@@ -98,15 +104,19 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
-		List<String> otherErrors = handleEvents(req, a, !errors.hasErrors());
+		RegData regData = handleRegistrations(req, a);
 		
 		//Errors will be handled here
-		if (!errors.hasErrors() && otherErrors.isEmpty()) {
-			if(this.Athdao.add(a) == null) 
+		if (!errors.hasErrors() && regData.errors.isEmpty()) {
+			if((a = this.Athdao.add(a)) == null) 
 				return "errorPageTemplate";
-			
+			for(int i = 0; i < regData.registrations.size(); ++i){
+				Registration r = regData.registrations.get(i);
+				r.setAthleteID(a.getId());
+				this.Regdao.add(r);	
+			}
 		} else {
-			model = loadModel(model,true,ss.getUser(),a,errors,otherErrors);
+			model = loadModel(model, req, true,ss.getUser(),a,errors,regData.errors);
 			return "maintainAthlete";
 		}
 		return "redirect:list";
@@ -138,12 +148,12 @@ public class AthleteController {
 		BindingResult errors = binder.getBindingResult();
 		
 		Classroom c = this.Cladao.find(ss.getUser());
-		a = Athdao.find(a.getId(), c);
+		a = this.Athdao.find(a.getId(), c);
 
 		if (errors.hasErrors()) 
 			return "redirect:list";
 		
-		model = loadModel(model,false,ss.getUser(),a,errors,null);
+		model = loadModel(model,req,false,ss.getUser(),a,errors,null);
 
 		return "maintainAthlete";
 	}
@@ -173,13 +183,18 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
-		List<String> otherErrors = handleEvents(req, a, !errors.hasErrors());
+		RegData regData = handleRegistrations(req, a);
 		
-		// Errors will be handled here
-		if (!errors.hasErrors() && otherErrors.isEmpty()) {
-			this.Athdao.update(a);
+		if (!errors.hasErrors() && regData.errors.isEmpty()) {
+			if((a = this.Athdao.add(a)) == null) 
+				return "errorPageTemplate";
+			for(int i = 0; i < regData.registrations.size(); ++i){
+				Registration r = regData.registrations.get(i);
+				r.setAthleteID(a.getId());
+				this.Regdao.add(r);	
+			}
 		} else {
-			model = loadModel(model,false,ss.getUser(),a,errors,otherErrors);
+			model = loadModel(model,req,false,ss.getUser(),a,errors,regData.errors);
 			return "maintainAthlete";
 		}
 		
@@ -211,6 +226,9 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 	
+		Classroom c = this.Cladao.find(ss.getUser());
+		a = this.Athdao.find(a.getId(), c);
+		
 		if(errors.hasErrors() || this.Athdao.delete(a) == null)
 			return "errorPageTemplate";
 		
@@ -241,24 +259,24 @@ public class AthleteController {
 	
 	// Returns a list of errors for when the entered scores for the events are either
 	// - less than minScore or greater than maxScore
-	public List<String> handleEvents(HttpServletRequest req, Athlete a, boolean storeEvents) {
+	public RegData handleRegistrations(HttpServletRequest req, Athlete a) {
 		List<String> errors = new ArrayList<String>();
-		String s = (String)req.getAttribute("pevent") ;
-		if (req.getAttribute("pevent") != null && !((String)req.getAttribute("pevent")).equals("-1")) {
-			String pevent = (String)req.getAttribute("pevent");
+		List<Registration> registrations = new ArrayList<Registration>();
+		if (req.getParameter("pevent") != null && !((String)req.getParameter("pevent")).equals("-1")) {
+			String pevent = (String)req.getParameter("pevent");
 			Event pe = this.Evdao.find(Long.parseLong(pevent));
 			if(pe != null){
 				Double pscore = 0.0;
 				try{
-					pscore = Double.parseDouble((String)req.getAttribute("pscore"));
+					pscore = Double.parseDouble((String)req.getParameter("pscore"));
 					if (pscore > pe.getMax() || pscore < pe.getMin()) {
 						errors.add("Primary event score not within bounds");
 					} else {
 						Registration r = new Registration(pscore, a.getId(), pe.getId());
 						Long regid = -1L;
-						if (req.getAttribute("pregId") != null && !((String)req.getAttribute("pregId")).equals("-1")) {
+						if (req.getParameter("pregId") != null && !((String)req.getParameter("pregId")).equals("-1")) {
 							try {
-								regid = (Long)req.getAttribute("sregId");
+								regid = Long.parseLong((String)req.getParameter("sregId"));
 							} catch (Exception e){
 								errors.add("Registration ID in incorrect format.");
 							}
@@ -269,8 +287,7 @@ public class AthleteController {
 							this.Regdao.delete(r);
 							r.setId(regid);
 						}
-						if(storeEvents)
-							this.Regdao.add(r);
+						registrations.add(r);
 					}
 				} catch (Exception e){
 					errors.add("Please enter numeric score for primary event.");
@@ -280,21 +297,21 @@ public class AthleteController {
 			}
 		}
 		
-		if (req.getAttribute("ssevent") != null && !((String)req.getAttribute("ssevent")).equals("-1")) {
-			String ssevent = (String)req.getAttribute("ssevent");
+		if (req.getParameter("sevent") != null && !((String)req.getParameter("sevent")).equals("-1")) {
+			String ssevent = (String)req.getParameter("sevent");
 			Event sse = this.Evdao.find(Long.parseLong(ssevent));
 			if(sse != null){
 				Double sscore = 0.0;
 				try {
-					sscore = Double.parseDouble((String)req.getAttribute("sscore"));
+					sscore = Double.parseDouble((String)req.getParameter("sscore"));
 					if (sscore > sse.getMax() || sscore < sse.getMin()) {
 						errors.add("Secondary event score not within bounds");
 					} else {
 						Registration r = new Registration(sscore, a.getId(), sse.getId());
 						Long regid = -1L;
-						if (req.getAttribute("sregId") != null && !((String)req.getAttribute("sregId")).equals("-1")) {
+						if (req.getParameter("sregId") != null && !((String)req.getParameter("sregId")).equals("-1")) {
 							try {
-								regid = (Long)req.getAttribute("pregId");
+								regid = Long.parseLong((String)req.getAttribute("pregId"));
 							} catch (Exception e){
 								errors.add("Registration ID in incorrect format.");
 							}
@@ -305,8 +322,7 @@ public class AthleteController {
 							this.Regdao.delete(r);
 							r.setId(regid);
 						}
-						if(storeEvents)
-							this.Regdao.add(r);
+						registrations.add(r);
 					}
 				} catch(Exception e){
 					errors.add("Please enter numeric score for secondary event.");
@@ -315,12 +331,13 @@ public class AthleteController {
 				errors.add("Secondary event not found.");
 			}
 		}
-		return errors;
+		return new RegData(registrations, errors);
 	}
 	
-	private ModelMap loadModel(ModelMap model, boolean add, User u, Athlete a, BindingResult errors, List<String> otherErrors) {
+	private ModelMap loadModel(ModelMap model, HttpServletRequest req, boolean add, User u, Athlete a, BindingResult errors, List<String> otherErrors) {
 		
 		try{
+			
 			List<Event> events = this.Evdao.loadAll();
 			List<School> schools = this.Schdao.loadAll();
 			List<Classroom> classrooms = this.Cladao.loadAll();
@@ -338,15 +355,59 @@ public class AthleteController {
 				a.setClassroomId(c.getId());
 			}
 			
-			List<Registration> regs = Regdao.find(a);
-			if(regs.size() > 0)
+			try{
+				Long s = Long.parseLong(req.getParameter("pevent"));
+				if(req.getParameter("pevent")!=null)
+					model.addAttribute("pevent", Long.parseLong(req.getParameter("pevent")));
+				else model.addAttribute("pevent", -1L);
+			} catch (Exception e){
+				model.addAttribute("pevent", -1L);
+			}
+			
+			try {
+				if(req.getParameter("sevent")!=null)
+					model.addAttribute("sevent", Long.parseLong(req.getParameter("sevent")));
+				else model.addAttribute("sevent", -1L);
+			} catch (Exception e){
+				model.addAttribute("sevent", -1L);
+			}    
+			
+			try {
+				if(req.getParameter("pscore")!=null)
+					model.addAttribute("pscore", Double.parseDouble(req.getParameter("pscore")));
+				else model.addAttribute("pscore", -1D);
+			} catch (Exception e){
+				model.addAttribute("pscore", -1D);
+			}  
+			
+			try {
+				if(req.getParameter("sscore")!=null)
+					model.addAttribute("sscore", Double.parseDouble(req.getParameter("sscore")));
+				else model.addAttribute("sscore", -1D);
+			} catch (Exception e){
+				model.addAttribute("sscore", -1D);
+			}  
+			
+			List<Registration> regs = this.Regdao.find(a);
+			if(regs.size() > 0) {
 				model.addAttribute("pregId", regs.get(0).getId());
-			else 
+				if(!add) {
+					model.addAttribute("pevent", regs.get(0).getEventID());
+					model.addAttribute("pscore", regs.get(0).getScore());
+				}
+			} else {
 				model.addAttribute("pregId", -1L);
-			if(regs.size() > 1)
+			}
+			
+			if(regs.size() > 1) {
 				model.addAttribute("sregId", regs.get(1).getId());
-			else
+				if(!add){
+					model.addAttribute("sevent", regs.get(1).getEventID());
+					model.addAttribute("sscore", regs.get(1).getScore());
+				}
+			} else {
 				model.addAttribute("sregId", -1L);
+			}
 			
 			if(errors != null)
 				model.addAllAttributes(errors.getModel()); 
@@ -358,5 +419,28 @@ public class AthleteController {
 		}
 		model.addAttribute("athlete", a);
 		return model;
+	}
+	
+	@InitBinder
+	public void binder(WebDataBinder binder) {binder.registerCustomEditor(Date.class,
+	    new PropertyEditorSupport() {
+	        public String getAsText() {
+	        	Object val;
+				if((val = getValue()) != null)
+					return new SimpleDateFormat("MM-dd-yyyy").format(val);
+				else 
+					return "";
+        	}
+	    });
+	}
+}
+
+class RegData {
+	public List<Registration> registrations;
+	public List<String> errors;
+
+	public RegData(List<Registration> registrations, List<String> errors) {
+		this.registrations = registrations;
+		this.errors = errors;
 	}
 }

@@ -15,28 +15,39 @@
    	<div class="row">
      	<div class="wrapper">
      	
-     	<% boolean isAdmin = ((User)request.getAttribute("user")).getRole().equals("A"); %>
+     	<% 	boolean isAdmin = ((User)request.getAttribute("user")).getRole().equals("A"); 
+     		boolean add = (Boolean)request.getAttribute("add");
+     		List<School> schools = (List<School>)request.getAttribute("schools");
+     		List<Classroom> classrooms = (List<Classroom>)request.getAttribute("classrooms"); 
+     		Long school = (Long)request.getAttribute("school");
+     		List<Event> events = (List<Event>)request.getAttribute("events");
+			Long pe = (Long)request.getAttribute("pevent"); 
+			Long se = (Long)request.getAttribute("sevent");
+      		String hidden = ((se == null || se.equals("-1") || se.equals("")) && pe.equals("-1")) ? "hidden" : "";
+      		Double pscore = (Double)request.getAttribute("pscore");
+      		Double sscore = (Double)request.getAttribute("sscore");
+      		Long pregid = (Long)request.getAttribute("pregId");
+      		Long sregid = (Long)request.getAttribute("sregId");
+     	%>
 
-		<form:form commandName='athlete' action='<%= ((Boolean)request.getAttribute("add")) ? "add": "update" %>'>
+		<form:form commandName='athlete' action='<%= (add) ? "add": "update" %>'>
 		
+		<ul class="errors">
 		<form:errors path="*" >
-			<ul class="errors">
-				<c:forEach items="${messages}" var="message">
-					<li>${message}</li>
-				</c:forEach>
-				<c:forEach items="${otherErrors}" var="error">
-					<li>${error}</li>
-				</c:forEach>
-			</ul>
+			<c:forEach items="${messages}" var="message">
+				<li>${message}</li>
+			</c:forEach>
 		</form:errors>
-		
+			<c:forEach items="${otherErrors}" var="error">
+				<li>${error}</li>
+			</c:forEach>
+		</ul>
 		<form:hidden path="id" />
 
 		<br>
 		<br>
 		<table>
 			<% if (isAdmin) { %>
-          		<% List<School> schools = (List<School>)request.getAttribute("schools"); %>
 		  	<tr>
 		  		<td>School:</td>
 				<td><form:select path="" id="school">
@@ -47,7 +58,6 @@
 	                </form:select>
 				<form:errors path="" cssClass="errors" /></td>
             </tr>
-          		<% List<Classroom> classrooms = (List<Classroom>)request.getAttribute("classrooms"); %>
           	<tr class="hidden" id="class">
 				<td>Class:</td>
 				<td><form:select path="classroomId">
@@ -61,7 +71,7 @@
 			</tr>
           <tr><td><br></td><td></td></tr> 
           <% } else { %>
-          	<input type="hidden" value="<%= (Long)request.getAttribute("school")%>" />
+          	<input type="hidden" value="<%= school %>" />
           	<form:hidden path="classroomId" />
           <% } %>
           <tr>
@@ -103,43 +113,42 @@
           <tr>
           
           <tr><td><br></td><td></td></tr>
-          
-          <% List<Event> events = (List<Event>)request.getAttribute("events"); %>
-          
 		  	<tr>
 		  		<td>Event One:</td>
 		  		<td>
 	                <select id="pevent" name="pevent">
-	                	<option value="">None</option>
+	                	<option value="-1" <%= (pe == -1L)?"selected":"" %>>None</option>
 	                	<% for (Event e : events) { %>
-	                    <%="<option value='" + e.getId() + "'>" + e.getName() + "</option>" %>
+	                    <%="<option value='" + e.getId() + "'" + ((pe.equals(e.getId()))?"selected":"") + ">" + e.getName() + "</option>" %>
 	                    <input type="hidden" id="<%=e.getId()%>" value="<%=e.getUnits()%>"/>
 	                    <% } %>
 	                </select>
-	                <span id="pscore" class="hidden">
-	                	Score: <input type="text" name="pscore" size="10"/>
+	                <span id="pscore" class="<%=hidden%>">
+	                	Score: <input type="text" name="pscore" size="10" value="<%= (pscore.equals(-1.0))?"":pscore %>"/>
 	                	<i><span id="punits"></span></i>
 	                </span>
-	                <input type="hidden" value="<%= (Long)request.getAttribute("pregId") %>" />
+	                <input type="hidden" value="<%= pregid %>" />
             	</td>
             </tr>
             
-            <tr id="sevent" class="hidden">
+            <% 	 %>
+            
+            <tr id="sevent" class="<%=hidden%>">
             	<td>Event Two:</td>
             	<td>
 	                <select id="ssevent" name="sevent">
-	                	<option value="">None</option>
+	                	<option value="-1" <%= (se == -1L)?"selected":"" %>>None</option>
 	                	<% for (Event e : events) { %>
-		                    <%="<option value='" + e.getId() + "'>" + e.getName() + "</option>" %>
+		                    <%="<option value='" + e.getId() + "'" + ((se.equals(e.getId()))?"selected":"") + ">" + e.getName() + "</option>" %>
 		                    <input type="hidden" id="<%=e.getId()%>" value="<%=e.getUnits()%>"/>
 	                    <% } %>
 	                </select>
-	                <span id="sscore" class="hidden">
-	                	Score: <input type="text" name="sscore" size="10"/>
+	                <span id="sscore" class="<%=hidden%>">
+	                	Score: <input type="text" name="sscore" size="10" value="<%= (sscore.equals(-1.0))?"":sscore %>"/>
 	                	<i><span id="sunits"></span></i>
 	                </span>
             	</td>
-            	<input type="hidden" value="<%= (Long)request.getAttribute("sregId") %>" />
+            	<input type="hidden" value="<%= sregid %>" />
             </tr>
           <tr><td><br></td><td></td></tr>
           
