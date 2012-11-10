@@ -1,6 +1,5 @@
 //-------------------------------------------//
-// Name: AthleteController					 //
-// Purpose: Spring Cotroller				 //
+// Name: InitController					     //
 //-------------------------------------------//
 package com.registration.sors.controller;
 
@@ -73,12 +72,6 @@ public class InitController {
 		s.setVolunteerNum(1242);
 		s.setParent(new Key<School>(School.class, School.parentId));
 		Schdao.add(s);
-		
-		Classroom c = new Classroom();
-		c.setClassName("Fifth Grade!!");
-		c.setSchoolID(s.getId());
-		c.setSchool(new Key<School>(School.class, s.getId()));
-		Cladao.add(c);
 
 		User up = new User();
 		up.setId(User.parentId);
@@ -89,8 +82,15 @@ public class InitController {
 		u.setFname("Frank");
 		u.setLname("Harrison");
 		u.setTitle("Mr.");
-		u.setParent(new Key<User>(User.class, u.getId()));
+		u.setParent(new Key<User>(User.class, up.getId()));
 		Usedao.add(u);
+		
+		Classroom c = new Classroom();
+		c.setClassName("Fifth Grade!!");
+		c.setSchoolID(s.getId());
+		c.setUserID(u.getId());
+		c.setSchool(new Key<School>(School.class, s.getId()));
+		Cladao.add(c);
 		
 		Athlete a = new Athlete();
 		a.setFname("Fred");
