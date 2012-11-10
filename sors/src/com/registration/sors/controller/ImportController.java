@@ -62,21 +62,32 @@ public class ImportController {
 		// Pick the right table to import into
 		
 		if (table.equals("athlete")) {
+			
+			// Get athletes from csv
 			List<Athlete> l = imp.importAthletes(csv);
-			model.addAttribute("TableData", l);
-			AthleteDAO.add(l);
+			
+			List<Athlete> a = new ArrayList<Athlete>();
+			for (Athlete ath : l) {
+				ath.setClassroom(ClassroomDAO.getKeyByID(ath.getId()));
+				a.add(ath);
+			}
+			
+			model.addAttribute("TableData", a);
+			AthleteDAO.add(a);
 		} else if (table.equals("classroom")) {
+			// Get classrooms from csv
 			List<Classroom> l = imp.importClassrooms(csv);
 			
-			List<Classroom> c = new ArrayList();
+			// Find parent school for each classroom and build new list
+			List<Classroom> c = new ArrayList<Classroom>();
 			for (Classroom cl : l) {
-				School s = SchoolDAO.find(cl.getSchoolID());
-				cl.setSchool(s.getParent());
+				cl.setSchool(SchoolDAO.getKeyByID(cl.getId()));
 				c.add(cl);
 			}
 			
+			// Throw new list into the model and datastore
 			model.addAttribute("TableData", c);
-			ClassroomDAO.add(l);
+			ClassroomDAO.add(c);
 		} else if (table.equals("event")) {
 			List<Event> l = imp.importEvent(csv);
 			model.addAttribute("TableData", l);
@@ -94,14 +105,23 @@ public class ImportController {
 			model.addAttribute("TableData", l);
 			RegistrationDAO.add(l);
 		} else if (table.equals("school")) {
+			// Get schools from csv
 			List<School> l = imp.importSchool(csv);
-			Key<School> key = SchoolDAO.getParentKey(1);
 			
+			// Get parent key
+			Key<School> key = SchoolDAO.getKeyByID((long) -1);
+			
+			// Loop over schools adding parent key
+			List<School> s = new ArrayList<School>();
 			for (School school : l) {
 				school.setParent(key);
+				s.add(school);
 			}
-			model.addAttribute("TableData", l);
-			SchoolDAO.add(l);
+			
+			// Add new list to model and datastore
+			model.addAttribute("TableData", s);
+			SchoolDAO.add(s);
+			
 		} else if (table.equals("user")) {
 			List<User> l = imp.importUser(csv);
 			model.addAttribute("TableData", l);

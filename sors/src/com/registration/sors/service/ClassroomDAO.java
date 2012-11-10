@@ -99,6 +99,17 @@ public class ClassroomDAO {
 		}
 	}
 	
+	public Classroom find(Long id){
+		try {
+			
+			Objectify ofy = objectifyFactory.begin();
+			return ofy.get(new Key<Classroom>(new Key<School>(School.class, 1), Classroom.class, id));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	
 	public Classroom find(User u){
 		try {
 			Objectify ofy = objectifyFactory.begin();
@@ -111,5 +122,9 @@ public class ClassroomDAO {
 	public void add(List<Classroom> a) {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
-}
+	}
+	
+	public Key<Classroom> getKeyByID(Long id) {
+		return objectifyFactory.getKey(find(id));
+	}
 }

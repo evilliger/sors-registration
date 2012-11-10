@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
+import com.registration.sors.model.Classroom;
 import com.registration.sors.model.School;
 import com.registration.sors.model.User;
 @Service
@@ -81,9 +82,8 @@ public class SchoolDAO {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
 }
-	public Key<School> getParentKey(int id) {
+	public Key<School> getKeyByID(Long id) {
 		Objectify ofy = objectifyFactory.begin();
-		School sch = ofy.get(new Key<School>(School.class, id));
-		return sch.getParent();
+		return objectifyFactory.getKey(ofy.get(School.class, id));
 	}
 }
