@@ -190,11 +190,12 @@ public class ImportHandler {
 	    Map<String, String> columnMapping = new HashMap<String, String>();
 	    
 	    // DB name, DS name
-	    columnMapping.put("RegID", "regID");
+	    columnMapping.put("RegID", "id");
 	    columnMapping.put("Score", "score");
 	    columnMapping.put("Rank", "rank");
-	    columnMapping.put("EventID", "eventID");
-	    columnMapping.put("AthleteID", "athleteID");
+	    columnMapping.put("FK_HeatID", "heatID");
+	    columnMapping.put("FK_EventID", "eventID");
+	    columnMapping.put("FK_AthleteID", "athleteID");
 	    
 	    HeaderColumnNameTranslateMappingStrategy<Registration> strategy = 
 	        new HeaderColumnNameTranslateMappingStrategy<Registration>();
@@ -203,7 +204,6 @@ public class ImportHandler {
 	    
 	    //Parse the CSV
 	    List<Registration> l = bean.parse(strategy, new StringReader(data));
-	    
 	    for(Registration reg : l) {
 	    	reg.setParent(new Key<Registration>(Registration.class, Registration.parentId));
 	    }
@@ -219,6 +219,7 @@ public class ImportHandler {
 	    Map<String, String> columnMapping = new HashMap<String, String>();
 	    
 	    // DB name, DS name
+	    // SchoolID,GroupCode,SchoolName,VolunteerNum,FK_PersonID
 	    columnMapping.put("SchoolID", "id");
 	    columnMapping.put("GroupCode", "groupID");
 	    columnMapping.put("SchoolName", "name");
@@ -247,10 +248,11 @@ public class ImportHandler {
 	    Map<String, String> columnMapping = new HashMap<String, String>();
 	    
 	    // DB name, DS name
-	    columnMapping.put("UserID", "id");
+	    // PersonID,Title,FirstName,LastName,Fax,Email,Password,Role,Active
+	    columnMapping.put("PersonID", "id");
 	    columnMapping.put("Title", "title");
-	    columnMapping.put("UserFirstName", "fname");
-	    columnMapping.put("UserLastName", "lname");
+	    columnMapping.put("FirstName", "fname");
+	    columnMapping.put("LastName", "lname");
 	    columnMapping.put("Fax", "fax");
 	    columnMapping.put("Email", "email");
 	    columnMapping.put("Password", "pword");

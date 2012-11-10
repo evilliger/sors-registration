@@ -51,7 +51,7 @@ public class ImportController {
 		
 		// Make sure the data is valid
 		if (table.isEmpty() || csv.isEmpty()){
-			model.addAttribute("ImporError", "Error importing file");
+			model.addAttribute("error", "No data to import!");
 			return "import";
 		}
 		
@@ -61,40 +61,85 @@ public class ImportController {
 		// Pick the right table to import into
 		
 		if (table.equals("athlete")) {
-			List<Athlete> l = imp.importAthletes(csv);
-			model.addAttribute("TableData",l);
-			AthleteDAO.add(l);
+			try {
+				List<Athlete> l = imp.importAthletes(csv);
+				model.addAttribute("success", l.size() + " athlete(s) imported successfully");
+				AthleteDAO.add(l);
+			} catch (Exception e) {
+				model.addAttribute("error", "An error occurred adding data.");
+				return "import";
+			}
+			
 		} else if (table.equals("classroom")) {
-			List<Classroom> l = imp.importClassrooms(csv);
-			model.addAttribute("TableData", l);
-			ClassroomDAO.add(l);
+			try {
+				List<Classroom> l = imp.importClassrooms(csv);
+				model.addAttribute("success", l.size() + " classroom(s) imported successfully");
+				ClassroomDAO.add(l);
+			} catch (Exception e) {
+				model.addAttribute("error", "An error occurred adding data.");
+				return "import";
+			}
+			
 		} else if (table.equals("event")) {
-			List<Event> l = imp.importEvent(csv);
-			model.addAttribute("TableData", l);
-			EventDAO.add(l);
+			try {
+				List<Event> l = imp.importEvent(csv);
+				model.addAttribute("success", l.size() + " event(s) imported successfully");
+				EventDAO.add(l);
+			} catch (Exception e) {
+				model.addAttribute("error", "An error occurred adding data.");
+				return "import";
+			}
+			
 		} else if (table.equals("heat")) {
-			List<Heat> l = imp.importHeat(csv);
-			model.addAttribute("TableData", l);
-			HeatDAO.add(l);
+			try {
+				List<Heat> l = imp.importHeat(csv);
+				model.addAttribute("success", l.size() + " heat(s) imported successfully");
+				HeatDAO.add(l);
+			} catch (Exception e) {
+				model.addAttribute("error", "An error occurred adding data.");
+				return "import";
+			}
+			
 		} else if (table.equals("heatspec")) {
-			List<HeatSpec> l = imp.importHeatSpec(csv);
-			model.addAttribute("TableData", l);
-			HeatSpecDAO.add(l);
+			try {
+				List<HeatSpec> l = imp.importHeatSpec(csv);
+				model.addAttribute("success", l.size() + " HeatSpec(s) imported successfully");
+				HeatSpecDAO.add(l);
+			} catch (Exception e) {
+				model.addAttribute("error", "An error occurred adding data.");
+				return "import";
+			}
+			
 		} else if (table.equals("registration")) {
-			List<Registration> l = imp.importRegistration(csv);
-			model.addAttribute("TableData", l);
-			RegistrationDAO.add(l);
+			try {
+				List<Registration> l = imp.importRegistration(csv);
+				model.addAttribute("success", l.size() + " registration(s) imported successfully");
+				RegistrationDAO.add(l);
+			} catch (Exception e) {
+				model.addAttribute("error", "An error occurred adding data.");
+				return "import";
+			}
 		} else if (table.equals("school")) {
-			List<School> l = imp.importSchool(csv);
-			model.addAttribute("TableData", l);
-			SchoolDAO.add(l);
+			try {
+				List<School> l = imp.importSchool(csv);
+				model.addAttribute("success", l.size() + " school(s) imported successfully");
+				SchoolDAO.add(l);
+			} catch (Exception e) {
+				model.addAttribute("error", "An error occurred adding data.");
+				return "import";
+			}
 		} else if (table.equals("user")) {
-			List<User> l = imp.importUser(csv);
-			model.addAttribute("TableData", l);
-			UserDAO.add(l);
+			try {
+				List<User> l = imp.importUser(csv);
+				model.addAttribute("success", l.size() + " user(s) imported successfully");
+				UserDAO.add(l);
+			} catch (Exception e) {
+				model.addAttribute("error", "An error occurred adding data.");
+				return "import";
+			}
 		}
 		
-		return "redirect:/athlete/list";
+		return "import";
 	}
 	
 }
