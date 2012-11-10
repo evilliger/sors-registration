@@ -11,6 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.googlecode.objectify.Key;
 import com.registration.sors.handler.ImportHandler;
 import com.registration.sors.service.*;
 import com.registration.sors.model.Athlete;
@@ -65,6 +66,12 @@ public class ImportController {
 			AthleteDAO.add(l);
 		} else if (table.equals("classroom")) {
 			List<Classroom> l = imp.importClassrooms(csv);
+			
+			for (Classroom cl : l) {
+				School s = SchoolDAO.find(cl.getSchoolID());
+				cl.setSchool(s.getParent());
+			}
+			
 			model.addAttribute("TableData", l);
 			ClassroomDAO.add(l);
 		} else if (table.equals("event")) {
@@ -85,6 +92,12 @@ public class ImportController {
 			RegistrationDAO.add(l);
 		} else if (table.equals("school")) {
 			List<School> l = imp.importSchool(csv);
+			SchoolDAO.init();
+			Key<School> key = SchoolDAO.getParent(1);
+			
+			for (School school : l) {
+				school.setParent(key);
+			}
 			model.addAttribute("TableData", l);
 			SchoolDAO.add(l);
 		} else if (table.equals("user")) {
