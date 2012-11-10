@@ -92,8 +92,7 @@ public class ImportController {
 			RegistrationDAO.add(l);
 		} else if (table.equals("school")) {
 			List<School> l = imp.importSchool(csv);
-			SchoolDAO.init();
-			Key<School> key = SchoolDAO.getParent(1);
+			Key<School> key = SchoolDAO.getParentKey(1);
 			
 			for (School school : l) {
 				school.setParent(key);
