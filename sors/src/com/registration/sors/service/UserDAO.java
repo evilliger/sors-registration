@@ -114,24 +114,6 @@ public class UserDAO {
 		} else return null;
 	}
 	
-	// For Dev ONLY
-	public void init() {
-		Objectify ofy = this.objectifyFactory.begin();
-		User parent = new User();
-		parent.setId(User.parentId);
-		ofy.put(parent);
-		
-		User u = new User();
-		u.setRole("A");
-		u.setActive("T");
-		u.setLname("Schaub");
-		u.setFname("Steven");
-		u.setEmail("Schaub");
-		u.setPword("x");
-		u.setParent(new Key<User>(User.class, User.parentId));
-		ofy.put(u);
-	}
-	
 	public void add(List<User> a) {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);

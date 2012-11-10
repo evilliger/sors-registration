@@ -97,12 +97,4 @@ public class HeatDAO {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
 	}
-	// For Dev ONLY
-	public void init() {
-		Objectify ofy = this.objectifyFactory.begin();
-		Heat parent = new Heat();
-		parent.setId(Heat.parentId);
-		ofy.put(parent);
-		
-	}
 }

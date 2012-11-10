@@ -19,7 +19,7 @@ public class School {
 	
 	@Id
 	Long id;
-	public static Long parentId = new Long(1);
+	public static Long parentId = new Long(-1);
 	String name;
 	String groupID;
 	int volunteerNum;

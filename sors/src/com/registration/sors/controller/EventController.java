@@ -64,23 +64,6 @@ public class EventController {
 		return "addEvent";
 	}
 
-
-	// Dev Testing ONLY
-	// Name: init
-	// Purpose: Determine if the event is logged in and authorized 
-	//		to see this page.
-	// Parameters: session - the current event session
-	// Return: page redirect
-	//		login page - if event not logged in or not authorized
-	//		list page - list of events
-	
-	@RequestMapping(value = "/init", method = RequestMethod.GET)
-	public ModelAndView init(HttpSession session) {
-		// Errors will be handled here
-		this.dao.init();
-		return new ModelAndView("redirect:list");
-	}
-
 	// Name: add
 	// Purpose: Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
 	// Parameters: session - the current event session

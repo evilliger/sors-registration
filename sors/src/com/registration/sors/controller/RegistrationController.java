@@ -63,23 +63,6 @@ public class RegistrationController {
 		return "addRegistration";
 	}
 
-
-	// Dev Testing ONLY
-	// Name: init
-	// Purpose: Determine if the registration is logged in and authorized 
-	//		to see this page.
-	// Parameters: session - the current registration session
-	// Return: page redirect
-	//		login page - if user not logged in or not authorized
-	//		list page - list of registrations
-	
-	@RequestMapping(value = "/init", method = RequestMethod.GET)
-	public ModelAndView init(HttpSession session) {
-		// Errors will be handled here
-		this.dao.init();
-		return new ModelAndView("redirect:list");
-	}
-
 	// Name: add
 	// Purpose: Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
 	// Parameters: session - the current registration session

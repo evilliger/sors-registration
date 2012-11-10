@@ -38,30 +38,6 @@ public class HeatSpecController {
 	@Autowired private HeatSpecDAO dao;
 	
 	List<String> roles = Arrays.asList("A", "T");
-
-	// Dev Testing ONLY
-	// Name: init
-	// Purpose: Determine if the user is logged in and authorized 
-	//		to see this page.
-	// Parameters: session - the current user session
-	// Return: page redirect
-	//		login page - if user not logged in or not authorized
-	//		list page - if user is logged in and authorized
-	@RequestMapping(value = "/init", method = RequestMethod.GET)
-	public ModelAndView init(HttpSession session) {
-		
-		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Security.isAuthenticated(this.roles, ss)){
-			
-			session.invalidate();
-			
-			// Right now it takes the user back to the Login Page no matter what
-			return new ModelAndView("redirect:/user/login");
-		}
-		this.dao.init();
-		//this.dao.init();
-		return new ModelAndView("redirect:list");
-	}
 	
 	// Name: getAddAthletePage
 	// Purpose: Determine if the user is logged in and authorized 

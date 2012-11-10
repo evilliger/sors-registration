@@ -49,34 +49,6 @@ public class AthleteController {
 	@Autowired private ClassroomDAO Cladao;
 	
 	List<String> roles = Arrays.asList("A", "T");
-
-	// Dev Testing ONLY
-	// Name: init
-	// Purpose: Determine if the user is logged in and authorized 
-	//		to see this page.
-	// Parameters: session - the current user session
-	// Return: page redirect
-	//		login page - if user not logged in or not authorized
-	//		list page - if user is logged in and authorized
-	@RequestMapping(value = "/init", method = RequestMethod.GET)
-	public ModelAndView init(HttpSession session) {
-		
-		School s = new School();
-		s.setGroupID("012");
-		s.setName("Bobby Jones");
-		s.setVolunteerNum(1242);
-		Schdao.add(s);
-		
-		SystemSession ss = (SystemSession)session.getAttribute("system");
-		if(!Security.isAuthenticated(this.roles, ss)){
-			session.invalidate();
-			return new ModelAndView("redirect:/user/login");
-		}
-		
-		this.Athdao.init();
-		
-		return new ModelAndView("redirect:list");
-	}
 	
 	// Name: getAddAthletePage
 	// Purpose: Determine if the user is logged in and authorized 

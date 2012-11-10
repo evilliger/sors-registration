@@ -101,38 +101,6 @@ public class HeatSpecDAO {
 		}
 	}
 	
-	// For Dev ONLY
-	public void init() {
-		Objectify ofy = this.objectifyFactory.begin();
-		HeatSpec parent = new HeatSpec();
-		parent.setId(HeatSpec.parentId);
-		ofy.put(parent);
-		
-		HeatSpec s = new HeatSpec();
-		s.setEventId(new Long(122));
-		s.setGender("F");
-		s.setMaxAge(15);
-		s.setMinAge(12);
-		s.setMaxInHeat(15);
-		s.setNumHeats(1);
-		s.setTime(new Date());
-		
-		s.setParent(new Key<HeatSpec>(HeatSpec.class, HeatSpec.parentId));
-		ofy.put(s);
-		
-		HeatSpec t = new HeatSpec();
-		t.setEventId(new Long(123));
-		t.setGender("M");
-		t.setMaxAge(15);
-		t.setMinAge(12);
-		t.setMaxInHeat(15);
-		t.setNumHeats(1);
-		t.setTime(new Date());
-		
-		t.setParent(new Key<HeatSpec>(HeatSpec.class, HeatSpec.parentId));
-		ofy.put(t);
-		
-	}
 	public void add(List<HeatSpec> a) {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
