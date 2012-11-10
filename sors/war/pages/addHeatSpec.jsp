@@ -12,13 +12,7 @@
 	<form method="post" action="add">
 		<table>
 			<tr><td>Event:</td><td>
-			    <select id="eventId" name="eventId">
-			        <option value=""></option>
-			        <option value="339">50 Meter Dash</option>
-			        <option value="340">100 Meter Flash</option>
-			        <option value="14">Sock Challenge</option>
-			        
-			    </select>
+			    <input type="text" name="EventID" />
 			</td></tr>
            	<tr><td>Gender:</td><td><input type="radio" name="gender" value="M"/>Male
            		<input type="radio" name="gender" value="F"/>Female</td><tr>

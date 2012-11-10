@@ -11,7 +11,7 @@
     
 	<form method="post" action="generate">
 		<h3>Warning: This action will delete all of the current heats</h3>
-		<h4>something about athletes not being complete</h4>
+		<h4>Any Athletes, Registrations, Events, or HeatSpecifications that are not deemed complete will be excluded from the heat generation.</h4>
             <input type="submit" value="Generate"/><button id="cancel">Cancel</button>
     </form>
 

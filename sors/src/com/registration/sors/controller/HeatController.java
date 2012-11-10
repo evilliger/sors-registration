@@ -288,11 +288,15 @@ public class HeatController {
 			Heat h = heatList.get(i);
 			this.heatDao.delete(h);
 		}
-		MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
-		handler.GenerateHeats();
-		String html = handler.ToString();
+		try{
+			MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
+			handler.GenerateHeats();
+			String html = handler.ToString();
 		
-		model.addAttribute("htmlTable", html);
+			model.addAttribute("htmlTable", html);
+		}catch(Exception e){
+			model.addAttribute("htmlTable", "Heat Generation encountered an error. Please check completeness of records.");
+		}
 		return "generate";
 
 	}
