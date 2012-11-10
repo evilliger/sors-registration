@@ -1,7 +1,7 @@
 package com.registration.sors.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -12,7 +12,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.googlecode.objectify.Key;
 import com.registration.sors.handler.ImportHandler;
 import com.registration.sors.service.*;
 import com.registration.sors.model.Athlete;
@@ -62,32 +61,13 @@ public class ImportController {
 		// Pick the right table to import into
 		
 		if (table.equals("athlete")) {
-			
-			// Get athletes from csv
 			List<Athlete> l = imp.importAthletes(csv);
-			
-			List<Athlete> a = new ArrayList<Athlete>();
-			for (Athlete ath : l) {
-				ath.setClassroom(ClassroomDAO.getKeyByID(ath.getId()));
-				a.add(ath);
-			}
-			
-			model.addAttribute("TableData", a);
-			AthleteDAO.add(a);
+			model.addAttribute("TableData",l);
+			AthleteDAO.add(l);
 		} else if (table.equals("classroom")) {
-			// Get classrooms from csv
 			List<Classroom> l = imp.importClassrooms(csv);
-			
-			// Find parent school for each classroom and build new list
-			List<Classroom> c = new ArrayList<Classroom>();
-			for (Classroom cl : l) {
-				cl.setSchool(SchoolDAO.getKeyByID(cl.getId()));
-				c.add(cl);
-			}
-			
-			// Throw new list into the model and datastore
-			model.addAttribute("TableData", c);
-			ClassroomDAO.add(c);
+			model.addAttribute("TableData", l);
+			ClassroomDAO.add(l);
 		} else if (table.equals("event")) {
 			List<Event> l = imp.importEvent(csv);
 			model.addAttribute("TableData", l);
@@ -105,23 +85,9 @@ public class ImportController {
 			model.addAttribute("TableData", l);
 			RegistrationDAO.add(l);
 		} else if (table.equals("school")) {
-			// Get schools from csv
 			List<School> l = imp.importSchool(csv);
-			
-			// Get parent key
-			Key<School> key = SchoolDAO.getKeyByID((long) -1);
-			
-			// Loop over schools adding parent key
-			List<School> s = new ArrayList<School>();
-			for (School school : l) {
-				school.setParent(key);
-				s.add(school);
-			}
-			
-			// Add new list to model and datastore
-			model.addAttribute("TableData", s);
-			SchoolDAO.add(s);
-			
+			model.addAttribute("TableData", l);
+			SchoolDAO.add(l);
 		} else if (table.equals("user")) {
 			List<User> l = imp.importUser(csv);
 			model.addAttribute("TableData", l);

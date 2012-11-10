@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.registration.sors.model.Classroom;
 import com.registration.sors.model.School;
-import com.registration.sors.model.User;
 @Service
 @SuppressWarnings("javadoc")
 public class SchoolDAO {
@@ -74,8 +72,15 @@ public class SchoolDAO {
 	// Parameters: id - schoolID number
 	// Return: school - whose schoolID is id
 	
-	public School find(int id){
-		return null;
+	public School find(Long id){
+		try {
+			
+			Objectify ofy = this.objectifyFactory.begin();
+			return ofy.get(new Key<School>(new Key<School>(School.class, School.parentId), School.class, id));
+		
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	public void add(List<School> a) {
@@ -83,7 +88,11 @@ public class SchoolDAO {
 		ofy.put(a);
 }
 	public Key<School> getKeyByID(Long id) {
-		Objectify ofy = objectifyFactory.begin();
-		return objectifyFactory.getKey(ofy.get(School.class, id));
+		try {
+			Objectify ofy = objectifyFactory.begin();
+			return objectifyFactory.getKey(ofy.get(new Key<School>(new Key<School>(School.class, School.parentId), School.class, id)));
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }
