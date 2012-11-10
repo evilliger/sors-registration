@@ -88,6 +88,16 @@ public class AthleteDAO {
 		}
 		return list;
 	}
+	// get a list of Athletes in DataStore
+	// Parameters: none
+	// Return: list of Athletes
+	
+	public List<Athlete> loadAll(){
+		Objectify ofy = this.objectifyFactory.begin();
+		List<Athlete> list = new ArrayList<Athlete>();
+		list =  ofy.query(Athlete.class).list();
+		return list;
+	}
 	
 	// find an athlete whose athleteID is id
 	// Parameters: id - athleteID number

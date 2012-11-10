@@ -33,6 +33,8 @@ import com.registration.sors.service.RegistrationDAO;
 
 public class MaintainHeatsHandler {
 	
+	// This class needs access to the objects in
+	// the 5 datastores 
 	private static RegistrationDAO regDAO;
 	private static AthleteDAO athDAO;
 	private static EventDAO eventDAO;
@@ -42,7 +44,9 @@ public class MaintainHeatsHandler {
 	private Dictionary<String,Athlete>aList;
 
 	
-	
+	// The contructor has to recieve the 5 dao classes from the controller
+	// becuase of objectify only the controllers can init the daos
+	// so the inited daos have to be passes through
 	public MaintainHeatsHandler(HeatDAO heatDao2, RegistrationDAO regDao2, AthleteDAO athDao2, EventDAO eventDao2, HeatSpecDAO heatSpecDao2){
 		regDAO = regDao2;
 		athDAO = athDao2;
@@ -51,7 +55,10 @@ public class MaintainHeatsHandler {
 		heatDAO = heatDao2;
 	}
 	
-	private  int findBdate(Date bday){
+	// name: age
+	// Purpose: to calculate the age of a person
+	// params:
+	private  int age(Date bday){
 		//calculate the birthday....
 		Calendar cal1 = new GregorianCalendar();
 	    Calendar cal2 = new GregorianCalendar();
@@ -219,7 +226,7 @@ public class MaintainHeatsHandler {
 				Registration r = rList.get(j);
 				Athlete a = athList.get(r.getAthleteID().toString());
 				html += "<tr><td>" + a.getFname() + " " + a.getLname() + "</td>"
-						+ "<td>" + findBdate(a.getBdate()) + "</td>"
+						+ "<td>" + age(a.getBdate()) + "</td>"
 						+ "<td>" + a.getGender() + "</td>"
 						+ "<td>" + r.getRank() + "</td>"
 						+ "<td>" + r.getScore() + "</td>"
@@ -242,7 +249,7 @@ public class MaintainHeatsHandler {
 			Registration r = regList.get(i);
 			Athlete a = aList.get(r.getAthleteID().toString());
 			
-			int age = findBdate(a.getBdate());
+			int age = age(a.getBdate());
 		    
 		    // Determine the specs for the event for the person
 			List<HeatSpec>EventSpecsList = specList.get(r.getEventID().toString());
