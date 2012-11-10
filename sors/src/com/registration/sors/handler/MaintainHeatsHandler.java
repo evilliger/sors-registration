@@ -139,21 +139,61 @@ public class MaintainHeatsHandler {
 		Collections.sort(rList, new Comparator<Registration>() {
 		    public int compare(Registration r1, Registration r2) {
 		    	if(r1.getScore() <= r2.getScore()){
-		    		return 1;
-		    	}else{
 		    		return -1;
+		    	}else{
+		    		return 1;
 		    	}
 		    }
 		});
 		return rList;
 	}
-		
+	private  List<Heat> sortHeats(List<Heat> hList){
+		Collections.sort(hList, new Comparator<Heat>() {
+		    public int compare(Heat h1, Heat h2) {
+		    	// sort on event
+		    	if(h1.getEventID() < h2.getEventID()){
+		    		return -1;
+		    	}else if(h1.getEventID() > h2.getEventID()){
+		    		return 1;
+		    	}else{
+		    		if(h1.getTime().before(h2.getTime())){
+		    			return -1;
+		    		}else if(h1.getTime().after(h2.getTime())){
+		    			return 1;
+		    		}else{
+		    			if(h1.getMinAge() < h2.getMinAge()){
+		    				return -1;
+		    			}else if(h1.getMinAge() > h2.getMinAge()){
+		    				
+		    			}else{
+		    				if(h1.getGender().equals("M") && h1.getGender().equals("F")){
+		    					return -1;
+		    				}else if (h1.getGender().equals("F") && h2.getGender().equals("M")){
+		    					return 1;
+		    				}else{
+		    					if(h1.getDivision() < h2.getDivision()){
+		    						return -1;
+		    					}else{
+		    						return 1;
+		    					}
+		    					
+		    				}
+		    			}
+		    		}
+		    		
+		    	}	    	
+		    	return 1;
+		    }
+		});
+		return hList;
+	}
 	
 	public String ToString(){
 		Dictionary<String,Athlete>athList = getAthleteDictionary();
 		Dictionary<String,Event>eventList = getEventDictionary(); 
 		Dictionary<String,List<Registration>>regList = getRegHeatDictionary();
 		List<Heat>heatList = heatDAO.loadAll();
+		heatList = sortHeats(heatList);
 		String html = "";
 		
 		for(int i = 0; i < heatList.size(); ++i){
@@ -234,13 +274,13 @@ public class MaintainHeatsHandler {
 			HeatSpec he = heatSpecList.get(i);
 			List<Registration> rList = heList.get(he.getId().toString());
 			// sort list of registrations
-			rList = sortRegistrations(rList);	
+			rList = sortRegistrations(rList);
 			
 			int currReg = 0;
 			// determine how many to put in each heat
 			
 			int numHeats = he.getNumHeats();
-			int numberInHeats = numHeats/rList.size();
+			int numberInHeats = rList.size()/numHeats;
 			int remainder = rList.size() - (numberInHeats * numHeats);
 			
 			// enter new heat
@@ -255,17 +295,23 @@ public class MaintainHeatsHandler {
 				
 				heatDAO.add(h);
 				// change heatid in reg
+				// change rank
+				int rank = 1;
 				for(int k = 0; k < numberInHeats; ++k){
 					Registration r = rList.get(currReg);
 					r.setHeatID(h.getId());
+					r.setRank(rank);
 					regDAO.update(r);
 					++currReg;
+					++rank;
 				}
 				if(remainder > 0){
 					Registration r = rList.get(currReg);
 					// add extra one
 					r.setHeatID(h.getId());
+					r.setRank(rank);
 					regDAO.update(r);
+					++rank;
 					++currReg;
 					--remainder;
 				}
