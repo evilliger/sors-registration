@@ -75,7 +75,7 @@ public class ImportController {
 				c.add(cl);
 			}
 			
-			model.addAttribute("TableData", s);
+			model.addAttribute("TableData", c);
 			ClassroomDAO.add(l);
 		} else if (table.equals("event")) {
 			List<Event> l = imp.importEvent(csv);
