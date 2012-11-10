@@ -81,4 +81,9 @@ public class SchoolDAO {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
 }
+	public Key<School> getParentKey(int id) {
+		Objectify ofy = objectifyFactory.begin();
+		School sch = ofy.get(new Key<School>(School.class, id));
+		return sch.getParent();
+	}
 }
