@@ -6,7 +6,6 @@
 package com.registration.sors.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,7 @@ import org.springframework.stereotype.Service;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.registration.sors.model.Athlete;
-import com.registration.sors.model.Classroom;
-import com.registration.sors.model.Event;
 import com.registration.sors.model.HeatSpec;
-import com.registration.sors.model.User;
 @Service
 @SuppressWarnings("javadoc")
 public class HeatSpecDAO {

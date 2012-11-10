@@ -1,5 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.registration.sors.model.Athlete" %>
+<%@ page import="com.registration.sors.model.AthData" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
 <tag:header/>
 
@@ -16,9 +17,8 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>School</th>
-                    <th>Event One</th>
-                    <th>Event Two</th>
+                    <th>Event 1</th>
+                    <th>Event 2</th>
                     <th>Complete</th>
                     <th>Options</th>
                 </tr>
@@ -26,26 +26,22 @@
 		
 		<%
 		  if(request.getAttribute("athleteList")!=null){						
-			List<Athlete> athletes = (List<Athlete>)request.getAttribute("athleteList");						
+			List<AthData> athletes = (List<AthData>)request.getAttribute("athleteList");						
 				if(!athletes.isEmpty()){
-					for(Athlete a : athletes){
-				%>
-					<tr>
-					  <td><%=a.getLname()%>, <%=a.getFname()%></td>
-					  <td>--school--</td>
-					  <td>--event1--</td>
-					  <td>--event2--</td>
-                    <td><img src="../img/no.png" class="confirm" alt="no">No</img></td>
-					<td ><button onClick="document.location.href='update?id=<%=a.getId()%>'">Edit</button>
-					<button onClick="document.location.href='delete?id=<%=a.getId()%>'" class="del">Delete</button></td>
-                    
-					</tr>
-		         <%
-			
+					for(AthData a : athletes){
+						String c = (a.completed)?"yes":"no";
+					%>
+						<tr>
+						<td><%=a.athlete.getLname()%>, <%=a.athlete.getFname()%></td>
+						<td><%=a.event1%></td>
+						<td><%=a.event2%></td>
+	                    <td><img src="../img/<%= c %>.png" class="confirm" alt="<%= c %>">  <%= c %></img></td>
+						<td ><button onClick="document.location.href='update?id=<%=a.athlete.getId()%>'">Edit</button>
+						<button onClick="document.location.href='delete?id=<%=a.athlete.getId()%>'" class="del">Delete</button></td>
+						</tr>
+		         	<%
 					}
-		    
 				}
-			
 		   	}
 		%>
 		</table>

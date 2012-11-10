@@ -23,7 +23,7 @@
      		List<Event> events = (List<Event>)request.getAttribute("events");
 			Long pe = (Long)request.getAttribute("pevent"); 
 			Long se = (Long)request.getAttribute("sevent");
-      		String hidden = ((se == null || se.equals("-1") || se.equals("")) && pe.equals("-1")) ? "hidden" : "";
+      		String hidden = ((se == null || se.equals(-1L) || se.equals("")) && pe.equals(-1L)) ? "hidden" : "";
       		Double pscore = (Double)request.getAttribute("pscore");
       		Double sscore = (Double)request.getAttribute("sscore");
       		Long pregid = (Long)request.getAttribute("pregId");
@@ -127,7 +127,7 @@
 	                	Score: <input type="text" name="pscore" size="10" value="<%= (pscore.equals(-1.0))?"":pscore %>"/>
 	                	<i><span id="punits"></span></i>
 	                </span>
-	                <input type="hidden" value="<%= pregid %>" />
+	                <input type="hidden" name="pregid" value="<%= pregid %>" />
             	</td>
             </tr>
             
@@ -148,7 +148,7 @@
 	                	<i><span id="sunits"></span></i>
 	                </span>
             	</td>
-            	<input type="hidden" value="<%= sregid %>" />
+            	<input type="hidden" name="sregid" value="<%= sregid %>" />
             </tr>
           <tr><td><br></td><td></td></tr>
           

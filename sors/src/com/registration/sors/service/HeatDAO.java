@@ -15,7 +15,6 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.registration.sors.model.Heat;
-import com.registration.sors.model.User;
 @Service
 @SuppressWarnings("javadoc")
 public class HeatDAO {

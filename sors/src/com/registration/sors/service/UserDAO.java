@@ -114,6 +114,8 @@ public class UserDAO {
 		} else return null;
 	}
 	
+	// add a list of users
+	
 	public void add(List<User> a) {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);

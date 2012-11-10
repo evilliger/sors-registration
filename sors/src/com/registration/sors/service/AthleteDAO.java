@@ -114,8 +114,8 @@ public class AthleteDAO {
 	}
 	
 	public void add(List<Athlete> a) {
-			Objectify ofy = objectifyFactory.begin();
-			ofy.put(a);
+		Objectify ofy = objectifyFactory.begin();
+		ofy.put(a);
 	}
 	
 }
