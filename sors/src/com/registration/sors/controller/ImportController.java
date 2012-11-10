@@ -1,5 +1,6 @@
 package com.registration.sors.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,12 +68,14 @@ public class ImportController {
 		} else if (table.equals("classroom")) {
 			List<Classroom> l = imp.importClassrooms(csv);
 			
+			List<Classroom> c = new ArrayList();
 			for (Classroom cl : l) {
 				School s = SchoolDAO.find(cl.getSchoolID());
 				cl.setSchool(s.getParent());
+				c.add(cl);
 			}
 			
-			model.addAttribute("TableData", l);
+			model.addAttribute("TableData", s);
 			ClassroomDAO.add(l);
 		} else if (table.equals("event")) {
 			List<Event> l = imp.importEvent(csv);
@@ -92,8 +95,7 @@ public class ImportController {
 			RegistrationDAO.add(l);
 		} else if (table.equals("school")) {
 			List<School> l = imp.importSchool(csv);
-			SchoolDAO.init();
-			Key<School> key = SchoolDAO.getParent(1);
+			Key<School> key = SchoolDAO.getParentKey(1);
 			
 			for (School school : l) {
 				school.setParent(key);
