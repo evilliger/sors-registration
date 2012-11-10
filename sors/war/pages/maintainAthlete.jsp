@@ -118,10 +118,12 @@
 		  		<td>
 	                <select id="pevent" name="pevent">
 	                	<option value="-1" <%= (pe == -1L)?"selected":"" %>>None</option>
-	                	<% for (Event e : events) { %>
+	                	<%  String units = "";
+	                		for (Event e : events) { %>
 	                    <%="<option value='" + e.getId() + "'" + ((pe.equals(e.getId()))?"selected":"") + ">" + e.getName() + "</option>" %>
-	                    <input type="hidden" id="<%=e.getId()%>" value="<%=e.getUnits()%>"/>
+	                    <% units += "<input type=\"hidden\" id=\"" + e.getId() + "\" value=\"" + e.getUnits() + "\"/>"; %>
 	                    <% } %>
+	                    <%=units %>
 	                </select>
 	                <span id="pscore" class="<%=hidden%>">
 	                	Score: <input type="text" name="pscore" size="10" value="<%= (pscore.equals(-1.0))?"":pscore %>"/>
@@ -138,10 +140,12 @@
             	<td>
 	                <select id="ssevent" name="sevent">
 	                	<option value="-1" <%= (se == -1L)?"selected":"" %>>None</option>
-	                	<% for (Event e : events) { %>
+	                	<%  units = "";
+	                		for (Event e : events) { %>
 		                    <%="<option value='" + e.getId() + "'" + ((se.equals(e.getId()))?"selected":"") + ">" + e.getName() + "</option>" %>
-		                    <input type="hidden" id="<%=e.getId()%>" value="<%=e.getUnits()%>"/>
+		                    <% units += "<input type=\"hidden\" id=\"" + e.getId() + "\" value=\"" + e.getUnits() + "\"/>"; %>
 	                    <% } %>
+	                    <%=units %>
 	                </select>
 	                <span id="sscore" class="<%=hidden%>">
 	                	Score: <input type="text" name="sscore" size="10" value="<%= (sscore.equals(-1.0))?"":sscore %>"/>

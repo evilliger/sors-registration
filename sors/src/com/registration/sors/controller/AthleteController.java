@@ -322,7 +322,6 @@ public class AthleteController {
 							}
 						}
 						if(regid != -1) {
-
 							r.setId(regid);
 						}
 						registrations.add(r);
@@ -332,6 +331,18 @@ public class AthleteController {
 				}
 			} else {
 				errors.add("Primary event not found.");
+			}
+		} else if(req.getParameter("pevent") != null && ((String)req.getParameter("pevent")).equals("-1")){
+			Long regid = -1L;
+			if (req.getParameter("pregid") != null && !((String)req.getParameter("pregid")).equals("-1")) {
+				try {
+					regid = Long.parseLong((String)req.getParameter("pregid"));
+					Registration r = new Registration();
+					r.setId(regid);
+					Regdao.delete(r);
+				} catch (Exception e){
+					errors.add("Registration ID in incorrect format.");
+				}
 			}
 		}
 		
@@ -367,7 +378,20 @@ public class AthleteController {
 			} else {
 				errors.add("Secondary event not found.");
 			}
+		} else if(req.getParameter("sevent") != null && ((String)req.getParameter("sevent")).equals("-1")){
+			Long regid = -1L;
+			if (req.getParameter("sregid") != null && !((String)req.getParameter("sregid")).equals("-1")) {
+				try {
+					regid = Long.parseLong((String)req.getParameter("sregid"));
+					Registration r = new Registration();
+					r.setId(regid);
+					Regdao.delete(r);
+				} catch (Exception e){
+					errors.add("Registration ID in incorrect format.");
+				}
+			}
 		}
+		
 		return new RegData(registrations, errors);
 	}
 	
