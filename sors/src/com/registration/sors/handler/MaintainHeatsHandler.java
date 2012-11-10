@@ -147,9 +147,7 @@ public class MaintainHeatsHandler {
 		});
 		return rList;
 	}
-	
-	
-	
+		
 	
 	public String ToString(){
 		Dictionary<String,Athlete>athList = getAthleteDictionary();
