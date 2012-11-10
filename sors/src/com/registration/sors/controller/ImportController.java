@@ -37,12 +37,13 @@ public class ImportController {
 	@Autowired private SchoolDAO SchoolDAO;
 	@Autowired private UserDAO UserDAO;
 	
-	
+	// returns the import page
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String getImportForm(ModelMap model, HttpSession session) {
 		return "import";
 	}
 	
+	// accepts a table name and csv data and puts it in the datastore
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String add(ModelMap model, HttpServletRequest req, HttpSession session) {
 		// Grab table and CSV from header
