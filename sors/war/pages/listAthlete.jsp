@@ -10,7 +10,7 @@
       	<div class="wrapper">
     
     
-        <h3>Athletes 2012</h3>
+        <h3><%= (String)request.getAttribute("title") %></h3>
         
         
         <table id="ath_table" class="tablesorter">
@@ -24,8 +24,7 @@
                 </tr>
             </thead>
 		
-		<%
-		  if(request.getAttribute("athleteList")!=null){						
+		<% if(request.getAttribute("athleteList")!=null){						
 			List<AthData> athletes = (List<AthData>)request.getAttribute("athleteList");						
 				if(!athletes.isEmpty()){
 					for(AthData a : athletes){

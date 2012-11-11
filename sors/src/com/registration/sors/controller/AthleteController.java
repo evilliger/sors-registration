@@ -265,30 +265,38 @@ public class AthleteController {
 		
 		List<AthData> athdata = new ArrayList<AthData>();
 		
-		for (Athlete a : this.Athdao.loadAll(ss.getUser())){
-			
-			String event1 = "";
-			String event2 = "";
-			Event e1;
-			Event e2;
-			List<Registration> regs = this.Regdao.find(a);
-			if(regs != null){
-				if(regs.size() > 0) 
-					if((e1 = Evdao.find(regs.get(0).getEventID())) != null)
-						event1 = Evdao.find(regs.get(0).getEventID()).getName();
-				if(regs.size() > 1)
-					if((e2 = Evdao.find(regs.get(1).getEventID())) != null)
-						event2 = Evdao.find(regs.get(1).getEventID()).getName();
+		if(ss.getUser().getRole().equals("T")) {
+			for (Athlete a : this.Athdao.loadAll(ss.getUser())){
+				
+				String event1 = "None";
+				String event2 = "None";
+				Event e1;
+				Event e2;
+				List<Registration> regs = this.Regdao.find(a);
+				if(regs != null){
+					if(regs.size() > 0) 
+						if((e1 = Evdao.find(regs.get(0).getEventID())) != null)
+							event1 = Evdao.find(regs.get(0).getEventID()).getName();
+					if(regs.size() > 1)
+						if((e2 = Evdao.find(regs.get(1).getEventID())) != null)
+							event2 = Evdao.find(regs.get(1).getEventID()).getName();
+				}
+				
+				boolean complete = !(a.getFname() == null || a.getFname().equals("") || a.getBdate() == null ||
+						a.getLname() == null || a.getLname().equals("") ||
+						a.getLname() == null || a.getLname().equals("") || 
+						a.getMname() == null || a.getMname().equals("") || 
+						a.getGender() == null || a.getGender().equals("") ||
+						event1.equals("None") && event2.equals("None"));
+				
+				athdata.add(new AthData(a,complete,"",event1,event2));
 			}
-			
-			boolean complete = !(a.getFname() == null || a.getFname().equals("") || a.getBdate() == null ||
-					a.getLname() == null || a.getLname().equals("") ||
-					a.getLname() == null || a.getLname().equals("") || 
-					a.getMname() == null || a.getMname().equals("") || 
-					a.getGender() == null || a.getGender().equals("") ||
-					event1.equals("") && event2.equals(""));
-			
-			athdata.add(new AthData(a,complete,"",event1,event2));
+			model.addAttribute("title",this.Cladao.find(ss.getUser()).getClassName());
+		} else {
+			for (Athlete a : this.Athdao.loadAll()){
+				athdata.add(new AthData(a, false, "","",""));
+			}
+			model.addAttribute("title","Athletes 2012");
 		}
 
 		model.addAttribute("athleteList", athdata);
