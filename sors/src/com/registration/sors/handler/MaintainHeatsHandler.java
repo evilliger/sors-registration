@@ -183,19 +183,20 @@ public class MaintainHeatsHandler {
 		    
 		    // Determine the specs for the event for the person
 			List<HeatSpec>EventSpecsList = specList.get(r.getEventID().toString());
-			
-			for(int j = 0; j < EventSpecsList.size(); ++j){
-				HeatSpec s = EventSpecsList.get(j);
-				if(age >= s.getMinAge() && age <= s.getMaxAge() && a.getGender().equals(s.getGender())){
-					List<Registration> temp = list.get(s.getId().toString());
-					if(temp == null){
-						temp = new ArrayList<Registration>();
+			if(EventSpecsList != null){
+				for(int j = 0; j < EventSpecsList.size(); ++j){
+					HeatSpec s = EventSpecsList.get(j);
+					if(age >= s.getMinAge() && age <= s.getMaxAge() && a.getGender().equals(s.getGender())){
+						List<Registration> temp = list.get(s.getId().toString());
+						if(temp == null){
+							temp = new ArrayList<Registration>();
+						}
+						temp.add(r);
+						list.put(s.getId().toString(), temp);
+						break;
 					}
-					temp.add(r);
-					list.put(s.getId().toString(), temp);
-					break;
-				}
-			}				
+				}				
+			}
 		}		
 		return list;
 	}
@@ -365,51 +366,53 @@ public class MaintainHeatsHandler {
 		for(int i = 0; i < heatSpecList.size(); ++i){
 			HeatSpec he = heatSpecList.get(i);
 			List<Registration> rList = heList.get(he.getId().toString());
-			// sort list of registrations
-			rList = sortRegistrations(rList);
-			
-			int currReg = 0;
-			// determine how many to put in each heat
-			
-			int numHeats = he.getNumHeats();
-			int numberInHeats = rList.size()/numHeats;
-			int remainder = rList.size() - (numberInHeats * numHeats);
-			
-			// enter new heat
-			for(int j = 0; j < numHeats; ++j){
-				Heat h = new Heat();
-				h.setDivision(j+1);
-				h.setEventID(he.getEventId());
-				h.setGender(he.getGender());
-				h.setMaxAge(he.getMaxAge());
-				h.setMinAge(he.getMinAge());
-				h.setTime(he.getTime());
+			if(rList != null){
 				
-				heatDAO.add(h);
-				// change heatid in reg
-				// change rank
-				int rank = 1;
-				for(int k = 0; k < numberInHeats; ++k){
-					Registration r = rList.get(currReg);
-					r.setHeatID(h.getId());
-					r.setRank(rank);
-					regDAO.update(r);
-					++currReg;
-					++rank;
-				}
-				if(remainder > 0){
-					Registration r = rList.get(currReg);
-					// add extra one
-					r.setHeatID(h.getId());
-					r.setRank(rank);
-					regDAO.update(r);
-					++rank;
-					++currReg;
-					--remainder;
+				// sort list of registrations
+				rList = sortRegistrations(rList);
+				
+				int currReg = 0;
+				// determine how many to put in each heat
+				
+				int numHeats = he.getNumHeats();
+				int numberInHeats = rList.size()/numHeats;
+				int remainder = rList.size() - (numberInHeats * numHeats);
+				
+				// enter new heat
+				for(int j = 0; j < numHeats; ++j){
+					Heat h = new Heat();
+					h.setDivision(j+1);
+					h.setEventID(he.getEventId());
+					h.setGender(he.getGender());
+					h.setMaxAge(he.getMaxAge());
+					h.setMinAge(he.getMinAge());
+					h.setTime(he.getTime());
+					
+					heatDAO.add(h);
+					// change heatid in reg
+					// change rank
+					int rank = 1;
+					for(int k = 0; k < numberInHeats; ++k){
+						Registration r = rList.get(currReg);
+						r.setHeatID(h.getId());
+						r.setRank(rank);
+						regDAO.update(r);
+						++currReg;
+						++rank;
+					}
+					if(remainder > 0){
+						Registration r = rList.get(currReg);
+						// add extra one
+						r.setHeatID(h.getId());
+						r.setRank(rank);
+						regDAO.update(r);
+						++rank;
+						++currReg;
+						--remainder;
+					}
 				}
 			}
 		}
-		
 
 	}
 }
