@@ -104,12 +104,14 @@ public class MaintainHeatsHandler {
 		Dictionary<String,List<Registration>> regD = new Hashtable<String,List<Registration>>();
 		for(int i = 0; i < regList.size(); ++i){
 			Registration r = regList.get(i);
-			List<Registration> temp = regD.get(r.getHeatID().toString());
-			if(temp == null){
-				temp = new ArrayList<Registration>();
+			if(r.getHeatID() != null){
+				List<Registration> temp = regD.get(r.getHeatID().toString());
+				if(temp == null){
+					temp = new ArrayList<Registration>();
+				}
+				temp.add(r);
+				regD.put(r.getHeatID().toString(), temp);
 			}
-			temp.add(r);
-			regD.put(r.getHeatID().toString(), temp);
 		}
 		return regD;
 	
@@ -217,6 +219,21 @@ public class MaintainHeatsHandler {
 		});
 		return rList;
 	}
+	// sort a list of registrations based on scores
+	// params : rlist - list of registrations
+	// return: sorted list of registrations
+	private  List<Registration> sortRank(List<Registration> rList){
+		Collections.sort(rList, new Comparator<Registration>() {
+		    public int compare(Registration r1, Registration r2) {
+		    	if(r1.getRank() <= r2.getRank()){
+		    		return -1;
+		    	}else{
+		    		return 1;
+		    	}
+		    }
+		});
+		return rList;
+	}
 	
 	// sort a list of heats based on eventid
 	// time, age range, gender, and division
@@ -267,7 +284,7 @@ public class MaintainHeatsHandler {
 	// params:none
 	// return: a html table listing of all
 	// heats and participants
-	public String ToString(){
+	public String MakeString(){
 		Dictionary<String,Athlete>athList = getAthleteDictionary();
 		Dictionary<String,Event>eventList = getEventDictionary(); 
 		Dictionary<String,List<Registration>>regList = getRegHeatDictionary();
@@ -294,6 +311,9 @@ public class MaintainHeatsHandler {
 			
 			List<Registration>rList = regList.get(h.getId().toString());
 			
+			if(rList != null){
+				rList = sortRank(rList);
+			}
 			for(int j = 0; j < rList.size(); ++j){
 				Registration r = rList.get(j);
 				Athlete a = athList.get(r.getAthleteID().toString());

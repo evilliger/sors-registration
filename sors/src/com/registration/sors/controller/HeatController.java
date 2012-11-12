@@ -291,7 +291,7 @@ public class HeatController {
 		try{
 			MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
 			handler.GenerateHeats();
-			String html = handler.ToString();
+			String html = handler.MakeString();
 		
 			model.addAttribute("htmlTable", html);
 		}catch(Exception e){
