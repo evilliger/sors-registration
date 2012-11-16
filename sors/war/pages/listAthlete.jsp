@@ -35,8 +35,8 @@
 						<td><%=a.event1%></td>
 						<td><%=a.event2%></td>
 	                    <td><img src="../img/<%= c %>.png" class="confirm" alt="<%= c %>">  <%= c %></img></td>
-						<td ><button onClick="document.location.href='update?id=<%=a.athlete.getId()%>'">Edit</button>
-						<button onClick="document.location.href='delete?id=<%=a.athlete.getId()%>'" class="del">Delete</button></td>
+						<td ><button onClick="document.location.href='update?id=<%=a.athlete.getId()%>&classroomid=<%=a.athlete.getClassroomId()%>'">Edit</button>
+						<button onClick="document.location.href='delete?id=<%=a.athlete.getId()%>&classroomid=<%=a.athlete.getClassroomId()%>'" class="del">Delete</button></td>
 						</tr>
 		         	<%
 					}

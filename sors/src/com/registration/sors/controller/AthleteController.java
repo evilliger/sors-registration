@@ -103,7 +103,7 @@ public class AthleteController {
 		Athlete a = new Athlete();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
-		binder.setRequiredFields(new String[] {"fname", "lname","bdate"});
+		binder.setRequiredFields(new String[] {"fname", "lname", "gender", "bdate", "classroomId"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
@@ -153,7 +153,8 @@ public class AthleteController {
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
-		Classroom c = this.Cladao.find(ss.getUser());
+		Long cId = Long.parseLong(req.getParameter("classroomid"));
+		Classroom c = this.Cladao.find(cId);
 		a = this.Athdao.find(a.getId(), c);
 
 		if (errors.hasErrors()) 
@@ -185,7 +186,7 @@ public class AthleteController {
 		Athlete a = new Athlete();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
-		binder.setRequiredFields(new String[] {"id", "fname", "lname","bdate"});
+		binder.setRequiredFields(new String[] {"id", "fname", "lname", "gender", "bdate"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
 		
@@ -234,8 +235,9 @@ public class AthleteController {
 		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
-	
-		Classroom c = this.Cladao.find(ss.getUser());
+
+		Long cId = Long.parseLong(req.getParameter("classroomid"));
+		Classroom c = this.Cladao.find(cId);
 		a = this.Athdao.find(a.getId(), c);
 		
 		if(errors.hasErrors() || this.Athdao.delete(a) == null)
@@ -265,38 +267,36 @@ public class AthleteController {
 		
 		List<AthData> athdata = new ArrayList<AthData>();
 		
+		List<Athlete> athletes;
 		if(ss.getUser().getRole().equals("T")) {
-			for (Athlete a : this.Athdao.loadAll(ss.getUser())){
-				
-				String event1 = "None";
-				String event2 = "None";
-				Event e1;
-				Event e2;
-				List<Registration> regs = this.Regdao.find(a);
-				if(regs != null){
-					if(regs.size() > 0) 
-						if((e1 = Evdao.find(regs.get(0).getEventID())) != null)
-							event1 = Evdao.find(regs.get(0).getEventID()).getName();
-					if(regs.size() > 1)
-						if((e2 = Evdao.find(regs.get(1).getEventID())) != null)
-							event2 = Evdao.find(regs.get(1).getEventID()).getName();
-				}
-				
-				boolean complete = !(a.getFname() == null || a.getFname().equals("") || a.getBdate() == null ||
-						a.getLname() == null || a.getLname().equals("") ||
-						a.getLname() == null || a.getLname().equals("") || 
-						a.getMname() == null || a.getMname().equals("") || 
-						a.getGender() == null || a.getGender().equals("") ||
-						event1.equals("None") && event2.equals("None"));
-				
-				athdata.add(new AthData(a,complete,"",event1,event2));
-			}
+			athletes = this.Athdao.loadAll(ss.getUser());
 			model.addAttribute("title",this.Cladao.find(ss.getUser()).getClassName());
-		} else {
-			for (Athlete a : this.Athdao.loadAll()){
-				athdata.add(new AthData(a, false, "","",""));
-			}
+		}
+		else {
+			athletes = this.Athdao.loadAll();
 			model.addAttribute("title","Athletes 2012");
+		}
+		for (Athlete a : athletes){
+			String event1 = "None";
+			String event2 = "None";
+			List<Registration> regs = this.Regdao.find(a);
+			if(regs != null){
+				if(regs.size() > 0) 
+					if(Evdao.find(regs.get(0).getEventID()) != null)
+						event1 = Evdao.find(regs.get(0).getEventID()).getName();
+				if(regs.size() > 1)
+					if(Evdao.find(regs.get(1).getEventID()) != null)
+						event2 = Evdao.find(regs.get(1).getEventID()).getName();
+			}
+			
+			boolean complete = !(a.getFname() == null || a.getFname().equals("") || a.getBdate() == null ||
+					a.getLname() == null || a.getLname().equals("") ||
+					a.getLname() == null || a.getLname().equals("") || 
+					a.getMname() == null || a.getMname().equals("") || 
+					a.getGender() == null || a.getGender().equals("") ||
+					event1.equals("None") && event2.equals("None"));
+			
+			athdata.add(new AthData(a,complete,"",event1,event2));
 		}
 
 		model.addAttribute("athleteList", athdata);
@@ -399,7 +399,8 @@ public class AthleteController {
 				}
 			}
 		}
-		
+		if (a.getClassroomId() == -1)
+			errors.add("Please specify a classroom.");
 		return new RegData(registrations, errors);
 	}
 	
@@ -418,8 +419,14 @@ public class AthleteController {
 			if(u.getRole().equals("A")) {
 				model.addAttribute("schools",schools);
 				model.addAttribute("classrooms",classrooms);
+				if (!add) {
+					Classroom c = this.Cladao.find(a.getClassroomId());
+					model.addAttribute("classroom", c.getId());
+					model.addAttribute("school", c.getSchoolID());
+				}
 			} else { 
 				Classroom c = this.Cladao.find(u);
+				model.addAttribute("classroom", c.getId());
 				model.addAttribute("school", c.getSchoolID());
 				a.setClassroomId(c.getId());
 			}
@@ -457,7 +464,7 @@ public class AthleteController {
 			}  
 			
 			List<Registration> regs = this.Regdao.find(a);
-			if(regs.size() > 0) {
+			if(regs != null && regs.size() > 0) {
 				model.addAttribute("pregId", regs.get(0).getId());
 				if(!add) {
 					model.addAttribute("pevent", regs.get(0).getEventID());
@@ -467,7 +474,7 @@ public class AthleteController {
 				model.addAttribute("pregId", -1L);
 			}
 			
-			if(regs.size() > 1) {
+			if(regs != null && regs.size() > 1) {
 				model.addAttribute("sregId", regs.get(1).getId());
 				if(!add){
 					model.addAttribute("sevent", regs.get(1).getEventID());

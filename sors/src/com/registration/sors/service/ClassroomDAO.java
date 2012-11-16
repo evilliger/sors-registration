@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
+import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Classroom;
 import com.registration.sors.model.School;
 import com.registration.sors.model.User;
@@ -80,7 +81,7 @@ public class ClassroomDAO {
 	// Return: list of Classrooms
 	public List<Classroom> loadAll(){
 		Objectify ofy = objectifyFactory.begin();
-		List<Classroom> list = ofy.query(Classroom.class).ancestor(new Key<School>(School.class,-1)).list();
+		List<Classroom> list = ofy.query(Classroom.class).list();
 		return list;
 	}
 	

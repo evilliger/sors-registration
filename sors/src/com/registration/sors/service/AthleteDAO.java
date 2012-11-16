@@ -98,10 +98,7 @@ public class AthleteDAO {
 		return list;
 	}
 	
-	// find an athlete whose athleteID is id
-	// Parameters: id - athleteID number
-	// Return: Athlete - whose athleteID is id
-	
+	// find an athlete whose athleteID is id and whose classrom is c
 	public Athlete find(Long id, Classroom c){
 		try {
 			Objectify ofy = this.objectifyFactory.begin();

@@ -4,6 +4,7 @@
 <%@ page import="com.registration.sors.model.User" %>
 <%@ page import="com.registration.sors.model.School" %>
 <%@ page import="com.registration.sors.model.Classroom" %>
+<%@ page import="com.registration.sors.service.ClassroomDAO" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -20,10 +21,13 @@
      		List<School> schools = (List<School>)request.getAttribute("schools");
      		List<Classroom> classrooms = (List<Classroom>)request.getAttribute("classrooms"); 
      		Long school = (Long)request.getAttribute("school");
+     		if (school == null) school = -1L;
+     		Long classroom = (Long)request.getAttribute("classroom");
+     		if (classroom == null) classroom = -1L;
      		List<Event> events = (List<Event>)request.getAttribute("events");
 			Long pe = (Long)request.getAttribute("pevent"); 
 			Long se = (Long)request.getAttribute("sevent");
-      		String hidden = ((se == null || se.equals(-1L) || se.equals("")) && pe.equals(-1L)) ? "hidden" : "";
+      		String hidden = ((se == null || se.equals(-1L) || se.equals("")) && (pe == null || pe.equals(-1L))) ? "hidden" : "";
       		Double pscore = (Double)request.getAttribute("pscore");
       		Double sscore = (Double)request.getAttribute("sscore");
       		Long pregid = (Long)request.getAttribute("pregId");
@@ -53,18 +57,20 @@
 				<td><form:select path="" id="school">
 	                	<form:option value="-1" label ="--- Please Select ---" />
 	                	<% for (School s : schools) { %>
-	                	<form:option value="<%= s.getId() %>" label ="<%= s.getName() %>" />
+		                	<form:option value="<%= s.getId() %>" label ="<%= s.getName() %>"
+		                	selected='<%=((!add && s.getId().equals(school))?"selected":"") %>' />
 	                    <% } %>
 	                </form:select>
 				<form:errors path="" cssClass="errors" /></td>
             </tr>
-          	<tr class="hidden" id="class">
+          	<tr class'<%=((add)?"hidden":"") %>' id="class">
 				<td>Class:</td>
 				<td><form:select path="classroomId">
 						<form:option value="-1" label="--- Please select ---" />
 	                	<% for (Classroom c : classrooms) { %>
-						<form:option value="<%= c.getId() %>"
-						label="<%= c.getClassName() %>" />
+							<form:option value="<%= c.getId() %>"
+							label="<%= c.getClassName() %>"
+			                selected='<%=((!add && c.getId().equals(classroom))?"selected":"") %>' />
 	                    <% } %>
 					</form:select>
 				<form:errors path="classroomId" cssClass="errors" /></td>
