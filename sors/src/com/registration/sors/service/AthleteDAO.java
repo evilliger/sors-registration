@@ -29,29 +29,21 @@ public class AthleteDAO {
 	// Parameters: Athlete a - athlete to add
 	// Return: Athlete - newly added athlete
 	
-	public Athlete add(Athlete a){
-		try {
-			a.setClassroom(new Key<Classroom>(Classroom.class, a.getClassroomId()));
-			Objectify ofy = this.objectifyFactory.begin();
-			ofy.put(a);
-			return a;
-		} catch (Exception e) {
-			return null;
-		}
+	public Athlete add(Athlete a) throws Exception{
+		a.setClassroom(new Key<Classroom>(Classroom.class, a.getClassroomId()));
+		Objectify ofy = this.objectifyFactory.begin();
+		ofy.put(a);
+		return a;
 	}
 	// Delete an Athlete from DataStore
 	// Parameters: Athlete a - athlete to delete
 	// Return: void
 	
-	public Athlete delete(Athlete a){
-		try {
-			Objectify ofy = this.objectifyFactory.begin();
-			Athlete ath = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, a.getClassroomId()), Athlete.class, a.getId()));
-			ofy.delete(ath);
-			return ath;
-		} catch (Exception e) {
-			return null;
-		}
+	public Athlete delete(Athlete a) throws Exception {
+		Objectify ofy = this.objectifyFactory.begin();
+		Athlete ath = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, a.getClassroomId()), Athlete.class, a.getId()));
+		ofy.delete(ath);
+		return ath;
 	}
 	
 	// update an Athlete in DataStore
@@ -99,15 +91,10 @@ public class AthleteDAO {
 	}
 	
 	// find an athlete whose athleteID is id and whose classrom is c
-	public Athlete find(Long id, Classroom c){
-		try {
-			Objectify ofy = this.objectifyFactory.begin();
-			
-			// The following get would have to be run on every classroom id, instead of just "1".
-			return ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, c.getId()), Athlete.class, id));
-		} catch (Exception e) {
-			return null;
-		}
+	public Athlete find(Long id, Classroom c) throws Exception{
+		Objectify ofy = this.objectifyFactory.begin();
+
+		return ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, c.getId()), Athlete.class, id));
 	}
 	
 	public void add(List<Athlete> a) {
