@@ -227,7 +227,7 @@ public class AthleteController {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
 			session.invalidate();
-			return "redirect:/user/login"; 
+			return "redirect:/user/login";
 		}
 
 		Athlete a = new Athlete();
@@ -239,6 +239,13 @@ public class AthleteController {
 		Long cId = Long.parseLong(req.getParameter("classroomid"));
 		Classroom c = this.Cladao.find(cId);
 		a = this.Athdao.find(a.getId(), c);
+
+		List<Registration> regList = Regdao.find(a);
+		for (Registration reg : regList) { // delete existing registration entries.
+			Registration r = new Registration();
+			r.setId(reg.getId());
+			Regdao.delete(r);
+		}
 		
 		if(errors.hasErrors() || this.Athdao.delete(a) == null)
 			return "errorPageTemplate";
@@ -311,6 +318,7 @@ public class AthleteController {
 		List<Registration> registrations = new ArrayList<Registration>();
 		Long first = -1L;
 		if (req.getParameter("pevent") != null && !((String)req.getParameter("pevent")).equals("-1")) {
+			// add new registration (primary event added)
 			first = Long.parseLong((String)req.getParameter("pevent"));
 			Event pe = this.Evdao.find(first);
 			if(pe != null){
@@ -341,6 +349,7 @@ public class AthleteController {
 				errors.add("Primary event not found.");
 			}
 		} else if(req.getParameter("pevent") != null && ((String)req.getParameter("pevent")).equals("-1")){
+			// delete registration entry for pevent
 			Long regid = -1L;
 			if (req.getParameter("pregid") != null && !((String)req.getParameter("pregid")).equals("-1")) {
 				try {
