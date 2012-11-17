@@ -168,7 +168,7 @@ public class InitController {
 			hs.setMinAge(12);
 			hs.setMaxInHeat(15);
 			hs.setNumHeats(1);
-			hs.setTime(new Date());
+			hs.setTime("10:30");
 			hs.setParent(new Key<HeatSpec>(HeatSpec.class, HeatSpec.parentId));
 			Hsdao.add(hs);
 			
@@ -179,7 +179,7 @@ public class InitController {
 			t.setMinAge(12);
 			t.setMaxInHeat(15);
 			t.setNumHeats(1);
-			t.setTime(new Date());
+			t.setTime("11:00");
 			t.setParent(new Key<HeatSpec>(HeatSpec.class, HeatSpec.parentId));
 			Hsdao.add(t);
 			
