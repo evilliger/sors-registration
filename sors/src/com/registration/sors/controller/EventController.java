@@ -138,7 +138,6 @@ public class EventController {
 		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
-			Long i = e.getId();
 			e = this.dao.find(e.getId());
 			model.addAttribute("event", e);
 		} else {

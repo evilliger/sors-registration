@@ -33,6 +33,7 @@
                 <value>com.registration.sors.model.Athlete</value>
                 <value>com.registration.sors.model.Classroom</value>
                 <value>com.registration.sors.model.Event</value>
+                <value>com.registration.sors.model.EventConflict</value>
                 <value>com.registration.sors.model.Heat</value>
                 <value>com.registration.sors.model.HeatSpec</value>
                 <value>com.registration.sors.model.Registration</value>

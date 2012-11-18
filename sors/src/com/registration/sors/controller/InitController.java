@@ -3,38 +3,32 @@
 //-------------------------------------------//
 package com.registration.sors.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
-import com.registration.sors.helpers.Security;
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Classroom;
 import com.registration.sors.model.Event;
+import com.registration.sors.model.EventConflict;
 import com.registration.sors.model.Heat;
 import com.registration.sors.model.HeatSpec;
 import com.registration.sors.model.Registration;
 import com.registration.sors.model.School;
-import com.registration.sors.model.SystemSession;
 import com.registration.sors.model.User;
 import com.registration.sors.service.AthleteDAO;
 import com.registration.sors.service.ClassroomDAO;
+import com.registration.sors.service.EventConflictDAO;
 import com.registration.sors.service.EventDAO;
 import com.registration.sors.service.HeatDAO;
 import com.registration.sors.service.HeatSpecDAO;
@@ -48,10 +42,10 @@ public class InitController {
 	
 	@Autowired private AthleteDAO Athdao;
 	@Autowired private EventDAO Evdao;
+	@Autowired private EventConflictDAO EvConfdao;
 	@Autowired private SchoolDAO Schdao;
 	@Autowired private ClassroomDAO Cladao;
 	@Autowired private UserDAO Usedao;
-	@Autowired private EventDAO Evedao;
 	@Autowired private HeatDAO Heatdao;
 	@Autowired private HeatSpecDAO Hsdao;
 	@Autowired private RegistrationDAO Regdao;
@@ -60,6 +54,7 @@ public class InitController {
 
 	// Dev Testing ONLY
 	// Name: init
+	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ModelAndView init(HttpSession session) {
 
@@ -134,14 +129,40 @@ public class InitController {
 			
 			Event ep = new Event();
 			ep.setId(Event.parentId);
-			Evedao.add(ep);
-			
+			Evdao.add(ep);
+
 			Event e = new Event();
 			e.setParent(new Key<Event>(Event.class, ep.getId()));
 			e.setName("Javelin Jumping Jack");
 			e.setMin(3);
 			e.setMax(10);
-			Evedao.add(e);
+			Evdao.add(e);
+			Event e2 = new Event();
+			e2.setParent(new Key<Event>(Event.class, ep.getId()));
+			e2.setName("50 Meter Dash");
+			e2.setUnits("S");
+			e2.setMin(10);
+			e2.setMax(20);
+			Evdao.add(e2);
+			Event e3 = new Event();
+			e3.setParent(new Key<Event>(Event.class, ep.getId()));
+			e3.setName("100 Meter Dash");
+			e3.setUnits("S");
+			e3.setMin(15);
+			e3.setMax(50);
+			Evdao.add(e3);
+			
+			EventConflict ec = new EventConflict();
+			ec.setId(EventConflict.parentId);
+			ec.setE1Id(0L);
+			ec.setE2Id(0L);
+			EvConfdao.add(ec);
+			
+			EventConflict ec1 = new EventConflict();
+			ec1.setId(EventConflict.parentId);
+			ec1.setE1Id(e2.getId());
+			ec1.setE2Id(e3.getId());
+			EvConfdao.add(ec1);
 	
 			Heat hp = new Heat();
 			hp.setId(Heat.parentId);

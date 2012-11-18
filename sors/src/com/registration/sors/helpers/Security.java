@@ -6,7 +6,6 @@
 package com.registration.sors.helpers;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.registration.sors.model.SystemSession;

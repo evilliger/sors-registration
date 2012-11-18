@@ -36,6 +36,7 @@ import com.registration.sors.model.SystemSession;
 import com.registration.sors.model.User;
 import com.registration.sors.service.AthleteDAO;
 import com.registration.sors.service.ClassroomDAO;
+import com.registration.sors.service.EventConflictDAO;
 import com.registration.sors.service.EventDAO;
 import com.registration.sors.service.RegistrationDAO;
 import com.registration.sors.service.SchoolDAO;
@@ -53,6 +54,7 @@ public class AthleteController {
 	
 	@Autowired private AthleteDAO Athdao;
 	@Autowired private EventDAO Evdao;
+	@Autowired private EventConflictDAO EvConfdao;
 	@Autowired private SchoolDAO Schdao;
 	@Autowired private ClassroomDAO Cladao;
 	@Autowired private RegistrationDAO Regdao;
@@ -111,10 +113,15 @@ public class AthleteController {
 		
 		//Errors will be handled here
 		if (!errors.hasErrors() && regData.errors.isEmpty()) {
-			if((a = this.Athdao.add(a)) == null) 
+			try {
+				if((a = this.Athdao.add(a)) == null) 
+					return "errorPageTemplate";
+				else 
+					log.warning(ss.getUser().getEmail() + " added " + a.getFname() + " " + a.getLname() + " to the datastore");
+			} catch (Exception e) {
+				log.severe("Error adding athlete to datastore: " + e.toString());
 				return "errorPageTemplate";
-			else 
-				log.warning(ss.getUser().getEmail() + " added " + a.getFname() + " " + a.getLname() + " to the datastore");
+			}
 			for(int i = 0; i < regData.registrations.size(); ++i){
 				Registration r = regData.registrations.get(i);
 				r.setAthleteID(a.getId());
@@ -154,9 +161,13 @@ public class AthleteController {
 		BindingResult errors = binder.getBindingResult();
 		
 		Long cId = Long.parseLong(req.getParameter("classroomid"));
-		Classroom c = this.Cladao.find(cId);
-		a = this.Athdao.find(a.getId(), c);
-
+		try {
+			Classroom c = this.Cladao.find(cId);
+			a = this.Athdao.find(a.getId(), c);
+		} catch (Exception e) {
+			log.severe("Error finding athlete: " + e.toString());
+			return "errorPageTemplate";
+		}
 		if (errors.hasErrors()) 
 			return "redirect:list";
 		
@@ -193,15 +204,25 @@ public class AthleteController {
 		RegData regData = handleRegistrations(req, a);
 		
 		if (!errors.hasErrors() && regData.errors.isEmpty()) {
-			if((a = this.Athdao.add(a)) == null) 
+			try {
+				if((a = this.Athdao.add(a)) == null) 
+					return "errorPageTemplate";
+				else 
+					log.warning(ss.getUser().getEmail() + " updated " + a.getFname() + " " + a.getLname() + " in the datastore");
+			} catch (Exception e) {
+				log.severe("Error adding athlete to datastore: " + e.toString());
 				return "errorPageTemplate";
-			else 
-				log.warning(ss.getUser().getEmail() + " updated " + a.getFname() + " " + a.getLname() + " in the datastore");
+			}
 			for(int i = 0; i < regData.registrations.size(); ++i){
 				Registration r = regData.registrations.get(i);
 				r.setAthleteID(a.getId());
-				if(this.Regdao.add(r) != null)
-					log.warning(ss.getUser().getEmail() + " added " + regData.registrations.size() + " to the datastore");	
+				try {
+					if(this.Regdao.add(r) != null)
+						log.warning(ss.getUser().getEmail() + " added " + regData.registrations.size() + " to the datastore");	
+				} catch (Exception e) {
+					log.severe("Error adding registration: " + e.toString());
+					return "errorPageTemplate";
+				}
 			}
 		} else {
 			model = loadModel(model,req,false,ss.getUser(),a,errors,regData.errors);
@@ -237,14 +258,24 @@ public class AthleteController {
 		BindingResult errors = binder.getBindingResult();
 
 		Long cId = Long.parseLong(req.getParameter("classroomid"));
-		Classroom c = this.Cladao.find(cId);
-		a = this.Athdao.find(a.getId(), c);
-
-		List<Registration> regList = Regdao.find(a);
-		for (Registration reg : regList) { // delete existing registration entries.
-			Registration r = new Registration();
-			r.setId(reg.getId());
-			Regdao.delete(r);
+		try {
+			Classroom c = this.Cladao.find(cId);
+			a = this.Athdao.find(a.getId(), c);
+		} catch (Exception e) {
+			log.severe("Error finding athlete: " + e.toString());
+			return "errorPageTemplate";
+		}
+	
+		try {
+			List<Registration> regList = Regdao.find(a);
+			for (Registration reg : regList) { // delete existing registration entries.
+				Registration r = new Registration();
+				r.setId(reg.getId());
+				Regdao.delete(r);
+			}
+		} catch (Exception e) {
+			log.severe("Error deleting registrations: " + e.toString());
+			return "errorPageTemplate";
 		}
 		
 		if(errors.hasErrors() || this.Athdao.delete(a) == null)
@@ -369,6 +400,8 @@ public class AthleteController {
 				errors.add("Cannot register for the same event.");
 			Event sse = this.Evdao.find(second);
 			if(sse != null){
+				Event pe = this.Evdao.find(Long.parseLong((String)req.getParameter("pevent")));
+				errors = handleConflictingEvents(pe, sse, errors);
 				Double sscore = 0.0;
 				try {
 					sscore = Double.parseDouble((String)req.getParameter("sscore"));
@@ -413,6 +446,15 @@ public class AthleteController {
 		return new RegData(registrations, errors);
 	}
 	
+	// Adds errors to the list of errors for conflicting events.
+	List<String> handleConflictingEvents(Event primary, Event secondary, List<String> errors) {
+		List<Long> conflicts = EvConfdao.find(primary);
+		for (Long eId : conflicts) {
+			if (eId.equals(secondary.getId()))
+					errors.add("Event '" + primary.getName() + "' conflicts with event '" + secondary.getName() + "'. Please remove one of them.");
+		}
+		return errors;
+	}
 	
 	// Loads the model for the maintain athletes jsp
 	private ModelMap loadModel(ModelMap model, HttpServletRequest req, boolean add, User u, Athlete a, BindingResult errors, List<String> otherErrors) {

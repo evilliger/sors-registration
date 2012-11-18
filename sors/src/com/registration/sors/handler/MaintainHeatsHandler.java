@@ -16,13 +16,9 @@ import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Event;
 import com.registration.sors.model.Heat;
-import com.registration.sors.model.HeatEntry;
 import com.registration.sors.model.HeatSpec;
 import com.registration.sors.model.Registration;
 import com.registration.sors.service.AthleteDAO;
@@ -371,6 +367,7 @@ public class MaintainHeatsHandler {
 	// main method called to generate heats
 	// params: none
 	// return: none
+	@SuppressWarnings("deprecation")
 	public void GenerateHeats() {
 		
 		// validate the entries in the datastore
@@ -406,7 +403,7 @@ public class MaintainHeatsHandler {
 					h.setGender(he.getGender());
 					h.setMaxAge(he.getMaxAge());
 					h.setMinAge(he.getMinAge());
-					h.setTime(he.getTime());
+					h.setTime(new Date(he.getTime()));
 					
 					heatDAO.add(h);
 					// change heatid in reg

@@ -14,7 +14,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Parent;
 
-@SuppressWarnings("javadoc")
+@SuppressWarnings({ "javadoc", "serial" })
 @Entity
 public class Event implements Serializable{
 	

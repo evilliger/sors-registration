@@ -7,8 +7,6 @@
 //---------------------------------------//
 package com.registration.sors.model;
 import java.io.Serializable;
-import java.sql.Time;
-import java.util.*;
 
 import javax.persistence.Id;
 
@@ -16,7 +14,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Parent;
 
-@SuppressWarnings("javadoc")
+@SuppressWarnings({ "javadoc", "serial" })
 @Entity
 public class HeatSpec implements Serializable {
 	

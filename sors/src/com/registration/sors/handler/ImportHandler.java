@@ -1,11 +1,12 @@
 package com.registration.sors.handler;
 
 import java.io.StringReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import au.com.bytecode.opencsv.bean.CsvToBean;
+import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 import com.googlecode.objectify.Key;
 import com.registration.sors.model.Athlete;
@@ -16,8 +17,6 @@ import com.registration.sors.model.HeatSpec;
 import com.registration.sors.model.Registration;
 import com.registration.sors.model.School;
 import com.registration.sors.model.User;
-import au.com.bytecode.opencsv.bean.CsvToBean;
-import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 
 public class ImportHandler {
