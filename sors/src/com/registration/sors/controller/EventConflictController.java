@@ -65,7 +65,7 @@ public class EventConflictController {
 	// Name: add
 	// Purpose: Receives the submission of add.jsp stores it in the datastore and redirects to list.jsp
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public ModelAndView add(HttpServletRequest req, HttpSession session) throws Exception {
+	public ModelAndView add(ModelMap model, HttpServletRequest req, HttpSession session) throws Exception {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
 			session.invalidate();

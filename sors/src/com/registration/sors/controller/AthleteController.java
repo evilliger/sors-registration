@@ -357,7 +357,7 @@ public class AthleteController {
 				try{
 					pscore = Double.parseDouble((String)req.getParameter("pscore"));
 					if (pscore > pe.getMax() || pscore < pe.getMin()) {
-						errors.add("Primary event score not within bounds");
+						errors.add("Primary event score needs to be between " + pe.getMin() + " and " + pe.getMax() + ".");
 					} else {
 						Registration r = new Registration(pscore, a.getId(), pe.getId());
 						Long regid = -1L;
@@ -397,36 +397,38 @@ public class AthleteController {
 		if (req.getParameter("sevent") != null && !((String)req.getParameter("sevent")).equals("-1")) {
 			Long second = Long.parseLong((String)req.getParameter("sevent"));
 			if(first.equals(second))
-				errors.add("Cannot register for the same event.");
-			Event sse = this.Evdao.find(second);
-			if(sse != null){
-				Event pe = this.Evdao.find(Long.parseLong((String)req.getParameter("pevent")));
-				errors = handleConflictingEvents(pe, sse, errors);
-				Double sscore = 0.0;
-				try {
-					sscore = Double.parseDouble((String)req.getParameter("sscore"));
-					if (sscore > sse.getMax() || sscore < sse.getMin()) {
-						errors.add("Secondary event score not within bounds");
-					} else {
-						Registration r = new Registration(sscore, a.getId(), sse.getId());
-						Long regid = -1L;
-						if (req.getParameter("sregid") != null && !((String)req.getParameter("sregid")).equals("-1")) {
-							try {
-								regid = Long.parseLong((String)req.getAttribute("sregid"));
-							} catch (Exception e){
-								errors.add("Registration ID in incorrect format.");
+				errors.add("Cannot register twice for the same event.");
+			else {
+				Event sse = this.Evdao.find(second);
+				if(sse != null){
+					Event pe = this.Evdao.find(Long.parseLong((String)req.getParameter("pevent")));
+					errors = handleConflictingEvents(pe, sse, errors);
+					Double sscore = 0.0;
+					try {
+						sscore = Double.parseDouble((String)req.getParameter("sscore"));
+						if (sscore > sse.getMax() || sscore < sse.getMin()) {
+							errors.add("Secondary event score needs to be between " + sse.getMin() + " and " + sse.getMax() + ".");
+						} else {
+							Registration r = new Registration(sscore, a.getId(), sse.getId());
+							Long regid = -1L;
+							if (req.getParameter("sregid") != null && !((String)req.getParameter("sregid")).equals("-1")) {
+								try {
+									regid = Long.parseLong((String)req.getParameter("sregid"));
+								} catch (Exception e){
+									errors.add("Registration ID in incorrect format.");
+								}
 							}
+							if(regid != -1) {
+								r.setId(regid);
+							}
+							registrations.add(r);
 						}
-						if(regid != -1) {
-							r.setId(regid);
-						}
-						registrations.add(r);
+					} catch(Exception e){
+						errors.add("Please enter numeric score for secondary event.");
 					}
-				} catch(Exception e){
-					errors.add("Please enter numeric score for secondary event.");
+				} else {
+					errors.add("Secondary event not found.");
 				}
-			} else {
-				errors.add("Secondary event not found.");
 			}
 		} else if(req.getParameter("sevent") != null && ((String)req.getParameter("sevent")).equals("-1")){
 			Long regid = -1L;
@@ -451,7 +453,7 @@ public class AthleteController {
 		List<Long> conflicts = EvConfdao.find(primary);
 		for (Long eId : conflicts) {
 			if (eId.equals(secondary.getId()))
-					errors.add("Event '" + primary.getName() + "' conflicts with event '" + secondary.getName() + "'. Please remove one of them.");
+					errors.add(primary.getName() + " conflicts with " + secondary.getName() + ". Please remove one of them.");
 		}
 		return errors;
 	}

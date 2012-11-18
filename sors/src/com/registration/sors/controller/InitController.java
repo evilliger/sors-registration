@@ -136,6 +136,7 @@ public class InitController {
 			e.setName("Javelin Jumping Jack");
 			e.setMin(3);
 			e.setMax(10);
+			e.setUnits("M");
 			Evdao.add(e);
 			Event e2 = new Event();
 			e2.setParent(new Key<Event>(Event.class, ep.getId()));
