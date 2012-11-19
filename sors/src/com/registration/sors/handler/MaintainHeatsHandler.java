@@ -195,7 +195,6 @@ public class MaintainHeatsHandler {
 						}
 						temp.add(r);
 						list.put(s.getId().toString(), temp);
-						break;
 					}
 				}				
 			}
