@@ -37,12 +37,16 @@ public class MaintainHeatsHandler {
 	private static HeatSpecDAO heatSpecDAO;
 	private static HeatDAO heatDAO;
 	
-	private Dictionary<String,Athlete>athDictionary;
 	
 	private List<Athlete> athList;
 	private List<Registration> regList;
 	private List<HeatSpec> heatSpecList;
 	private List<Event> eventList;
+	
+	public Dictionary<String,Athlete>athDictionary;
+	public Dictionary<String,Event>eventDictionary; 
+	public Dictionary<String,List<Registration>>regDictionary;
+	public List<Heat>heatList;
 
 	
 	// The contructor has to recieve the 5 dao classes from the controller
@@ -243,9 +247,26 @@ public class MaintainHeatsHandler {
 		    	}else if(h1.getEventID() > h2.getEventID()){
 		    		return 1;
 		    	}else{
-		    		if(h1.getTime().before(h2.getTime())){
+		    		String t1 = h1.getTime();
+		    		String t2 = h2.getTime();
+		    		int hour1 = 0;
+		    		int minute1 = 0;
+		    		int hour2 = 0;
+		    		int minute2 = 0;
+		    		
+		    		int index = t1.indexOf(':');
+		    		hour1 = Integer.parseInt(t1.substring(0,index));
+		    		t1 = t1.substring(index);
+		    		minute1 = Integer.parseInt(t1);
+		    		
+		    		index = t2.indexOf(':');
+		    		hour2 = Integer.parseInt(t2.substring(0,index));
+		    		t2 = t2.substring(index);
+		    		minute2 = Integer.parseInt(t2);
+		    		
+		    		if(hour1 < hour2 || (hour1 == hour2 && minute1 < minute2)){
 		    			return -1;
-		    		}else if(h1.getTime().after(h2.getTime())){
+		    		}else if(hour1 > hour2 || (hour1 == hour2 && minute1 > minute2) ){
 		    			return 1;
 		    		}else{
 		    			if(h1.getMinAge() < h2.getMinAge()){
@@ -286,6 +307,8 @@ public class MaintainHeatsHandler {
 		List<Heat>heatList = heatDAO.loadAll();
 		heatList = sortHeats(heatList);
 		String html = "";
+		
+		
 		
 		for(int i = 0; i < heatList.size(); ++i){
 			Heat h = heatList.get(i);
@@ -412,6 +435,9 @@ public class MaintainHeatsHandler {
 		validate();
 		
 		athDictionary = getAthleteDictionary();
+		eventDictionary= getEventDictionary(); 
+		regDictionary = getRegHeatDictionary();
+		
 
 		// do the join
 		Dictionary<String,List<Registration>> heList = getHeatSpec_RegDictionary();
@@ -440,7 +466,7 @@ public class MaintainHeatsHandler {
 					h.setGender(he.getGender());
 					h.setMaxAge(he.getMaxAge());
 					h.setMinAge(he.getMinAge());
-					h.setTime(new Date(he.getTime()));
+					h.setTime(he.getTime());
 					
 					heatDAO.add(h);
 					// change heatid in reg
@@ -465,6 +491,8 @@ public class MaintainHeatsHandler {
 						--remainder;
 					}
 				}
+				heatList = heatDAO.loadAll();
+				heatList = sortHeats(heatList);
 			}
 		}
 

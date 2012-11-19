@@ -4,7 +4,10 @@
 //-------------------------------------------//
 package com.registration.sors.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +24,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.registration.sors.handler.MaintainHeatsHandler;
 import com.registration.sors.helpers.Security;
+import com.registration.sors.model.Athlete;
+import com.registration.sors.model.Event;
 import com.registration.sors.model.Heat;
+import com.registration.sors.model.Registration;
 import com.registration.sors.model.SystemSession;
 import com.registration.sors.service.AthleteDAO;
 import com.registration.sors.service.EventDAO;
@@ -291,15 +297,31 @@ public class HeatController {
 			Heat h = heatList.get(i);
 			this.heatDao.delete(h);
 		}
+		String error = "";
+		Dictionary<String,Athlete>athDictionary = new Hashtable<String,Athlete>();
+		Dictionary<String,Event>eventDictionary= new Hashtable<String,Event>();
+		Dictionary<String,List<Registration>>regDictionary= new Hashtable<String,List<Registration>>();
+		List<Heat>hList= new ArrayList<Heat>();
 		try{
 			MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
 			handler.GenerateHeats();
-			String html = handler.MakeString();
+			//String html = handler.MakeString();
 		
-			model.addAttribute("htmlTable", html);
+			//model.addAttribute("htmlTable", html);
+			athDictionary = handler.athDictionary;
+			eventDictionary = handler.eventDictionary;
+			hList = handler.heatList;
+			regDictionary = handler.regDictionary;
+			
 		}catch(Exception e){
-			model.addAttribute("htmlTable", "Heat Generation encountered an error. Please check completeness of records.");
+			//model.addAttribute("htmlTable", "Heat Generation encountered an error. Please check completeness of records.");
+			error = "Heat Generation encountered an error. Please check completeness of records.";
 		}
+		model.addAttribute("athDictionary",athDictionary);
+		model.addAttribute("eventDictionary",eventDictionary);
+		model.addAttribute("heatList",hList);
+		model.addAttribute("regDictionary",regDictionary);
+		model.addAttribute("error",error);
 		return "generate";
 
 	}

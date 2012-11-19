@@ -27,7 +27,7 @@ public class Heat implements Serializable {
 	int division;
 	int minAge;
 	int maxAge;
-	Date time;
+	String time;
 	Long eventID;
 	
 	@Parent
@@ -83,11 +83,11 @@ public class Heat implements Serializable {
 		this.maxAge = maxAge;
 	}
 
-	public Date getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 
@@ -107,7 +107,7 @@ public class Heat implements Serializable {
 		this.parent = parent;
 	}
 
-	public Heat(int d, String g, int min, int max, Long e, Date t){
+	public Heat(int d, String g, int min, int max, Long e, String t){
 		division = d;
 		minAge = min;
 		maxAge = max;

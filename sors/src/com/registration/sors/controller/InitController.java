@@ -175,7 +175,7 @@ public class InitController {
 			h.setMaxAge(12);
 			h.setMinAge(7);
 			h.setDivision(1);
-			h.setTime(new Date(2012,10,10));
+			h.setTime("11:00");
 			Heatdao.add(h);
 			
 			
