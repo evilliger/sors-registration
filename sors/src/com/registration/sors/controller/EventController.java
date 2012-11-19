@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.registration.sors.helpers.Security;
+import com.registration.sors.model.HeatSpec;
 import com.registration.sors.model.SystemSession;
 import com.registration.sors.model.Event;
 import com.registration.sors.service.EventDAO;
+import com.registration.sors.service.HeatSpecDAO;
 
 
 @Controller
@@ -37,6 +39,7 @@ import com.registration.sors.service.EventDAO;
 public class EventController {
 	
 	@Autowired private EventDAO dao;
+	@Autowired private HeatSpecDAO HSdao;
 	
 	List<String> roles = Arrays.asList("A");
 	
@@ -135,7 +138,6 @@ public class EventController {
 		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
-			Long i = e.getId();
 			e = this.dao.find(e.getId());
 			model.addAttribute("event", e);
 		} else {
@@ -204,13 +206,20 @@ public class EventController {
 			return "redirect:/user/login";
 		}
 		
-		Event u = new Event();
-		ServletRequestDataBinder binder = new ServletRequestDataBinder(u, "event");
+		Event e = new Event();
+		ServletRequestDataBinder binder = new ServletRequestDataBinder(e, "event");
 		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
 		
+		List<HeatSpec> hsList = HSdao.loadAll();
+		for (HeatSpec hs : hsList) {
+			if (hs.getEventId().equals(e.getId())){
+				HSdao.delete(hs);
+			}
+		}
+		
 		// Errors will be handled here		
-		this.dao.delete(u);
+		this.dao.delete(e);
 
 		// return to list
 		return "redirect:list";

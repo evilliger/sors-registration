@@ -1,10 +1,13 @@
 //-------------------------------------------//
-// Name: AthleteController					 //
+// Name: HeatSpecController					 //
 // Purpose: Spring Cotroller				 //
 //-------------------------------------------//
 package com.registration.sors.controller;
 
+import java.beans.PropertyEditorSupport;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,13 +18,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.registration.sors.helpers.Security;
+import com.registration.sors.model.Event;
 import com.registration.sors.model.HeatSpec;
 import com.registration.sors.model.SystemSession;
+import com.registration.sors.model.User;
+import com.registration.sors.service.EventDAO;
 import com.registration.sors.service.HeatSpecDAO;
 
 @Controller
@@ -36,32 +43,27 @@ import com.registration.sors.service.HeatSpecDAO;
 public class HeatSpecController {
 	
 	@Autowired private HeatSpecDAO dao;
+	@Autowired private EventDAO Evdao;
 	
 	List<String> roles = Arrays.asList("A", "T");
 	
-	// Name: getAddAthletePage
+	// Name: getAddHeatSpecPage
 	// Purpose: Determine if the user is logged in and authorized 
 	//		to see this page.
 	// Parameters: session - the current user session
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
-	//		add page - page allowing the user to submit a new athlete
-	
+	//		add page - page allowing the user to submit a new heatspec
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddAthletePage(HttpSession session, ModelMap model) {
+	public String getAddHeatSpecPage(HttpServletRequest req, HttpSession session, ModelMap model) {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
-			session.invalidate();	
-			// Right now it takes the user back to the Login Page no matter what
+			session.invalidate();
 			return "redirect:/user/login"; 
 		}
+		model = loadModel(model, req, true, ss.getUser(), new HeatSpec(), null);
 		
-		HeatSpec h = new HeatSpec();
-		
-		model.addAttribute("heatspec", h);
-		model.addAttribute("add", true);
-		
-		return "addHeatSpec";
+		return "maintainHeatSpec";
 	}
 
 	
@@ -74,56 +76,39 @@ public class HeatSpecController {
 	//		list page - when data is added
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public ModelAndView add(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
-		
+	public String add(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		
 		if(!Security.isAuthenticated(this.roles, ss)){
-			
 			session.invalidate();
-			
-			// Right now it takes the user back to the Login Page no matter what
-			return new ModelAndView("redirect:/user/login");
+			return "redirect:/user/login"; 
 		}
-		
+
 		HeatSpec h = new HeatSpec();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heatspec");
-		binder.setRequiredFields(new String[] {"eventId", "gender", "minAge", "maxAge", "time", "numHeats", "maxInHeat"});
+		binder.setRequiredFields(new String[] {"eventId", "minAge", "maxAge", "gender", "maxInHeat", "numHeats"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
-
-		// Errors will be handled here
+		
 		if (!errors.hasErrors()) {
-			
-			if(this.dao.add(h) == null) {
-				throw new Exception ("Error adding HeatSpec to datastore");
-			}
-			
+			if((h = this.dao.add(h)) == null) 
+				return "errorPageTemplate";
 		} else {
-			throw new Exception ("Supply required information." + errors.getAllErrors().get(0).toString());
+			model = loadModel(model,req,false,ss.getUser(),h,errors);
+			return "maintainHeatSpec";
 		}
-		return new ModelAndView("redirect:list");
+		
+		// return to list
+		return "redirect:list";
 	}
 	
 	// Name: getUpdateHeatSpecPage
-	// Purpose: Displays the get.jsp page with the information from the Athlete
-	// Parameters: session - the current user session
-	//			req - athlete to update
-	//			model - the model for update
-	// Return: page redirect
-	//		login page - if user not logged in or not authorized
-	//		updateathlete page - page to edit athlete information
-	
+	// Purpose: Displays the get.jsp page with the information from the HeatSpec
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String getUpdateHeatSpecPage(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
-		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
-			
 			session.invalidate();
-			
-			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
 
@@ -133,18 +118,15 @@ public class HeatSpecController {
 		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
-		
+
 		h = dao.find(h.getId());
+
+		if (errors.hasErrors()) 
+			return "redirect:list";
 		
-		// Errors will be handle here
-		if (!errors.hasErrors()) {
-			model.addAttribute("heatspec", h);
-		} else {
-			model.addAttribute("heatspec", h);
-			model.addAllAttributes(errors.getModel()); 
-			return "updateHeatSpec";
-		}
-		return "updateHeatSpec";
+		model = loadModel(model,req,false,ss.getUser(),h,errors);
+
+		return "maintainHeatSpec";
 	}
 	
 	
@@ -158,32 +140,26 @@ public class HeatSpecController {
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String update(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
-		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
-		
 		if(!Security.isAuthenticated(this.roles, ss)){
-			
 			session.invalidate();
-			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
 
 		HeatSpec h = new HeatSpec();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heatspec");
-		binder.setRequiredFields(new String[] {"eventId", "gender", "minAge", "maxAge", "time", "numHeats", "maxInHeat"});
+		binder.setRequiredFields(new String[] {"id", "eventId", "gender", "minAge", "maxAge", "numHeats", "maxInHeat"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
-		
-		// Errors will be handled here
+
 		if (!errors.hasErrors()) {
-			this.dao.update(h);
+			if((h = this.dao.add(h)) == null) 
+				return "errorPageTemplate";
 		} else {
-			model.addAttribute("heatspec", h);
-			model.addAllAttributes(errors.getModel()); 
-			return "updateHeatSpec";
+			model = loadModel(model,req,false,ss.getUser(),h,errors);
+			return "maintainHeatSpec";
 		}
-		
 		// return to list
 		return "redirect:list";
 
@@ -243,5 +219,45 @@ public class HeatSpecController {
 		// Errors will be handled here
 		model.addAttribute("heatSpecList", this.dao.loadAll());
 		return "listHeatSpec";
+	}
+	
+	// ********************** HELPER METHODS **************************
+	// Loads the model for the maintain heatspecs jsp
+	private ModelMap loadModel(ModelMap model, HttpServletRequest req, boolean add, User u, HeatSpec h, BindingResult errors) {
+		try{
+			List<Event> events = this.Evdao.loadAll();
+			
+			model.addAttribute("add", add);
+			model.addAttribute("events", events);
+			
+			try{
+				if(req.getParameter("evid")!=null)
+					model.addAttribute("evid", Long.parseLong(req.getParameter("evid")));
+				else model.addAttribute("evid", -1L);
+			} catch (Exception e){
+				model.addAttribute("evid", -1L);
+			}
+			
+			if(errors != null)
+				model.addAllAttributes(errors.getModel()); 
+		} catch (Exception e){
+			return null;
+		}
+		model.addAttribute("heatspec", h);
+		return model;
+	}
+	
+	// Special binder to customize the output of the date
+	@InitBinder
+	public void binder(WebDataBinder binder) {binder.registerCustomEditor(Date.class,
+	    new PropertyEditorSupport() {
+	        public String getAsText() {
+	        	Object val;
+				if((val = getValue()) != null)
+					return new SimpleDateFormat("hh:mm").format(val);
+				else 
+					return "";
+        	}
+	    });
 	}
 }

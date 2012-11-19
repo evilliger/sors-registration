@@ -7,7 +7,6 @@
 //---------------------------------------//
 package com.registration.sors.model;
 import java.io.Serializable;
-import java.util.*;
 
 import javax.persistence.Id;
 
@@ -15,7 +14,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Parent;
 
-@SuppressWarnings("javadoc")
+@SuppressWarnings({ "javadoc", "serial" })
 @Entity
 public class HeatSpec implements Serializable {
 	
@@ -25,7 +24,7 @@ public class HeatSpec implements Serializable {
 	String gender;
 	int minAge;
 	int maxAge;
-	Date time;
+	String time;
 	int numHeats;
 	int maxInHeat;
 	Long eventId;
@@ -86,13 +85,13 @@ public class HeatSpec implements Serializable {
 
 
 
-	public Date getTime() {
+	public String getTime() {
 		return time;
 	}
 
 
 
-	public void setTime(Date time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 
@@ -158,7 +157,7 @@ public class HeatSpec implements Serializable {
 
 
 
-	public HeatSpec(String g, int minA, int maxA, Date t, int num, int max, Long e){
+	public HeatSpec(String g, int minA, int maxA, String t, int num, int max, Long e){
 		gender = g;
 		minAge = minA;
 		maxAge = maxA;

@@ -144,7 +144,6 @@ public class HeatController {
 		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
-			Long i = h.getId();
 			h = this.heatDao.find(h.getId());
 			model.addAttribute("heat", h);
 		} else {

@@ -200,7 +200,6 @@ public class UserController {
 		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
-			Long i = u.getId();
 			u = this.dao.find(u.getId());
 			model.addAttribute("user", u);
 		} else {

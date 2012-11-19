@@ -134,7 +134,6 @@ public class RegistrationController {
 		
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
-			Long i = r.getId();
 			r = this.dao.find(r.getId());
 			model.addAttribute("registration", r);
 		} else {

@@ -4,9 +4,6 @@
 //		maintainheatshandler.           //
 //--------------------------------------//
 package com.registration.sors.model;
-import java.util.*;
-
-import javax.persistence.Id;
 public class HeatEntry {
 	
 	Long eventID;
