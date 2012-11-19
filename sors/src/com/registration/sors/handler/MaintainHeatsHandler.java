@@ -296,57 +296,6 @@ public class MaintainHeatsHandler {
 		return hList;
 	}
 	
-	// To string method for the heats
-	// params:none
-	// return: a html table listing of all
-	// heats and participants
-	public String MakeString(){
-		Dictionary<String,Athlete>athList = getAthleteDictionary();
-		Dictionary<String,Event>eventList = getEventDictionary(); 
-		Dictionary<String,List<Registration>>regList = getRegHeatDictionary();
-		List<Heat>heatList = heatDAO.loadAll();
-		heatList = sortHeats(heatList);
-		String html = "";
-		
-		
-		
-		for(int i = 0; i < heatList.size(); ++i){
-			Heat h = heatList.get(i);
-			html += "<table style=\"text-align:left;\"><tr>" 
-			+ " <th>" + eventList.get(h.getEventID().toString()).getName() + "</th>"
-			+ "<th>Group " + Integer.toString(h.getMinAge()) + " to " + Integer.toString(h.getMaxAge()) + "</th>"
-			+ "<th>Time " + h.getTime().toString() + "</th>"
-			+ "<th>Gender: " + h.getGender() + "</th>"
-			+ "</tr>";
-			
-			html += "<tr>"
-			+ "<th>Name</th>"
-			+ "<th>Age</th>"
-			+ "<th>Sex</th>"
-			+ "<th>Rank</th>"
-			+ "<th>Score</th>"
-			+ "<th>Div</th></tr>";
-			
-			List<Registration>rList = regList.get(h.getId().toString());
-			
-			if(rList != null){
-				rList = sortRank(rList);
-			}
-			for(int j = 0; j < rList.size(); ++j){
-				Registration r = rList.get(j);
-				Athlete a = athList.get(r.getAthleteID().toString());
-				html += "<tr><td>" + a.getFname() + " " + a.getLname() + "</td>"
-						+ "<td>" + age(a.getBdate()) + "</td>"
-						+ "<td>" + a.getGender() + "</td>"
-						+ "<td>" + r.getRank() + "</td>"
-						+ "<td>" + r.getScore() + "</td>"
-						+ "<td>" + h.getDivision() + "</td></tr>";
-			
-			}
-			html += "</table>";		
-		}
-		return html;
-	}
 	
 	// to validate the entries in the datastore
 	// to reduce chance of exceptions
@@ -427,7 +376,6 @@ public class MaintainHeatsHandler {
 	// main method called to generate heats
 	// params: none
 	// return: none
-	@SuppressWarnings("deprecation")
 	public void GenerateHeats() {
 		
 		// validate the entries in the datastore
@@ -491,10 +439,15 @@ public class MaintainHeatsHandler {
 						--remainder;
 					}
 				}
-				heatList = heatDAO.loadAll();
-				heatList = sortHeats(heatList);
+				
 			}
 		}
+		athDictionary = getAthleteDictionary();
+		eventDictionary= getEventDictionary(); 
+		regDictionary = getRegHeatDictionary();
+		heatList = heatDAO.loadAll();
+		heatList = sortHeats(heatList);
+		
 
 	}
 }

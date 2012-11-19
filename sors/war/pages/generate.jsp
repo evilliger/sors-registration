@@ -4,6 +4,10 @@
 <%@ page import="com.registration.sors.model.*" %>
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.Collections" %>
+<%@ page import="java.util.GregorianCalendar" %>
+<%@ page import="java.util.Calendar" %>
+<%@ page import="java.util.Date" %>
+
 
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
 <tag:header/>
@@ -19,16 +23,16 @@
 			Dictionary<String,Event>eventDictionary= (Dictionary<String,Event>)request.getAttribute("eventDictionary");
 			Dictionary<String,List<Registration>>regDictionary= (Dictionary<String,List<Registration>>)request.getAttribute("regDictionary");
 			List<Heat>hList= (List<Heat>)request.getAttribute("heatList");	
-			//if(!hList.isEmpty()){
+			if(!hList.isEmpty()){
 				for(int i = 0; i < hList.size(); ++i){
 					Heat h = hList.get(i);
 					
 					%>
-						<table style=\"text-align:left;\"><tr> 
-						<th>eventList.get(h.getEventID().toString()).getName()</th>
-						<th>Group Integer.toString(h.getMinAge()) to Integer.toString(h.getMaxAge())</th>
-						<th>Time h.getTime().toString()</th>
-						<th>Gender: h.getGender()</th>
+						<table style="text-align:left;"><tr> 
+						<th><%=eventDictionary.get(h.getEventID().toString()).getName()%></th>
+						<th>Group <%=Integer.toString(h.getMinAge())%> to <%=Integer.toString(h.getMaxAge())%></th>
+						<th>Time <%=h.getTime().toString()%></th>
+						<th>Gender: <%=h.getGender()%></th>
 						</tr>
 					
 						<tr>
@@ -56,27 +60,39 @@
 					for(int j = 0; j < rList.size(); ++j){
 						Registration r = rList.get(j);
 						Athlete a = athDictionary.get(r.getAthleteID().toString());
+						Calendar cal1 = new GregorianCalendar();
+					    Calendar cal2 = new GregorianCalendar();
+					    int age = 0;
+					    int factor = 0; 
+					    cal1.setTime(a.getBdate());
+					    cal2.setTime(new Date());
+					    if(cal2.get(Calendar.DAY_OF_YEAR) < cal1.get(Calendar.DAY_OF_YEAR)) {
+					          factor = -1; 
+					    }
+					    age = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR) + factor;
+
 						%>
 							<tr>
-							<td>a.getFname() a.getLname()</td>
-							<td>age(a.getBdate())</td>
-							<td>a.getGender()</td>
-							<td>r.getRank()</td>
-							<td>r.getScore()</td>
-							<td>h.getDivision()</td></tr>
+							<td><%=a.getFname()%> <%=a.getLname()%></td>
+							<td><%=age%></td>
+							<td><%=a.getGender()%></td>
+							<td><%=r.getRank()%></td>
+							<td><%=r.getScore()%></td>
+							<td><%=h.getDivision()%></td></tr>
 						<%
 					
 					}
 				}
 			}
-		   	//}else{
+		   	}else{
 		   		%>
 		   		<tr>
-				<td>There was an error</td>
+				<td>There was a complication during Heat Generation.</td>
 				</tr>
 				<%
-		   //	}
+		   	}
 		%>
+		</table>
     
       	</div>
       </div>

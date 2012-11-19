@@ -305,9 +305,7 @@ public class HeatController {
 		try{
 			MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
 			handler.GenerateHeats();
-			//String html = handler.MakeString();
-		
-			//model.addAttribute("htmlTable", html);
+
 			athDictionary = handler.athDictionary;
 			eventDictionary = handler.eventDictionary;
 			hList = handler.heatList;
