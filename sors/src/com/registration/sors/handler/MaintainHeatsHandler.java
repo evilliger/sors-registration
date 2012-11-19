@@ -327,39 +327,77 @@ public class MaintainHeatsHandler {
 	
 	// to validate the entries in the datastore
 	// to reduce chance of exceptions
-	private void validate(){
-		
+	public List<String> validate(){
+		List<String> errors = new ArrayList<String>();
 		// check all athletes
 		for(int i = 0; i < athList.size(); ++i){
 			Athlete a = athList.get(i);
-			if(a.getBdate() == null || a.getFname() == null || a.getGender() == null || a.getLname() == null){
+			if(a.getBdate() == null || a.getGender() == null ){
 				athList.remove(i);
+				errors.add("Error: AthleteID: " + a.getId() + " entry is not complete and will be removed before generating heats.");
 			}
 		}
 		
-		// check registrations
-		for(int i = 0; i < regList.size(); ++i){
-			Registration r = regList.get(i);
-			if(r.getAthleteID() == null || r.getEventID() == null){
-				regList.remove(i);
-			}
-		}
 		
 		// check events
 		for(int i = 0; i < eventList.size(); ++i){
 			Event e = eventList.get(i);
 			if(e.getName() == null || e.getUnits() == null){
 				eventList.remove(i);
+				errors.add("Error: EventID: " + e.getId() + " entry is not complete and will be removed before generating heats.");
 			}
 		}
+		
+		
+		
+		Dictionary<String,Athlete>aList = getAthleteDictionary();
+		Dictionary <String, Event> eList = getEventDictionary();
+		
+		
+		Dictionary<String, List<Registration>> regAthDictionary = new Hashtable<String,List<Registration>>();
+		
+		
+		// check registrations
+		for(int i = 0; i < regList.size(); ++i){
+			Registration r = regList.get(i);
+			
+			if(r.getAthleteID() == null || r.getEventID() == null || aList.get(r.getAthleteID().toString())  == null || eList.get(r.getEventID().toString()) == null){
+				regList.remove(i);
+				errors.add("Error: RegistrationID: " + r.getId() + " entry is not complete, athlete does not exist, or event does not exists and registration will be removed before generating heats.");
+			}else{
+				List<Registration> t = regAthDictionary.get(r.getAthleteID().toString());
+				if(t == null){
+					t = new ArrayList<Registration>();
+				}
+				t.add(r);
+				regAthDictionary.put(r.getAthleteID().toString(), t);
+			}
+		}
+		
+		
 		
 		//check heatspecs
 		for(int i = 0; i < heatSpecList.size(); ++i){
 			HeatSpec h = heatSpecList.get(i);
-			if(h.getEventId() == null || h.getGender() == null || h.getMaxAge() == 0 || h.getMaxInHeat() == 0  || h.getNumHeats() == 0 || h.getTime() == null){
+			if(h.getEventId() == null || h.getGender() == null || h.getMaxAge() == 0 || h.getMaxInHeat() == 0  || h.getNumHeats() == 0 || h.getTime() == null || eList.get(h.getEventId()) == null){
 				heatSpecList.remove(i);
+				errors.add("Error: HeatSpecID: " + h.getId() + " entry is not complete or event does not exist and heatspec will be removed before generating heats.");
 			}
 		}
+
+		
+		for(int i = 0; i < athList.size(); ++i){
+			Athlete a = athList.get(i);
+			List<Registration> r = regAthDictionary.get(a.getId().toString());
+			if(r == null){
+				errors.add("Warning: Athlete " + a.getFname() + " " + a.getLname() + " is not registered for any events.");
+			}else if(r.size() < 2){
+				errors.add("Warning: Athlete " + a.getFname() + " " + a.getLname() + " is only registered for one event.");
+			}else if (r.size() > 2){
+				errors.add("Warning: Athlete " + a.getFname() + " " + a.getLname() + " is registered for too many events.");
+			}
+		}
+		return errors;
 		
 	}
 	

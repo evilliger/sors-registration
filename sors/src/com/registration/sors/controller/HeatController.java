@@ -254,7 +254,7 @@ public class HeatController {
 		return "listHeat";
 	}
 	@RequestMapping(value = "/generate", method = RequestMethod.GET)
-	public String getGenerateHeatPage(HttpSession session) {
+	public String getGenerateHeatPage(HttpSession session, ModelMap model) {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
@@ -265,6 +265,10 @@ public class HeatController {
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
+		MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
+		
+		model.addAttribute("errors", handler.validate());
+		
 		return "generateHeat";
 	}
 
