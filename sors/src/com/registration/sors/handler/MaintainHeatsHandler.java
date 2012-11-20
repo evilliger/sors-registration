@@ -15,7 +15,9 @@ import java.util.Dictionary;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Logger;
 
+import com.registration.sors.controller.AthleteController;
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Event;
 import com.registration.sors.model.Heat;
@@ -28,6 +30,8 @@ import com.registration.sors.service.HeatSpecDAO;
 import com.registration.sors.service.RegistrationDAO;
 
 public class MaintainHeatsHandler {
+	
+	static Logger log = Logger.getLogger(MaintainHeatsHandler.class.getName());
 	
 	// This class needs access to the objects in
 	// the 5 datastores 
@@ -304,8 +308,9 @@ public class MaintainHeatsHandler {
 		// check all athletes
 		for(int i = 0; i < athList.size(); ++i){
 			Athlete a = athList.get(i);
-			if(a.getBdate() == null || a.getGender() == null ){
+			if(a.getBdate() == null || a.getGender() == null || a.getLname() == null || a.getFname() == null){
 				athList.remove(i);
+				log.severe("Athlete: " + a.getId() + "is not completely registered");
 				errors.add("Error: AthleteID: " + a.getId() + " entry is not complete and will be removed before generating heats.");
 			}
 		}
@@ -316,6 +321,7 @@ public class MaintainHeatsHandler {
 			Event e = eventList.get(i);
 			if(e.getName() == null || e.getUnits() == null){
 				eventList.remove(i);
+				log.severe("Event: " + e.getId() + " was not entered correctly");
 				errors.add("Error: EventID: " + e.getId() + " entry is not complete and will be removed before generating heats.");
 			}
 		}
@@ -335,6 +341,7 @@ public class MaintainHeatsHandler {
 			
 			if(r.getAthleteID() == null || r.getEventID() == null || aList.get(r.getAthleteID().toString())  == null || eList.get(r.getEventID().toString()) == null){
 				regList.remove(i);
+				log.severe("Registration: " + r.getId() + " was not entered correctly");
 				errors.add("Error: RegistrationID: " + r.getId() + " entry is not complete, athlete does not exist, or event does not exists and registration will be removed before generating heats.");
 			}else{
 				List<Registration> t = regAthDictionary.get(r.getAthleteID().toString());
@@ -353,6 +360,7 @@ public class MaintainHeatsHandler {
 			HeatSpec h = heatSpecList.get(i);
 			if(h.getEventId() == null || h.getGender() == null || h.getMaxAge() == 0 || h.getMaxInHeat() == 0  || h.getNumHeats() == 0 || h.getTime() == null || eList.get(h.getEventId().toString()) == null){
 				heatSpecList.remove(i);
+				log.severe("HeatSpec: " + h.getId() + " was not entered correctly");
 				errors.add("Error: HeatSpecID: " + h.getId() + " entry is not complete or event does not exist and heatspec will be removed before generating heats.");
 			}
 		}

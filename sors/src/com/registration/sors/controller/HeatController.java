@@ -56,7 +56,7 @@ public class HeatController {
 	
 	List<String> roles = Arrays.asList("A");
 	
-	static Logger log = Logger.getLogger(AthleteController.class.getName());
+	static Logger log = Logger.getLogger(HeatController.class.getName());
 	
 	// Name: getAddHeatPage
 	// Purpose: Determine if the user is logged in and authorized 
@@ -275,6 +275,14 @@ public class HeatController {
 		model.addAttribute("heatList",list);
 		return "listHeat";
 	}
+	
+	// Name: generate get
+		// Purpose: generate heats
+		// Parameters: session - the current user session
+		//				model - the model for list
+		// Return: page redirect
+		//		login page - if user not logged in or not authorized
+		//		warning page 
 	@RequestMapping(value = "/generate", method = RequestMethod.GET)
 	public String getGenerateHeatPage(HttpSession session, ModelMap model) {
 		
@@ -287,6 +295,7 @@ public class HeatController {
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
+		log.warning(ss.getUser().getEmail() + " requested generate Heats");
 		MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
 		
 		model.addAttribute("errors", handler.validate());
