@@ -304,6 +304,7 @@ public class MaintainHeatsHandler {
 	
 	// to validate the entries in the datastore
 	// to reduce chance of exceptions
+	// params: none
 	public List<String> validate(){
 		List<String> errors = new ArrayList<String>();
 		// check all athletes

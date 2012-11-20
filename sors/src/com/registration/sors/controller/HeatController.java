@@ -304,7 +304,13 @@ public class HeatController {
 	}
 
 
-	
+	// Name: generate post
+	// Purpose: generate heats
+	// Parameters: session - the current user session
+	//				model - the model for list
+	// Return: page redirect
+	//		login page - if user not logged in or not authorized
+	//		generates heats and produces a page with heat listings 
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public String generate(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
 		
