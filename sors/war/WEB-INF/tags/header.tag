@@ -1,4 +1,7 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%> 
+<%@ attribute name="admin" required="false" %> 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +37,17 @@
         	<a href="/athlete/list"><span id="logo">SORS</span></a>
           <span id="sub-logo">Special Olympics Registration System</span>
         </div>
+        <nav>
+          <ul>
+          	<li><a href="/athlete/list">Athletes</a></li>
+          	<c:if test="${admin=='true'}">
+	            <li><a href="/event/list">Events</a></li>
+	            <li><a href="/eventconflict/list">Event Conflicts</a></li>
+	            <li><a href="/heatspec/list">Heat Specifications</a></li>
+	            <li><a href="/heat/generate">Heat Generation</a></li>
+            </c:if>
+          </ul>
+        </nav>
       </div>
     </div>
   </header>

@@ -15,6 +15,7 @@ $(function() {
     $('#sevent').change(function(){
     	if ($('#ssevent').val() === "-1") {
         	$('#sscore').attr('class','hidden');
+        	$('#sscore input').val('');
     	} else {
     		$('#sscore').attr('class','');
     		show_units("#sunits",$("#" + $('#ssevent').val()).val());
@@ -39,8 +40,6 @@ function show_units(id,c){
     }else if (c === "S"){
         $(id).html(' units in seconds');
     }
-    
-
 }
 
 $(document).ready(function() {

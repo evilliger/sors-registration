@@ -128,6 +128,9 @@ public class AthleteController {
 		
 		RegData regData = handleRegistrations(req, a);
 		regData.errors.addAll(checkName(req, a));
+
+		if(a.getBdate() == null)
+			regData.errors.add("Date entered in incorrect format.");
 		
 		//Errors will be handled here
 		if (!errors.hasErrors() && regData.errors.isEmpty()) {
@@ -220,6 +223,9 @@ public class AthleteController {
 		
 		RegData regData = handleRegistrations(req, a);
 		regData.errors.addAll(checkName(req, a));
+		
+		if(a.getBdate() == null)
+			regData.errors.add("Date entered in incorrect format.");
 		
 		if (!errors.hasErrors() && regData.errors.isEmpty()) {
 			try {
