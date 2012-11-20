@@ -63,6 +63,24 @@ public class AthleteController {
 	
 	static Logger log = Logger.getLogger(AthleteController.class.getName());
 	
+	// Provides functionality for the Spring binder to format dates.
+	static PropertyEditorSupport dateConverter = new PropertyEditorSupport() {
+        public String getAsText() {
+        	Object val;
+			if((val = getValue()) != null)
+				return new SimpleDateFormat("MM/dd/yyyy").format(val);
+			else 
+				return "";
+    	}
+        public void setAsText(String value) {
+            try {
+                setValue(new SimpleDateFormat("MM/dd/yyyy").parse(value));
+            } catch(Exception e) {
+                setValue(null);
+            }
+        }
+	};
+	
 	// Name: getAddAthletePage
 	// Purpose: Determine if the user is logged in and authorized 
 	//		to see this page.
@@ -103,6 +121,7 @@ public class AthleteController {
 		Athlete a = new Athlete();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
+		binder.registerCustomEditor(Date.class, dateConverter);
 		binder.setRequiredFields(new String[] {"fname", "lname", "gender", "bdate", "classroomId"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
@@ -152,8 +171,8 @@ public class AthleteController {
 		}
 
 		Athlete a = new Athlete();
-		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
+		binder.registerCustomEditor(Date.class, dateConverter);
 		binder.setRequiredFields(new String[] {"id"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
@@ -194,6 +213,7 @@ public class AthleteController {
 		Athlete a = new Athlete();
 		
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(a, "athlete");
+		binder.registerCustomEditor(Date.class, dateConverter);
 		binder.setRequiredFields(new String[] {"id", "fname", "lname", "gender", "bdate"});
 		binder.bind(req);
 		BindingResult errors = binder.getBindingResult();
@@ -562,29 +582,19 @@ public class AthleteController {
 		model.addAttribute("athlete", a);
 		return model;
 	}
-	
-	// Special binder to customize the output of the date
+
+	// Binds the date to be displayed in the correct format.
 	@InitBinder
-	public void binder(WebDataBinder binder) {binder.registerCustomEditor(Date.class,
-	    new PropertyEditorSupport() {
-	        public String getAsText() {
-	        	Object val;
-				if((val = getValue()) != null)
-					return new SimpleDateFormat("MM/dd/yyyy").format(val);
-				else 
-					return "";
-        	}
-	    });
-	}
+	public void binder(WebDataBinder binder) {binder.registerCustomEditor(Date.class, dateConverter);}
 }
 
 // Class that holds registrations and errors associated with them
 class RegData {
-	public List<Registration> registrations;
-	public List<String> errors;
-
-	public RegData(List<Registration> registrations, List<String> errors) {
-		this.registrations = registrations;
-		this.errors = errors;
+		public List<Registration> registrations;
+		public List<String> errors;
+	
+		public RegData(List<Registration> registrations, List<String> errors) {
+			this.registrations = registrations;
+			this.errors = errors;
 	}
 }

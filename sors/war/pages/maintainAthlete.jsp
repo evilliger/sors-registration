@@ -153,7 +153,7 @@
 	                    <% } %>
 	                    <%=units %>
 	                </select>
-	                <span id="sscore" class="<%=hidden%>">
+	                <span id="sscore" class="hidden">
 	                	Score: <input type="text" name="sscore" size="10" value="<%= (sscore.equals(-1.0))?"":sscore %>"/>
 	                	<i><span id="sunits"></span></i>
 	                </span>

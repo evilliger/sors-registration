@@ -13,8 +13,12 @@ $(function() {
 
     //Second event  select
     $('#sevent').change(function(){
-        $('#sscore').attr('class','');
-        show_units("#sunits",$("#" + $('#ssevent').val()).val());
+    	if ($('#ssevent').val() === "-1") {
+        	$('#sscore').attr('class','hidden');
+    	} else {
+    		$('#sscore').attr('class','');
+    		show_units("#sunits",$("#" + $('#ssevent').val()).val());
+    	}
     });
     // Cancel button
     $('#cancel').click(function(){
@@ -49,8 +53,10 @@ $(document).ready(function() {
     }  
     $("#ath_table")
     .tablesorter({sortList: [[0,0]]});
-    if($("#pevent").size() != 0) {
-        $("#pevent").trigger('change');
-        $("#sevent").trigger('change');
+    if($("#pevent").size()) {
+    	if ($("#pscore").attr('class') != 'hidden')
+    		$("#pevent").trigger('change');
+    	if ($("#ssevent").val() != "-1")
+    		$("#sevent").trigger('change');
     }
 });
