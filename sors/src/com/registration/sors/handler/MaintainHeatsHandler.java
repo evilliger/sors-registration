@@ -364,6 +364,23 @@ public class MaintainHeatsHandler {
 				log.severe("HeatSpec: " + h.getId() + " was not entered correctly");
 				errors.add("Error: HeatSpecID: " + h.getId() + " entry is not complete or event does not exist and heatspec will be removed before generating heats.");
 			}
+			try{
+				
+				String t = h.getTime();
+	    		int hour = 0;
+	    		int minute = 0;
+	    		
+	    		int index = t.indexOf(':');
+	    		hour = Integer.parseInt(t.substring(0,index));
+	    		t = t.substring(index+1);
+	    		minute = Integer.parseInt(t);
+	    		
+			}catch(Exception e){
+				heatSpecList.remove(i);
+				--i;
+				log.severe("HeatSpec: " + h.getId() + " has a time in incorrect formatting");
+				errors.add("Error: HeatSpecID: " + h.getId() + " has a time in incorrect formatting");
+			}
 		}
 
 		
