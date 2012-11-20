@@ -276,9 +276,9 @@ public class MaintainHeatsHandler {
 		    			if(h1.getMinAge() < h2.getMinAge()){
 		    				return -1;
 		    			}else if(h1.getMinAge() > h2.getMinAge()){
-		    				
+		    				return 1;
 		    			}else{
-		    				if(h1.getGender().equals("M") && h1.getGender().equals("F")){
+		    				if(h1.getGender().equals("M") && h2.getGender().equals("F")){
 		    					return -1;
 		    				}else if (h1.getGender().equals("F") && h2.getGender().equals("M")){
 		    					return 1;
@@ -294,7 +294,6 @@ public class MaintainHeatsHandler {
 		    		}
 		    		
 		    	}	    	
-		    	return 1;
 		    }
 		});
 		return hList;
