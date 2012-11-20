@@ -42,10 +42,11 @@ function show_units(id,c){
 $(document).ready(function() {
     $("#footer").pinFooter("relative"); 
     $(window).resize(function() {
-        $("#footer").pinFooter();
+        $("#footer").pinFooter("relative");
     });
-    if($("#content").height() < $(window).height()-200) {
-      $("#content").css("height", ($(window).height()-200) + "px");
+    if($("#content").height() < $(window).height() - 300) {
+      $("#content").css("height", ($(window).height()) - 300 + "px");
     }  
-    $("#ath_table").tablesorter({sortList: [[0,0]]}); 
+    $("#ath_table")
+    .tablesorter({sortList: [[0,0]]});
 });

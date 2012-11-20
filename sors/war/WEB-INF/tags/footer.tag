@@ -1,5 +1,9 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
   <!-- footer -->
+  <br/>
+  <br/>
+  <br/>
+  <br/>
   <div id="footer">
     <div class="container_24">
     	<div class="wrapper">
