@@ -7,6 +7,8 @@
 
 package com.registration.sors.controller;
 
+import java.util.logging.Logger;
+
 import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.registration.sors.handler.MaintainHeatsHandler;
 import com.registration.sors.model.Athlete;
 import com.registration.sors.service.AthleteDAO;
 
@@ -26,6 +29,7 @@ import com.registration.sors.service.AthleteDAO;
 //		class									  //
 //------------------------------------------------//
 public class TestAthleteController {
+	static Logger log = Logger.getLogger(MaintainHeatsHandler.class.getName());
 	
 	@Autowired private AthleteDAO dao;
 
@@ -37,7 +41,12 @@ public class TestAthleteController {
 	@RequestMapping(value = "/testathlete", method = RequestMethod.GET)
 	public ModelAndView test() {
 		boolean allPass = true;
-		int numAthletes = this.dao.loadAll().size();
+		int numAthletes = 0;
+		try {
+			numAthletes = this.dao.loadAll().size();
+		} catch (Exception e) {
+			log.severe("Error loading list of athletes: " + e.toString());
+		}
 		
 		try {
 			//---------------------------------------//

@@ -28,7 +28,7 @@ public class AthleteDAO {
 	// Add an Athlete to DataStore
 	// Parameters: Athlete a - athlete to add
 	// Return: Athlete - newly added athlete
-	
+	// Throws an exception if a database access error occurs
 	public Athlete add(Athlete a) throws Exception{
 		a.setClassroom(new Key<Classroom>(Classroom.class, a.getClassroomId()));
 		Objectify ofy = this.objectifyFactory.begin();
@@ -38,7 +38,7 @@ public class AthleteDAO {
 	// Delete an Athlete from DataStore
 	// Parameters: Athlete a - athlete to delete
 	// Return: void
-	
+	// Throws an exception if a database access error occurs
 	public Athlete delete(Athlete a) throws Exception {
 		Objectify ofy = this.objectifyFactory.begin();
 		Athlete ath = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, a.getClassroomId()), Athlete.class, a.getId()));
@@ -49,8 +49,8 @@ public class AthleteDAO {
 	// update an Athlete in DataStore
 	// Parameters: Athlete a - athlete to update
 	// Return: Athlete - newly updated athlete
-	
-	public void update(Athlete a){
+	// Throws an exception if a database access error occurs
+	public void update(Athlete a) throws Exception {
 		Objectify ofy = this.objectifyFactory.begin();
 
 		Athlete newAthlete = ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, a.getClassroomId()), Athlete.class, a.getId()));
@@ -67,8 +67,8 @@ public class AthleteDAO {
 	// get a list of Athletes in DataStore
 	// Parameters: none
 	// Return: list of Athletes
-	
-	public List<Athlete> loadAll(User u){
+	// Throws an exception if a database access error occurs
+	public List<Athlete> loadAll(User u) throws Exception{
 		Objectify ofy = this.objectifyFactory.begin();
 		List<Athlete> list = new ArrayList<Athlete>();
 		
@@ -79,25 +79,33 @@ public class AthleteDAO {
 		}
 		return list;
 	}
+	
 	// get a list of Athletes in DataStore
 	// Parameters: none
 	// Return: list of Athletes
-	
-	public List<Athlete> loadAll(){
+	// Throws an exception if a database access error occurs
+	public List<Athlete> loadAll() throws Exception {
 		Objectify ofy = this.objectifyFactory.begin();
 		List<Athlete> list = new ArrayList<Athlete>();
 		list =  ofy.query(Athlete.class).list();
 		return list;
 	}
 	
-	// find an athlete whose athleteID is id and whose classrom is c
+	// find an athlete whose athleteID is id and whose Classroom is c
+	// Parameters: AthleteId id and Classroom c
+	// Return: Athlete whose id matches <id> and is registered in Classroom <c>
+	// Throws an exception if a database access error occurs
 	public Athlete find(Long id, Classroom c) throws Exception{
 		Objectify ofy = this.objectifyFactory.begin();
 
 		return ofy.get(new Key<Athlete>(new Key<Classroom>(Classroom.class, c.getId()), Athlete.class, id));
 	}
-	
-	public void add(List<Athlete> a) {
+
+	// Adds a list of athletes to the database
+	// Parameters: List of athletes to add <a>
+	// Return: none
+	// Throws an exception if a database access error occurs
+	public void add(List<Athlete> a) throws Exception {
 		Objectify ofy = objectifyFactory.begin();
 		ofy.put(a);
 	}
