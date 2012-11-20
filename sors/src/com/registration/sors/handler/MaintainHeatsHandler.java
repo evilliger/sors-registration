@@ -256,12 +256,12 @@ public class MaintainHeatsHandler {
 		    		
 		    		int index = t1.indexOf(':');
 		    		hour1 = Integer.parseInt(t1.substring(0,index));
-		    		t1 = t1.substring(index);
+		    		t1 = t1.substring(index+1);
 		    		minute1 = Integer.parseInt(t1);
 		    		
 		    		index = t2.indexOf(':');
 		    		hour2 = Integer.parseInt(t2.substring(0,index));
-		    		t2 = t2.substring(index);
+		    		t2 = t2.substring(index+1);
 		    		minute2 = Integer.parseInt(t2);
 		    		
 		    		if(hour1 < hour2 || (hour1 == hour2 && minute1 < minute2)){
@@ -351,7 +351,7 @@ public class MaintainHeatsHandler {
 		//check heatspecs
 		for(int i = 0; i < heatSpecList.size(); ++i){
 			HeatSpec h = heatSpecList.get(i);
-			if(h.getEventId() == null || h.getGender() == null || h.getMaxAge() == 0 || h.getMaxInHeat() == 0  || h.getNumHeats() == 0 || h.getTime() == null || eList.get(h.getEventId()) == null){
+			if(h.getEventId() == null || h.getGender() == null || h.getMaxAge() == 0 || h.getMaxInHeat() == 0  || h.getNumHeats() == 0 || h.getTime() == null || eList.get(h.getEventId().toString()) == null){
 				heatSpecList.remove(i);
 				errors.add("Error: HeatSpecID: " + h.getId() + " entry is not complete or event does not exist and heatspec will be removed before generating heats.");
 			}
