@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -55,6 +56,7 @@ public class HeatController {
 	
 	List<String> roles = Arrays.asList("A");
 	
+	static Logger log = Logger.getLogger(AthleteController.class.getName());
 	
 	// Name: getAddHeatPage
 	// Purpose: Determine if the user is logged in and authorized 
@@ -109,11 +111,15 @@ public class HeatController {
 	
 		// Errors will be handled here
 		if (!errors.hasErrors()) {
-			
-			if(this.heatDao.add(h) == null) {
-				throw new Exception ("Error adding Heat to datastore");
+			try{
+				if(this.heatDao.add(h) == null) {
+					throw new Exception ("Error adding Heat to datastore");
+				}else{
+					log.warning(ss.getUser().getEmail() + " added a new heat to the datastore");
+				}
+			}catch(Exception e){
+				log.severe("Error adding heat to datastore: " + e.toString());
 			}
-			
 		} else {
 			throw new Exception ("Supply required information.");
 		}
@@ -153,7 +159,8 @@ public class HeatController {
 			h = this.heatDao.find(h.getId());
 			model.addAttribute("heat", h);
 		} else {
-			throw new Exception ("Helpful exception code");
+			log.severe("Error finding heat");
+			return "errorPageTemplate";
 		}
 		return "updateHeat";
 	}
@@ -187,9 +194,18 @@ public class HeatController {
 		
 		// Errors will be handled here		
 		if (!errors.hasErrors()) {
-			this.heatDao.update(h);
+			try {
+				if((h = this.heatDao.add(h)) == null) 
+					return "errorPageTemplate";
+				else 
+					log.warning(ss.getUser().getEmail() + " updated Heat:" +h.getId() + " in the datastore");
+			} catch (Exception e) {
+				log.severe("Error updating heat in datastore: " + e.toString());
+				return "errorPageTemplate";
+			}
 		} else {
-			throw new Exception ("Supply ID, Name, and Email");
+			log.severe("Error updating heat in datastore");
+			return "errorPageTemplate";
 		}
 		
 		// return to list
@@ -313,6 +329,7 @@ public class HeatController {
 			
 		}catch(Exception e){
 			//model.addAttribute("htmlTable", "Heat Generation encountered an error. Please check completeness of records.");
+			log.severe("Error was encountered in Generating heats: " + e.toString());
 			error = "Heat Generation encountered an error. Please check completeness of records.";
 		}
 		model.addAttribute("athDictionary",athDictionary);
