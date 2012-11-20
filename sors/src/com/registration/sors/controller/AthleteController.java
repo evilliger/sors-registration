@@ -108,6 +108,7 @@ public class AthleteController {
 		BindingResult errors = binder.getBindingResult();
 		
 		RegData regData = handleRegistrations(req, a);
+		regData.errors.addAll(checkName(req, a));
 		
 		//Errors will be handled here
 		if (!errors.hasErrors() && regData.errors.isEmpty()) {
@@ -198,6 +199,7 @@ public class AthleteController {
 		BindingResult errors = binder.getBindingResult();
 		
 		RegData regData = handleRegistrations(req, a);
+		regData.errors.addAll(checkName(req, a));
 		
 		if (!errors.hasErrors() && regData.errors.isEmpty()) {
 			try {
@@ -341,6 +343,19 @@ public class AthleteController {
 	}
 	
 	// ********* HELPER METHODS *******************
+	
+	// Returns a lists of registrations and errors associated with them inside of a class called RegData
+	private List<String> checkName(HttpServletRequest req, Athlete a) {
+		List<String> errors = new ArrayList<String>();
+		String name = a.getFname() + a.getMname() + a.getLname();
+		for (int i = 0; i < name.length(); ++i) {
+			if (!(Character.isLetter(name.charAt(i)) || name.charAt(i) == ' ')) {
+				errors.add("Athlete name must only contain letters.");
+				break;
+			}
+		}
+		return errors;
+	}
 	
 	// Returns a lists of registrations and errors associated with them inside of a class called RegData
 	private RegData handleRegistrations(HttpServletRequest req, Athlete a) {

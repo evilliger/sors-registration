@@ -49,4 +49,8 @@ $(document).ready(function() {
     }  
     $("#ath_table")
     .tablesorter({sortList: [[0,0]]});
+    if($("#pevent").size() != 0) {
+        $("#pevent").trigger('change');
+        $("#sevent").trigger('change');
+    }
 });
