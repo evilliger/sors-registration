@@ -70,7 +70,6 @@ public class AthleteController {
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
 	//		add page - page allowing the user to submit a new athlete
-	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String getAddAthletePage(HttpSession session, HttpServletRequest req, ModelMap model) {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
@@ -92,7 +91,6 @@ public class AthleteController {
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
 	//		list page - when data is added
-
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String add(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
 		
@@ -143,7 +141,6 @@ public class AthleteController {
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
 	//		updateathlete page - page to edit athlete information
-	
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String getUpdateAthletePage(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
 		
@@ -184,7 +181,6 @@ public class AthleteController {
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
 	//		list page - when data is updated
-	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String update(HttpServletRequest req, ModelMap model, HttpSession session) throws Exception {
 		
@@ -241,7 +237,6 @@ public class AthleteController {
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
 	//		list page - when data is deleted
-	
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String delete(HttpServletRequest req, HttpSession session) throws Exception {
 		
@@ -293,7 +288,6 @@ public class AthleteController {
 	// Return: page redirect
 	//		login page - if user not logged in or not authorized
 	//		list page - list of athletes
-	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String list(ModelMap model, HttpSession session) {	
 		
@@ -306,13 +300,18 @@ public class AthleteController {
 		List<AthData> athdata = new ArrayList<AthData>();
 		
 		List<Athlete> athletes;
-		if(ss.getUser().getRole().equals("T")) {
-			athletes = this.Athdao.loadAll(ss.getUser());
-			model.addAttribute("title",this.Cladao.find(ss.getUser()).getClassName());
-		}
-		else {
-			athletes = this.Athdao.loadAll();
-			model.addAttribute("title","Athletes 2012");
+		try {
+			if(ss.getUser().getRole().equals("T")) {
+				athletes = this.Athdao.loadAll(ss.getUser());
+				model.addAttribute("title",this.Cladao.find(ss.getUser()).getClassName());
+			}
+			else {
+				athletes = this.Athdao.loadAll();
+				model.addAttribute("title","Athletes 2012");
+			}
+		} catch (Exception e) {
+			log.severe("Error loading list of athletes: " + e.toString());
+			return "errorPageTemplate";
 		}
 		for (Athlete a : athletes){
 			String event1 = "None";
@@ -344,7 +343,7 @@ public class AthleteController {
 	// ********* HELPER METHODS *******************
 	
 	// Returns a lists of registrations and errors associated with them inside of a class called RegData
-	public RegData handleRegistrations(HttpServletRequest req, Athlete a) {
+	private RegData handleRegistrations(HttpServletRequest req, Athlete a) {
 		List<String> errors = new ArrayList<String>();
 		List<Registration> registrations = new ArrayList<Registration>();
 		Long first = -1L;
@@ -449,7 +448,7 @@ public class AthleteController {
 	}
 	
 	// Adds errors to the list of errors for conflicting events.
-	List<String> handleConflictingEvents(Event primary, Event secondary, List<String> errors) {
+	private List<String> handleConflictingEvents(Event primary, Event secondary, List<String> errors) {
 		List<Long> conflicts = EvConfdao.find(primary);
 		for (Long eId : conflicts) {
 			if (eId.equals(secondary.getId()))

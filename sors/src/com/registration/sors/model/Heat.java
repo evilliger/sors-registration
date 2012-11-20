@@ -7,7 +7,6 @@
 //--------------------------------------//
 package com.registration.sors.model;
 import java.io.Serializable;
-import java.util.*;
 
 import javax.persistence.Id;
 

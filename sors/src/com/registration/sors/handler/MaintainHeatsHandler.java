@@ -17,7 +17,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.registration.sors.controller.AthleteController;
 import com.registration.sors.model.Athlete;
 import com.registration.sors.model.Event;
 import com.registration.sors.model.Heat;
@@ -63,8 +62,11 @@ public class MaintainHeatsHandler {
 		heatSpecDAO = heatSpecDao2;
 		heatDAO = heatDao2;
 		
-		
-		athList = athDAO.loadAll();
+		try {
+			athList = athDAO.loadAll();
+		} catch (Exception e) {
+			log.severe("Error loading list of athletes: " + e.toString());
+		}
 		regList = regDAO.loadAll();
 		eventList = eventDAO.loadAll();
 		heatSpecList = heatSpecDAO.loadAll();
@@ -315,7 +317,6 @@ public class MaintainHeatsHandler {
 			}
 		}
 		
-		
 		// check events
 		for(int i = 0; i < eventList.size(); ++i){
 			Event e = eventList.get(i);
@@ -326,14 +327,10 @@ public class MaintainHeatsHandler {
 			}
 		}
 		
-		
-		
 		Dictionary<String,Athlete>aList = getAthleteDictionary();
 		Dictionary <String, Event> eList = getEventDictionary();
 		
-		
 		Dictionary<String, List<Registration>> regAthDictionary = new Hashtable<String,List<Registration>>();
-		
 		
 		// check registrations
 		for(int i = 0; i < regList.size(); ++i){
@@ -455,7 +452,5 @@ public class MaintainHeatsHandler {
 		regDictionary = getRegHeatDictionary();
 		heatList = heatDAO.loadAll();
 		heatList = sortHeats(heatList);
-		
-
 	}
 }
