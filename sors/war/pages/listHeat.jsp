@@ -1,4 +1,5 @@
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Dictionary" %>
 <%@ page import="com.registration.sors.model.Heat" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
 <tag:header/>
@@ -15,18 +16,27 @@
         <table id="ath_table" class="tablesorter">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Event</th>
+                    <th>Age Group</th>
+                    <th>Time</th>
+                    <th>Gender</th>
+                    <th>Division</th>
                 </tr>
             </thead>
 		
 		<%
 		  if(request.getAttribute("heatList")!=null){						
-			List<Heat> heats = (List<Heat>)request.getAttribute("heatList");						
+			List<Heat> heats = (List<Heat>)request.getAttribute("heatList");
+			Dictionary<String,String> events = (Dictionary<String,String>)request.getAttribute("eList");
 				if(!heats.isEmpty()){
 					for(Heat h : heats){
 				%>
 					<tr>
-					  <td><%=h.getId()%></td>
+					  <td><%=events.get(h.getEventID().toString())%></td>
+					  <td><%=h.getMinAge()%> to <%=h.getMaxAge()%></td>
+					  <td><%=h.getTime()%></td>
+					  <td><%=h.getGender()%></td>
+					  <td><%=h.getDivision()%></td>
 					  
 					<td ><button onClick="document.location.href='update?id=<%=h.getId()%>'">Edit</button>
 					<button onClick="document.location.href='delete?id=<%=h.getId()%>'" class="del">Delete</button></td>

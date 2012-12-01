@@ -313,8 +313,8 @@ public class MaintainHeatsHandler {
 			if(a.getBdate() == null || a.getGender() == null || a.getLname() == null || a.getFname() == null){
 				athList.remove(i);
 				--i;
-				log.severe("Athlete: " + a.getId() + "is not completely registered");
-				errors.add("Error: AthleteID: " + a.getId() + " entry is not complete and will be removed before generating heats.");
+				log.severe("Athlete: " + a.getFname() + " " + a.getLname() + "is not completely registered");
+				errors.add("Error: AthleteID: " + a.getFname() + " " + a.getLname() + " entry is not complete and will be removed before generating heats.");
 			}
 		}
 		
@@ -325,7 +325,11 @@ public class MaintainHeatsHandler {
 				eventList.remove(i);
 				--i;
 				log.severe("Event: " + e.getId() + " was not entered correctly");
-				errors.add("Error: EventID: " + e.getId() + " entry is not complete and will be removed before generating heats.");
+				if(e.getName() == null){
+					errors.add("Error: EventID: " + e.getId() + " entry is not complete and will be removed before generating heats.");
+				}else{
+					errors.add("Error: EventID: " + e.getName() + " entry is not complete and will be removed before generating heats.");
+				}
 			}
 		}
 		
@@ -341,8 +345,8 @@ public class MaintainHeatsHandler {
 			if(r.getAthleteID() == null || r.getEventID() == null || aList.get(r.getAthleteID().toString())  == null || eList.get(r.getEventID().toString()) == null){
 				regList.remove(i);
 				--i;
-				log.severe("Registration: " + r.getId() + " was not entered correctly");
-				errors.add("Error: RegistrationID: " + r.getId() + " entry is not complete, athlete does not exist, or event does not exists and registration will be removed before generating heats.");
+				log.severe("Registration for " + aList.get(r.getAthleteID().toString()).getFname() + " " + aList.get(r.getAthleteID().toString()).getLname() + " was not entered correctly");
+				errors.add("Error: Registration for " + aList.get(r.getAthleteID().toString()).getFname() + " " + aList.get(r.getAthleteID().toString()).getLname() +  " entry is not complete, athlete does not exist, or event does not exists and registration will be removed before generating heats.");
 			}else{
 				List<Registration> t = regAthDictionary.get(r.getAthleteID().toString());
 				if(t == null){
@@ -362,7 +366,8 @@ public class MaintainHeatsHandler {
 				heatSpecList.remove(i);
 				--i;
 				log.severe("HeatSpec: " + h.getId() + " was not entered correctly");
-				errors.add("Error: HeatSpecID: " + h.getId() + " entry is not complete or event does not exist and heatspec will be removed before generating heats.");
+				errors.add("Error: HeatSpecID: " + h.getId() + " for the " + eList.get(h.getEventId().toString()) + " event entry is not complete or event does not exist and heatspec will be removed before generating heats.");
+				
 			}
 			try{
 				
@@ -379,7 +384,7 @@ public class MaintainHeatsHandler {
 				heatSpecList.remove(i);
 				--i;
 				log.severe("HeatSpec: " + h.getId() + " has a time in incorrect formatting");
-				errors.add("Error: HeatSpecID: " + h.getId() + " has a time in incorrect formatting");
+				errors.add("Error: HeatSpecID: " + h.getId() + " for the " + eList.get(h.getEventId().toString()) + " event has a time in incorrect formatting");
 			}
 		}
 

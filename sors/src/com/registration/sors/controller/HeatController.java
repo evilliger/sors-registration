@@ -271,8 +271,15 @@ public class HeatController {
 		// Errors will be handled here
 		
 		List<Heat> list = this.heatDao.loadAll();
+		List<Event>eventList = this.eventDao.loadAll();
+		Dictionary<String, String>eList = new Hashtable<String,String>();
+		for(int i = 0; i < eventList.size(); ++i){
+			Event e = eventList.get(i);
+			eList.put(e.getId().toString(), e.getName());
+		}
 		//list.remove(0);
 		model.addAttribute("heatList",list);
+		model.addAttribute("eList",eList);
 		return "listHeat";
 	}
 	
