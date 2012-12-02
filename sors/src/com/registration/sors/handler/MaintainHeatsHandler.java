@@ -366,7 +366,7 @@ public class MaintainHeatsHandler {
 				heatSpecList.remove(i);
 				--i;
 				log.severe("HeatSpec: " + h.getId() + " was not entered correctly");
-				errors.add("Error: HeatSpecID: " + h.getId() + " for the " + eList.get(h.getEventId().toString()) + " event entry is not complete or event does not exist and heatspec will be removed before generating heats.");
+				errors.add("Error: HeatSpecID: " + h.getId() + " for the " + eList.get(h.getEventId().toString()).getName() + " event entry is not complete or event does not exist and heatspec will be removed before generating heats.");
 				
 			}
 			try{
@@ -384,7 +384,7 @@ public class MaintainHeatsHandler {
 				heatSpecList.remove(i);
 				--i;
 				log.severe("HeatSpec: " + h.getId() + " has a time in incorrect formatting");
-				errors.add("Error: HeatSpecID: " + h.getId() + " for the " + eList.get(h.getEventId().toString()) + " event has a time in incorrect formatting");
+				errors.add("Error: HeatSpecID: " + h.getId() + " for the " + eList.get(h.getEventId().toString()).getName() + " event has a time in incorrect formatting");
 			}
 		}
 
