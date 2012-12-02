@@ -115,7 +115,7 @@ public class UserController {
 	//		add page - page allowing the user to submit a new user
 
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddUserPage(HttpSession session) {
+	public String getAddUserPage(HttpSession session, ModelMap model) {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
@@ -126,6 +126,7 @@ public class UserController {
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
+		model.addAttribute("user", ss.getUser());
 		return "addUser";
 	}
 
@@ -190,6 +191,7 @@ public class UserController {
 			session.invalidate();
 			return "redirect:/user/login";
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		User u = new User();
 		
@@ -301,6 +303,7 @@ public class UserController {
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login";
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		// Errors will be handled here
 		

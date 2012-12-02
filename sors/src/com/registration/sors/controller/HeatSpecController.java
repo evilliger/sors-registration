@@ -174,13 +174,14 @@ public class HeatSpecController {
 	//		list page - when data is deleted
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public String delete(HttpServletRequest req, HttpSession session) throws Exception {
+	public String delete(HttpServletRequest req, HttpSession session, ModelMap model) throws Exception {
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		if(!Security.isAuthenticated(this.roles, ss)){
 			session.invalidate();
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
+		model.addAttribute("user", ss.getUser());
 
 		HeatSpec h = new HeatSpec();
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(h, "heatspec");
@@ -215,6 +216,7 @@ public class HeatSpecController {
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		// Errors will be handled here
 		model.addAttribute("heatSpecList", this.dao.loadAll());
@@ -226,7 +228,8 @@ public class HeatSpecController {
 	private ModelMap loadModel(ModelMap model, HttpServletRequest req, boolean add, User u, HeatSpec h, BindingResult errors) {
 		try{
 			List<Event> events = this.Evdao.loadAll();
-			
+
+			model.addAttribute("user", u);
 			model.addAttribute("add", add);
 			model.addAttribute("events", events);
 			

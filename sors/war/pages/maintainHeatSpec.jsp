@@ -9,7 +9,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<tag:header/>
+<% Boolean isAdmin = ((User)request.getAttribute("user")).getRole().equals("A");  %>
+<tag:header admin="<%= isAdmin.toString() %>"/>
 
 <section id="content">
  	<div class="container_24">

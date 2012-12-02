@@ -1,7 +1,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.registration.sors.model.User" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
-<tag:header/>
+<% Boolean isAdmin = ((User)request.getAttribute("user")).getRole().equals("A");  %>
+<tag:header admin="<%= isAdmin.toString() %>"/>
 
   <section id="content">
   	<div class="container_24">

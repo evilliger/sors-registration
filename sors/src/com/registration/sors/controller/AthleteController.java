@@ -328,6 +328,7 @@ public class AthleteController {
 			session.invalidate();
 			return "redirect:/user/login"; 
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		List<AthData> athdata = new ArrayList<AthData>();
 		

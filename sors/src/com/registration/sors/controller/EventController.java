@@ -53,7 +53,7 @@ public class EventController {
 	//		add page - page allowing the event to submit a new event
 
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddEventPage(HttpSession session) {
+	public String getAddEventPage(HttpSession session, ModelMap model) {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
@@ -64,6 +64,7 @@ public class EventController {
 			// Right now it takes the event back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
+		model.addAttribute("user", ss.getUser());
 		return "addEvent";
 	}
 
@@ -128,6 +129,7 @@ public class EventController {
 			session.invalidate();
 			return "redirect:/user/login";
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		Event e = new Event();
 		
@@ -246,6 +248,7 @@ public class EventController {
 			// Right now it takes the event back to the Login Page no matter what
 			return "redirect:/user/login";
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		// Errors will be handled here
 		

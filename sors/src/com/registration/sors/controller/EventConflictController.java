@@ -55,6 +55,7 @@ public class EventConflictController {
 			session.invalidate();
 			return "redirect:/user/login"; 
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		List<Event> events = Evdao.loadAll();
 		model.addAttribute("events", events);
@@ -103,6 +104,7 @@ public class EventConflictController {
 			session.invalidate();
 			return "redirect:/user/login";
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		EventConflict ec = new EventConflict();
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(ec, "eventconflict");
@@ -182,6 +184,7 @@ public class EventConflictController {
 			session.invalidate();
 			return "redirect:/user/login";
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		List<EventConflict> list = this.dao.loadAll();
 		model.addAttribute("eventConflictList",list);

@@ -67,7 +67,7 @@ public class HeatController {
 	//		add page - page allowing the user to submit a new heat
 
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getAddHeatPage(HttpSession session) {
+	public String getAddHeatPage(HttpSession session, ModelMap model) {
 		
 		SystemSession ss = (SystemSession)session.getAttribute("system");
 		
@@ -78,6 +78,7 @@ public class HeatController {
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
+		model.addAttribute("user", ss.getUser());
 		return "addHeat";
 	}
 	
@@ -146,6 +147,7 @@ public class HeatController {
 			session.invalidate();
 			return "redirect:/user/login";
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		Heat h = new Heat();
 		
@@ -267,6 +269,7 @@ public class HeatController {
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login";
 		}
+		model.addAttribute("user", ss.getUser());
 		
 		// Errors will be handled here
 		
@@ -302,6 +305,7 @@ public class HeatController {
 			// Right now it takes the user back to the Login Page no matter what
 			return "redirect:/user/login"; 
 		}
+		model.addAttribute("user", ss.getUser());
 		log.warning(ss.getUser().getEmail() + " requested generate Heats");
 		MaintainHeatsHandler handler = new MaintainHeatsHandler(heatDao,regDao,athDao,eventDao,heatSpecDao);
 		
