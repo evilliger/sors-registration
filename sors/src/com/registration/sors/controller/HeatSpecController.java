@@ -8,6 +8,8 @@ import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -219,7 +221,14 @@ public class HeatSpecController {
 		model.addAttribute("user", ss.getUser());
 		
 		// Errors will be handled here
+		List<Event> eventList = this.Evdao.loadAll();
+		Dictionary<String,String>eList = new Hashtable<String,String>();
+		for(int i = 0; i < eventList.size(); ++i){
+			Event e = eventList.get(i);
+			eList.put(e.getId().toString(), e.getName());
+		}
 		model.addAttribute("heatSpecList", this.dao.loadAll());
+		model.addAttribute("eventList", eList);
 		return "listHeatSpec";
 	}
 	

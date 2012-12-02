@@ -26,7 +26,9 @@
 			if(!hList.isEmpty()){
 				for(int i = 0; i < hList.size(); ++i){
 					Heat h = hList.get(i);
+					List<Registration>rList = regDictionary.get(h.getId().toString());
 					
+					if(rList != null){
 					%>
 						<table style="text-align:left;"><tr> 
 						<th><%=eventDictionary.get(h.getEventID().toString()).getName()%></th>
@@ -44,9 +46,9 @@
 						<th>Div</th>
 						</tr>
 					<%
-					List<Registration>rList = regDictionary.get(h.getId().toString());
+
 					
-					if(rList != null){
+					
 						Collections.sort(rList, new Comparator<Registration>() {
 						    public int compare(Registration r1, Registration r2) {
 						    	if(r1.getRank() <= r2.getRank()){
@@ -56,31 +58,31 @@
 						    	}
 						    }
 						});
-					}
-					for(int j = 0; j < rList.size(); ++j){
-						Registration r = rList.get(j);
-						Athlete a = athDictionary.get(r.getAthleteID().toString());
-						Calendar cal1 = new GregorianCalendar();
-					    Calendar cal2 = new GregorianCalendar();
-					    int age = 0;
-					    int factor = 0; 
-					    cal1.setTime(a.getBdate());
-					    cal2.setTime(new Date());
-					    if(cal2.get(Calendar.DAY_OF_YEAR) < cal1.get(Calendar.DAY_OF_YEAR)) {
-					          factor = -1; 
-					    }
-					    age = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR) + factor;
-
-						%>
-							<tr>
-							<td><%=a.getFname()%> <%=a.getLname()%></td>
-							<td><%=age%></td>
-							<td><%=a.getGender()%></td>
-							<td><%=r.getRank()%></td>
-							<td><%=r.getScore()%></td>
-							<td><%=h.getDivision()%></td></tr>
-						<%
 					
+						for(int j = 0; j < rList.size(); ++j){
+							Registration r = rList.get(j);
+							Athlete a = athDictionary.get(r.getAthleteID().toString());
+							Calendar cal1 = new GregorianCalendar();
+						    Calendar cal2 = new GregorianCalendar();
+						    int age = 0;
+						    int factor = 0; 
+						    cal1.setTime(a.getBdate());
+						    cal2.setTime(new Date());
+						    if(cal2.get(Calendar.DAY_OF_YEAR) < cal1.get(Calendar.DAY_OF_YEAR)) {
+						          factor = -1; 
+						    }
+						    age = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR) + factor;
+	
+							%>
+								<tr>
+								<td><%=a.getFname()%> <%=a.getLname()%></td>
+								<td><%=age%></td>
+								<td><%=a.getGender()%></td>
+								<td><%=r.getRank()%></td>
+								<td><%=r.getScore()%></td>
+								<td><%=h.getDivision()%></td></tr>
+							<%
+						}
 					}
 				}
 			}

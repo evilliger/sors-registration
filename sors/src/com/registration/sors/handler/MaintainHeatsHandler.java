@@ -438,7 +438,7 @@ public class MaintainHeatsHandler {
 				int remainder = rList.size() - (numberInHeats * numHeats);
 				
 				// enter new heat
-				for(int j = 0; j < numHeats; ++j){
+				for(int j = 0; j < numHeats && (numberInHeats != 0 || remainder !=0); ++j){
 					Heat h = new Heat();
 					h.setDivision(j+1);
 					h.setEventID(he.getEventId());

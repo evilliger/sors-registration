@@ -1,4 +1,5 @@
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Dictionary" %>
 <%@ page import="com.registration.sors.model.HeatSpec" %>
 <%@ page import="com.registration.sors.model.User" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %> 
@@ -27,11 +28,12 @@
 		<%
 		  if(request.getAttribute("heatSpecList")!=null){						
 			List<HeatSpec> hslist = (List<HeatSpec>)request.getAttribute("heatSpecList");						
+			Dictionary<String,String> events = (Dictionary<String,String>)request.getAttribute("eventList");
 				if(!hslist.isEmpty()){
 					for(HeatSpec h : hslist){
 				%>
 					<tr>
-					  <td><%=h.getEventId()%></td>
+					  <td><%=events.get(h.getEventId().toString())%></td>
 					  <td><%=h.getGender()%></td>
 					  <td><%=h.getMinAge()%> - <%=h.getMaxAge()%></td>
 					  <td><%=h.getTime()%></td>
