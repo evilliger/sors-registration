@@ -39,7 +39,6 @@
                 <value>com.registration.sors.model.Registration</value>
                 <value>com.registration.sors.model.School</value>
                 <value>com.registration.sors.model.User</value>
-                <value>com.registration.sors.model.SorsParent</value>
             </list>
         </property>
     </bean>

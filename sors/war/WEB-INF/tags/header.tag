@@ -44,7 +44,7 @@
 	            <li><a href="/event/list">Events</a></li>
 	            <li><a href="/eventconflict/list">Event Conflicts</a></li>
 	            <li><a href="/heatspec/list">Heat Specifications</a></li>
-	            <li><a href="/heat/generate">Heat Generation</a></li>
+	            <li><a href="/heat/list">Heat Generation</a></li>
             </c:if>
           </ul>
         </nav>
