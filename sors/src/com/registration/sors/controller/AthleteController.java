@@ -385,6 +385,10 @@ public class AthleteController {
 				break;
 			}
 		}
+		if (a.getFname().length() > 50)
+			errors.add("First name is too long. Please limit your entry to 50 characters.");
+		if (a.getLname().length() > 50)
+			errors.add("Last name is too long. Please limit your entry to 50 characters.");
 		return errors;
 	}
 	
