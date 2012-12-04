@@ -26,12 +26,12 @@ table { width: 100%; }
 	header{
 		height:135px;
 		overflow:hidden;
-		background:url(../images/header-tail.gif) 0 0 repeat-x #fff;
+		background:url(../img/header-tail.gif) 0 0 repeat-x #fff;
 		}
 	
 	/* Content */
 	section#content {
-		background:url(../images/content-tail.gif) 0 0 repeat-x #f8f8f9;
+		background:url(../img/content-tail.gif) 0 0 repeat-x #f8f8f9;
 		padding-top:50px;
 		padding-bottom:20px;
 		}
@@ -43,7 +43,7 @@ table { width: 100%; }
 			
 	/* Footer */
 	#footer{
-		background:url(../images/footer-tail.gif) 0 100% repeat-x #1079ac;
+		background:url(../img/footer-tail.gif) 0 100% repeat-x #1079ac;
 		padding:25px 0 25px 0;
 		}
 
@@ -147,7 +147,7 @@ h3 {
 	line-height:1.2em;
 	font-weight:500;
 	color:#30383a;
-	background:url(../images/line-hor.gif) 0 100% repeat-x;
+	background:url(../img/line-hor.gif) 0 100% repeat-x;
 	padding:0 0 8px 0;
 	margin-bottom:20px;
 	}
@@ -173,7 +173,7 @@ h6 {
 	height:37px;
 	line-height:37px;
 	font-size:18px;
-	background:url(../images/button.png) no-repeat 0 0;
+	background:url(../img/button.png) no-repeat 0 0;
 	color:#fff;
 	text-decoration:none;
 	text-align:center;
@@ -271,7 +271,7 @@ a.rss {
 	right:8px;
 	top:36px;
 	color:#014568;
-	background:url(../images/icon-rss.png) no-repeat 100% 0;
+	background:url(../img/icon-rss.png) no-repeat 100% 0;
 	padding:4px 54px 10px 0;
 	font-size:1.1em;
 	}
@@ -308,7 +308,7 @@ a.rss:hover {
 
 /* List */
 .list1 li {
-	background:url(../images/marker1.gif) no-repeat 0 5px;
+	background:url(../img/marker1.gif) no-repeat 0 5px;
 	padding:0 0 0 25px;
 	line-height:24px;
 	font-size:13px;
